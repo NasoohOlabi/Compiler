@@ -23,14 +23,21 @@
 
 %%
 
-stmts: stmt | stmts stmt 
-;
+stmts: stmt 
+		| stmts stmt 
+		;
 
-stmt: IDENT '=' expr ';' | IF '(' expr ')' stmt %prec IFPREC | IF '(' expr ')' stmts ELSE stmts
-;
+stmt: IDENT '=' expr ';' 
+		| IF '(' expr ')' stmt %prec IFPREC 
+		| IF '(' expr ')' stmts ELSE stmts
+		;
 
-expr: NUMBER | IDENT | expr '-' expr | expr '*' expr | '-' expr %prec MINUS
-;
+expr: NUMBER 
+		| IDENT 
+		| expr '-' expr 
+		| expr '*' expr 
+		| '-' expr %prec MINUS
+		;
 
 
 %%

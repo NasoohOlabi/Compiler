@@ -8,7 +8,7 @@
 	using std::endl;
 	using std::left;
 	
-	#include "ast.h"
+	// #include "ast.h"
 	
 	#define YY_INPUT(buf,result,max_size) \
     { \
@@ -66,7 +66,7 @@ REAL3	(0|[1-9][0-9]*)([eE][-+]?(0|[1-9][0-9]*))
 }
 "begin" {
 	col += yyleng;
-	return BEGIN;
+	return BEG;
 }
 "end" {
 	col += yyleng;
@@ -103,10 +103,6 @@ REAL3	(0|[1-9][0-9]*)([eE][-+]?(0|[1-9][0-9]*))
 "double"			{
 						col += yyleng;
 						return DOUBLE;
-					}
-"int"				{
-						col += yyleng;
-						return INT;
 					}
 "if"				{
 						col += yyleng;
@@ -201,11 +197,5 @@ REAL3	(0|[1-9][0-9]*)([eE][-+]?(0|[1-9][0-9]*))
 						errorno++;
 					}
 %%
-int yywrap(void)
-{
-	return 1;
-}
 
-
-
-   
+  

@@ -35,10 +35,66 @@ REAL3	(0|[1-9][0-9]*)([eE][-+]?(0|[1-9][0-9]*))
 
 "//".*\n				lin++; col = 1;
 
-"class"				{
-						col += yyleng;
-						return CLASS;
-					}
+"program"				{
+	col += yyleng;
+	return PROGRAM;
+}
+"var" {
+	col += yyleng;
+	return VAR;
+}
+"integer" {
+	col += yyleng;
+	return INTEGER;
+}
+"real" {
+	col += yyleng;
+	return REAL;
+}
+"function" {
+	col += yyleng;
+	return FUNCTION;
+}
+"procedure" {
+	col += yyleng;
+	return PROCEDURE;
+}
+"do" {
+	col += yyleng;
+	return DO;
+}
+"begin" {
+	col += yyleng;
+	return BEGIN;
+}
+"end" {
+	col += yyleng;
+	return END;
+}
+"array" {
+	col += yyleng;
+	return ARRAY;
+}
+"of" {
+	col += yyleng;
+	return OF;
+}
+"div" {
+	col += yyleng;
+	return DIV;
+}
+"not" {
+	col += yyleng;
+	return NOT;
+}
+"and" {
+	col += yyleng;
+	return AND;
+}
+"or" {
+	col += yyleng;
+	return OR;
+}
 "boolean"			{						
 						col += yyleng;
 						return BOOLEAN;
@@ -75,37 +131,9 @@ REAL3	(0|[1-9][0-9]*)([eE][-+]?(0|[1-9][0-9]*))
 						col += yyleng;
 						return TRUE;
 					}
-"extends"			{
-						col += yyleng;
-						return EXTENDS;
-					}
-"instanceof"	    {
-						col += yyleng;
-						return INSTANCEOF;
-					}
-"new"				{
-						col += yyleng;
-						return NEW;
-					}
-"this"				{
-						col += yyleng;
-						return THIS;
-					}
 "null"				{
 						col += yyleng;
 						return NUL;
-					}
-"private"			{
-						col += yyleng;
-						return PRIVATE;
-					}
-"static"			{
-						col += yyleng;
-						return STATIC;
-					}
-"void"				{
-						col += yyleng;
-						return VOID;
 					}
 "return"			{
 						col += yyleng;

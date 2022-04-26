@@ -21,6 +21,7 @@
 	int lin = 1, col = 1, errorno = 0;
 %}
 %option noyywrap
+%option caseless
 
 %x comment
 REAL1	(0|[1-9][0-9]*)"."[0-9]*([eE][-+]?(0|[1-9][0-9]*))?

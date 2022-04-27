@@ -28,15 +28,15 @@ REAL1	(0|[1-9][0-9]*)"."[0-9]*([eE][-+]?(0|[1-9][0-9]*))?
 REAL2	"."[0-9]+([eE][-+]?(0|[1-9][0-9]*))?
 REAL3	(0|[1-9][0-9]*)([eE][-+]?(0|[1-9][0-9]*))
 %%
-"/*"					BEGIN(comment); col += yyleng;
-<comment>[^*\n]*		col += yyleng;
+"/*"	BEGIN(comment); col += yyleng;
+<comment>[^*\n]*	col += yyleng;
 <comment>"*"+[^*/\n]*	col += yyleng;
-<comment>\n				lin++; col = 1;
-<comment>"*"+"/"		BEGIN(0); col += yyleng;
+<comment>\n	lin++; col = 1;
+<comment>"*"+"/"	BEGIN(0); col += yyleng;
 
-"//".*\n				lin++; col = 1;
+"//".*\n	lin++; col = 1;
 
-"program"				{
+"program"	{
 	col += yyleng;
 	return PROGRAM;
 }
@@ -66,7 +66,7 @@ REAL3	(0|[1-9][0-9]*)([eE][-+]?(0|[1-9][0-9]*))
 }
 "begin" {
 	col += yyleng;
-	return BEG;
+	return BEG; // BEGIN IS A LEX RESERVED KEYWORD
 }
 "end" {
 	col += yyleng;
@@ -96,106 +96,110 @@ REAL3	(0|[1-9][0-9]*)([eE][-+]?(0|[1-9][0-9]*))
 	col += yyleng;
 	return OR;
 }
-"boolean"			{						
-						col += yyleng;
-						return BOOLEAN;
-					}
-"double"			{
-						col += yyleng;
-						return DOUBLE;
-					}
-"if"				{
-						col += yyleng;
-						return IF;
-					}
-"else"				{
-						col += yyleng;
-						return ELSE;
-					}
-"while"				{
-						col += yyleng;
-						return WHILE;
-					}
-"for"				{
-						col += yyleng;
-						return FOR;
-					}
-"false"				{
-						col += yyleng;
-						return FALSE;
-					}
-"true"				{
-						col += yyleng;
-						return TRUE;
-					}
-"null"				{
-						col += yyleng;
-						return NUL;
-					}
-"return"			{
-						col += yyleng;
-						return RETURN;
-					}
-"++"				{
-						col += yyleng;
-						return INCREMENT;
-					}
-"--"				{
-						col += yyleng;
-						return DECREMENT;
-					}
-">="				{
-						col += yyleng;
-						return LE;
-					}
-"<="				{						
-						col += yyleng;
-						return SE;
-					}
-"=="				{
-						col += yyleng;
-						return EQ;
-					}
-"!="				{
-						col += yyleng;
-						return NE;
-					}
-"&&"				{
-						col += yyleng;
-						return AND;
-					}
-"||"				{
-						col += yyleng;
-						return OR;
-					}
-			
-									
-0|[1-9][0-9]*		{
-						col += yyleng;
-						
-						return INTEGER;
-					}
-					
+"boolean"	{	
+	col += yyleng;
+	return BOOLEAN;
+}
+"double"	{
+	col += yyleng;
+	return DOUBLE;
+}
+"if"	{
+	col += yyleng;
+	return IF;
+}
+"else"	{
+	col += yyleng;
+	return ELSE;
+}
+"while"	{
+	col += yyleng;
+	return WHILE;
+}
+"for"	{
+	col += yyleng;
+	return FOR;
+}
+"false"	{
+	col += yyleng;
+	return FALSE;
+}
+"true"	{
+	col += yyleng;
+	return TRUE;
+}
+"null"	{
+	col += yyleng;
+	return NUL;
+}
+"return"	{
+	col += yyleng;
+	return RETURN;
+}
+"++"	{
+	col += yyleng;
+	return INCREMENT;
+}
+"--"	{
+	col += yyleng;
+	return DECREMENT;
+}
+">="	{
+	col += yyleng;
+	return LE;
+}
+"<="	{	
+	col += yyleng;
+	return SE;
+}
+"=="	{
+	col += yyleng;
+	return EQ;
+}
+"!="	{
+	col += yyleng;
+	return NE;
+}
+"&&"	{
+	col += yyleng;
+	return AND;
+}
+"||"	{
+	col += yyleng;
+	return OR;
+}
+	
+	
+0|[1-9][0-9]*	{
+	col += yyleng;
+	
+	return INTEGER_LITERAL;
+}
+	
 (0|[1-9][0-9]*)"."[0-9]*([eE][-+]?(0|[1-9][0-9]*))? |
-"."[0-9]+([eE][-+]?(0|[1-9][0-9]*))?				|
-(0|[1-9][0-9]*)([eE][-+]?(0|[1-9][0-9]*))			{
-														col += yyleng;
-														
-														return REAL;
-													}
+"."[0-9]+([eE][-+]?(0|[1-9][0-9]*))?	|
+(0|[1-9][0-9]*)([eE][-+]?(0|[1-9][0-9]*))	{
+
+	col += yyleng;
+	return REAL_LITERAL;
+
+}
 ([a-zA-Z]|_)([a-zA-Z]|[0-9]|_)*	{
-									col += yyleng;
-									
-									return IDENT;
-								}
-[\t]*				col += 4 * yyleng;
-[ ]*				col += yyleng;
-\n					lin++; col = 1;
-[+*/%<>={}().;,-<>]		return *yytext;
-.					{
-						col += yyleng;
-						errorno++;
-					}
+
+	col += yyleng;
+	return IDENT;
+
+}
+[\t]*	col += 4 * yyleng;
+[ ]*	col += yyleng;
+\n	lin++; col = 1;
+[+*/%<>={}().;,-<>]	return *yytext;
+.	{
+	
+	col += yyleng;
+	errorno++;
+	
+}	
 %%
 
   

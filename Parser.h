@@ -62,9 +62,11 @@
      OR = 288,
      AND = 289,
      NOT = 290,
-     ELSE = 291,
-     IFPREC = 292,
-     MINUS = 293
+     INTEGER_LITERAL = 291,
+     REAL_LITERAL = 292,
+     ELSE = 293,
+     IFPREC = 294,
+     MINUS = 295
    };
 #endif
 /* Tokens.  */
@@ -101,9 +103,11 @@
 #define OR 288
 #define AND 289
 #define NOT 290
-#define ELSE 291
-#define IFPREC 292
-#define MINUS 293
+#define INTEGER_LITERAL 291
+#define REAL_LITERAL 292
+#define ELSE 293
+#define IFPREC 294
+#define MINUS 295
 
 
 

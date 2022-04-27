@@ -42,6 +42,8 @@
 %token OR
 %token AND
 %token NOT
+%token INTEGER_LITERAL
+%token REAL_LITERAL
 
 
 %nonassoc ELSE

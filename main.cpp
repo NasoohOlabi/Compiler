@@ -1,6 +1,8 @@
 #include <iostream>
 
-#include "Parser.h"
+#include "AST/Node.h"
+#include "parsers/Parser.h"
+
 using std::cout;
 using std::endl;
 extern int yyparse();

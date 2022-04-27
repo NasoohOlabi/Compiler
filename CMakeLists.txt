@@ -12,7 +12,7 @@ enable_testing()
 file(GLOB_RECURSE sources ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp )
 add_executable(Compiler main.cpp ${sources})
 
-target_include_directories(Compiler PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/parsers)
+target_include_directories(Compiler PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/*)
 
 
 

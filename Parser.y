@@ -9,7 +9,6 @@
 
 %}
 
-%token NUMBER
 %token IDENT
 %token IF
 %token PROCEDURE
@@ -64,7 +63,8 @@ stmt: IDENT '=' expr ';'
 		| IF '(' expr ')' stmts ELSE stmts
 		;
 
-expr: NUMBER 
+expr: INTEGER_LITERAL
+		| REAL_LITERAL
 		| IDENT 
 		| expr '-' expr 
 		| expr '*' expr 
@@ -76,12 +76,14 @@ expr: NUMBER
 
 int yyerror(const char * s){
 
-	cout << "Syntax Error.... " << endl;
+	cout << "Sub Syntax Error.... " << endl;
+	
+	auto tmp = s;
+	while (tmp){
+		cout << *tmp;
+		tmp++;
+	}
+
 	return 1;
 
-}
-
-int main(){
-	yyparse();
-	return 0;
 }

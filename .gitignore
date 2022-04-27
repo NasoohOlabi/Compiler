@@ -1,0 +1,12 @@
+# # Ignore everything
+# *
+
+# # But not these files...
+# !*.l
+# !*.bat
+# !*.y
+# !*.md
+# # we'll add sematic parser by name later not all .cpp for now
+
+# # ...even if they are in subdirectories
+# !*/

@@ -1,0 +1,10 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "parsers",
+			"command": "./scripts/run.bat", // Could be any other shell command
+			"type": "shell"
+		}
+	]
+}

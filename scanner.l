@@ -186,6 +186,8 @@ REAL3	(0|[1-9][0-9]*)([eE][-+]?(0|[1-9][0-9]*))
 }
 ([a-zA-Z]|_)([a-zA-Z]|[0-9]|_)*	{
 
+	cout<<"yytext is "<<yytext<<'\n';
+	
 	col += yyleng;
 	return IDENT;
 

@@ -9,7 +9,8 @@
 !main.cpp
 !.gitignore
 !CMakeLists.txt
-!src/*/*.cpp
+!src/AST/*.cpp
+!src/util/*.cpp
 !include/*.hpp
 !include/*.h
 # we'll add sematic parser by name later not all .cpp for now

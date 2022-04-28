@@ -107,4 +107,4 @@ CMakeFiles/Compiler.dir/src/parsers/Scanner.cpp.obj: \
  c:\mingw\lib\gcc\mingw32\9.2.0\include\c++\bits\ostream.tcc \
  c:\mingw\lib\gcc\mingw32\9.2.0\include\c++\istream \
  c:\mingw\lib\gcc\mingw32\9.2.0\include\c++\bits\istream.tcc \
- C:\Users\nasooh\Desktop\School_is_cool\Compilers\Compiler\src\parsers\Parser.h
+ C:/Users/nasooh/Desktop/School_is_cool/Compilers/Compiler/include/Parser.h

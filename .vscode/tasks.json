@@ -5,6 +5,16 @@
 			"label": "parsers",
 			"command": "./scripts/run.bat", // Could be any other shell command
 			"type": "shell"
+		},
+		{
+			"label": "build",
+			"type": "shell",
+			"command": "g++",
+			"args": [
+				"*.cpp",
+				"-o",
+				"output.exe"
+			]
 		}
 	]
 }

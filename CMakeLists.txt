@@ -9,10 +9,10 @@ enable_testing()
 # 		src/parsers/Scanner.cpp
 # )
 
-file(GLOB_RECURSE sources ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp )
+file(GLOB_RECURSE sources src/*)
 add_executable(Compiler main.cpp ${sources})
 
-target_include_directories(Compiler PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src/*)
+target_include_directories(Compiler PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 
 

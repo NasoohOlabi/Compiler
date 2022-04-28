@@ -83,11 +83,26 @@ CMakeFiles/Compiler.dir/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Compiler.dir/main.cpp.s"
 	C:\MinGW\bin\mingw32-g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\nasooh\Desktop\School_is_cool\Compilers\Compiler\main.cpp -o CMakeFiles\Compiler.dir\main.cpp.s
 
+CMakeFiles/Compiler.dir/src/AST/Node.cpp.obj: CMakeFiles/Compiler.dir/flags.make
+CMakeFiles/Compiler.dir/src/AST/Node.cpp.obj: CMakeFiles/Compiler.dir/includes_CXX.rsp
+CMakeFiles/Compiler.dir/src/AST/Node.cpp.obj: ../src/AST/Node.cpp
+CMakeFiles/Compiler.dir/src/AST/Node.cpp.obj: CMakeFiles/Compiler.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\nasooh\Desktop\School_is_cool\Compilers\Compiler\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/Compiler.dir/src/AST/Node.cpp.obj"
+	C:\MinGW\bin\mingw32-g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Compiler.dir/src/AST/Node.cpp.obj -MF CMakeFiles\Compiler.dir\src\AST\Node.cpp.obj.d -o CMakeFiles\Compiler.dir\src\AST\Node.cpp.obj -c C:\Users\nasooh\Desktop\School_is_cool\Compilers\Compiler\src\AST\Node.cpp
+
+CMakeFiles/Compiler.dir/src/AST/Node.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Compiler.dir/src/AST/Node.cpp.i"
+	C:\MinGW\bin\mingw32-g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E C:\Users\nasooh\Desktop\School_is_cool\Compilers\Compiler\src\AST\Node.cpp > CMakeFiles\Compiler.dir\src\AST\Node.cpp.i
+
+CMakeFiles/Compiler.dir/src/AST/Node.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Compiler.dir/src/AST/Node.cpp.s"
+	C:\MinGW\bin\mingw32-g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S C:\Users\nasooh\Desktop\School_is_cool\Compilers\Compiler\src\AST\Node.cpp -o CMakeFiles\Compiler.dir\src\AST\Node.cpp.s
+
 CMakeFiles/Compiler.dir/src/parsers/Parser.cpp.obj: CMakeFiles/Compiler.dir/flags.make
 CMakeFiles/Compiler.dir/src/parsers/Parser.cpp.obj: CMakeFiles/Compiler.dir/includes_CXX.rsp
 CMakeFiles/Compiler.dir/src/parsers/Parser.cpp.obj: ../src/parsers/Parser.cpp
 CMakeFiles/Compiler.dir/src/parsers/Parser.cpp.obj: CMakeFiles/Compiler.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\nasooh\Desktop\School_is_cool\Compilers\Compiler\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/Compiler.dir/src/parsers/Parser.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\nasooh\Desktop\School_is_cool\Compilers\Compiler\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/Compiler.dir/src/parsers/Parser.cpp.obj"
 	C:\MinGW\bin\mingw32-g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Compiler.dir/src/parsers/Parser.cpp.obj -MF CMakeFiles\Compiler.dir\src\parsers\Parser.cpp.obj.d -o CMakeFiles\Compiler.dir\src\parsers\Parser.cpp.obj -c C:\Users\nasooh\Desktop\School_is_cool\Compilers\Compiler\src\parsers\Parser.cpp
 
 CMakeFiles/Compiler.dir/src/parsers/Parser.cpp.i: cmake_force
@@ -102,7 +117,7 @@ CMakeFiles/Compiler.dir/src/parsers/Scanner.cpp.obj: CMakeFiles/Compiler.dir/fla
 CMakeFiles/Compiler.dir/src/parsers/Scanner.cpp.obj: CMakeFiles/Compiler.dir/includes_CXX.rsp
 CMakeFiles/Compiler.dir/src/parsers/Scanner.cpp.obj: ../src/parsers/Scanner.cpp
 CMakeFiles/Compiler.dir/src/parsers/Scanner.cpp.obj: CMakeFiles/Compiler.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\nasooh\Desktop\School_is_cool\Compilers\Compiler\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/Compiler.dir/src/parsers/Scanner.cpp.obj"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=C:\Users\nasooh\Desktop\School_is_cool\Compilers\Compiler\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/Compiler.dir/src/parsers/Scanner.cpp.obj"
 	C:\MinGW\bin\mingw32-g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Compiler.dir/src/parsers/Scanner.cpp.obj -MF CMakeFiles\Compiler.dir\src\parsers\Scanner.cpp.obj.d -o CMakeFiles\Compiler.dir\src\parsers\Scanner.cpp.obj -c C:\Users\nasooh\Desktop\School_is_cool\Compilers\Compiler\src\parsers\Scanner.cpp
 
 CMakeFiles/Compiler.dir/src/parsers/Scanner.cpp.i: cmake_force
@@ -116,6 +131,7 @@ CMakeFiles/Compiler.dir/src/parsers/Scanner.cpp.s: cmake_force
 # Object files for target Compiler
 Compiler_OBJECTS = \
 "CMakeFiles/Compiler.dir/main.cpp.obj" \
+"CMakeFiles/Compiler.dir/src/AST/Node.cpp.obj" \
 "CMakeFiles/Compiler.dir/src/parsers/Parser.cpp.obj" \
 "CMakeFiles/Compiler.dir/src/parsers/Scanner.cpp.obj"
 
@@ -123,13 +139,14 @@ Compiler_OBJECTS = \
 Compiler_EXTERNAL_OBJECTS =
 
 Compiler.exe: CMakeFiles/Compiler.dir/main.cpp.obj
+Compiler.exe: CMakeFiles/Compiler.dir/src/AST/Node.cpp.obj
 Compiler.exe: CMakeFiles/Compiler.dir/src/parsers/Parser.cpp.obj
 Compiler.exe: CMakeFiles/Compiler.dir/src/parsers/Scanner.cpp.obj
 Compiler.exe: CMakeFiles/Compiler.dir/build.make
 Compiler.exe: CMakeFiles/Compiler.dir/linklibs.rsp
 Compiler.exe: CMakeFiles/Compiler.dir/objects1.rsp
 Compiler.exe: CMakeFiles/Compiler.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=C:\Users\nasooh\Desktop\School_is_cool\Compilers\Compiler\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Linking CXX executable Compiler.exe"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=C:\Users\nasooh\Desktop\School_is_cool\Compilers\Compiler\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Linking CXX executable Compiler.exe"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles\Compiler.dir\link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

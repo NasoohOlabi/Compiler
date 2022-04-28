@@ -546,6 +546,30 @@ main.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\Compiler.dir\build.make CMakeFiles/Compiler.dir/main.cpp.s
 .PHONY : main.cpp.s
 
+src/AST/Node.obj: src/AST/Node.cpp.obj
+.PHONY : src/AST/Node.obj
+
+# target to build an object file
+src/AST/Node.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Compiler.dir\build.make CMakeFiles/Compiler.dir/src/AST/Node.cpp.obj
+.PHONY : src/AST/Node.cpp.obj
+
+src/AST/Node.i: src/AST/Node.cpp.i
+.PHONY : src/AST/Node.i
+
+# target to preprocess a source file
+src/AST/Node.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Compiler.dir\build.make CMakeFiles/Compiler.dir/src/AST/Node.cpp.i
+.PHONY : src/AST/Node.cpp.i
+
+src/AST/Node.s: src/AST/Node.cpp.s
+.PHONY : src/AST/Node.s
+
+# target to generate assembly for a file
+src/AST/Node.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Compiler.dir\build.make CMakeFiles/Compiler.dir/src/AST/Node.cpp.s
+.PHONY : src/AST/Node.cpp.s
+
 src/parsers/Parser.obj: src/parsers/Parser.cpp.obj
 .PHONY : src/parsers/Parser.obj
 
@@ -637,6 +661,9 @@ help:
 	@echo ... main.obj
 	@echo ... main.i
 	@echo ... main.s
+	@echo ... src/AST/Node.obj
+	@echo ... src/AST/Node.i
+	@echo ... src/AST/Node.s
 	@echo ... src/parsers/Parser.obj
 	@echo ... src/parsers/Parser.i
 	@echo ... src/parsers/Parser.s

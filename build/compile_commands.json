@@ -6,6 +6,11 @@
 },
 {
   "directory": "C:/Users/nasooh/Desktop/School_is_cool/Compilers/Compiler/build",
+  "command": "C:\\MinGW\\bin\\mingw32-g++.exe  @CMakeFiles/Compiler.dir/includes_CXX.rsp -O3 -DNDEBUG -o CMakeFiles\\Compiler.dir\\src\\AST\\Node.cpp.obj -c C:\\Users\\nasooh\\Desktop\\School_is_cool\\Compilers\\Compiler\\src\\AST\\Node.cpp",
+  "file": "C:/Users/nasooh/Desktop/School_is_cool/Compilers/Compiler/src/AST/Node.cpp"
+},
+{
+  "directory": "C:/Users/nasooh/Desktop/School_is_cool/Compilers/Compiler/build",
   "command": "C:\\MinGW\\bin\\mingw32-g++.exe  @CMakeFiles/Compiler.dir/includes_CXX.rsp -O3 -DNDEBUG -o CMakeFiles\\Compiler.dir\\src\\parsers\\Parser.cpp.obj -c C:\\Users\\nasooh\\Desktop\\School_is_cool\\Compilers\\Compiler\\src\\parsers\\Parser.cpp",
   "file": "C:/Users/nasooh/Desktop/School_is_cool/Compilers/Compiler/src/parsers/Parser.cpp"
 },

@@ -7,6 +7,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/Compiler.dir/src/parsers/Parser.cpp.obj.d"
   "CMakeFiles/Compiler.dir/src/parsers/Scanner.cpp.obj"
   "CMakeFiles/Compiler.dir/src/parsers/Scanner.cpp.obj.d"
+  "CMakeFiles/Compiler.dir/src/util/lg.cpp.obj"
+  "CMakeFiles/Compiler.dir/src/util/lg.cpp.obj.d"
   "Compiler.exe"
   "Compiler.exe.manifest"
   "Compiler.pdb"

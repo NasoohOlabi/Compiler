@@ -6,9 +6,12 @@
 !*.bat
 !*.y
 !*.md
+!main.cpp
 !.gitignore
 !CMakeLists.txt
-!src/*/*
+!src/*/*.cpp
+!include/*.hpp
+!include/*.h
 # we'll add sematic parser by name later not all .cpp for now
 
 # ...even if they are in subdirectories

@@ -5,6 +5,19 @@
 #include "Node.hpp"
 #include "Parser.h"
 
+#define pretty_print(x) std::cout << #x "=" << x << '\n'
+#define pp(x) pretty_print(x)
+#define STR(x) #x << '=' << x << ' '
+
+#define init_persist()                       \
+	ofstream myfile;                          \
+	myfile.open("../last_run.log", ios::out); \
+	LOG_INIT_CUSTOM(myfile);                  \
+	log.set_log_level(LOG_DEBUG)
+#define start_persist(level) log(level) <<
+#define end_persist << '\n'
+#define close_persist() myfile.close()
+
 using std::cout;
 using std::endl;
 using std::ios;
@@ -16,14 +29,16 @@ int main() {
 	cout << "Hello" << endl;
 	int x = 4;
 
-	ofstream myfile;
-	myfile.open("../last_run.log", ios::out);
+	init_persist();
 
-	// LOG_INIT_CUSTOM(myfile);
-	LOG_INIT_COUT();
-	log(LOG_INFO) << "test " << '\n';
+	start_persist(LOG_INFO) "test52 " << x << '\n' << "test" end_persist;
+	start_persist(LOG_DEBUG) STR(x) end_persist;
 
-	myfile.close();
+	pp(x);
+
+	cout << STR(x) << '\n';
+
+	close_persist();
 
 	yyparse();
 

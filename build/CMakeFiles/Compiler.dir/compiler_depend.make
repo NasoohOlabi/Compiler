@@ -541,6 +541,8 @@ CMakeFiles/Compiler.dir/src/parsers/Scanner.cpp.obj: ../src/parsers/Scanner.cpp 
   C:/MinGW/lib/gcc/mingw32/9.2.0/include/c++/bits/istream.tcc \
   ../include/Parser.h
 
+CMakeFiles/Compiler.dir/src/util/lg.cpp.obj: ../src/util/lg.cpp
+
 
 C:/MinGW/lib/gcc/mingw32/9.2.0/include/c++/clocale:
 
@@ -885,3 +887,5 @@ C:/MinGW/lib/gcc/mingw32/9.2.0/include/c++/bits/stl_bvector.h:
 C:/MinGW/lib/gcc/mingw32/9.2.0/include/c++/stdlib.h:
 
 C:/MinGW/include/getopt.h:
+
+../src/util/lg.cpp:

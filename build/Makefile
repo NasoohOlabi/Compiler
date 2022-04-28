@@ -618,6 +618,30 @@ src/parsers/Scanner.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\Compiler.dir\build.make CMakeFiles/Compiler.dir/src/parsers/Scanner.cpp.s
 .PHONY : src/parsers/Scanner.cpp.s
 
+src/util/lg.obj: src/util/lg.cpp.obj
+.PHONY : src/util/lg.obj
+
+# target to build an object file
+src/util/lg.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Compiler.dir\build.make CMakeFiles/Compiler.dir/src/util/lg.cpp.obj
+.PHONY : src/util/lg.cpp.obj
+
+src/util/lg.i: src/util/lg.cpp.i
+.PHONY : src/util/lg.i
+
+# target to preprocess a source file
+src/util/lg.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Compiler.dir\build.make CMakeFiles/Compiler.dir/src/util/lg.cpp.i
+.PHONY : src/util/lg.cpp.i
+
+src/util/lg.s: src/util/lg.cpp.s
+.PHONY : src/util/lg.s
+
+# target to generate assembly for a file
+src/util/lg.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Compiler.dir\build.make CMakeFiles/Compiler.dir/src/util/lg.cpp.s
+.PHONY : src/util/lg.cpp.s
+
 # Help Target
 help:
 	@echo The following are some of the valid targets for this Makefile:
@@ -670,6 +694,9 @@ help:
 	@echo ... src/parsers/Scanner.obj
 	@echo ... src/parsers/Scanner.i
 	@echo ... src/parsers/Scanner.s
+	@echo ... src/util/lg.obj
+	@echo ... src/util/lg.i
+	@echo ... src/util/lg.s
 .PHONY : help
 
 

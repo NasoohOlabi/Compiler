@@ -12,6 +12,7 @@ set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "C:/Users/nasooh/Desktop/School_is_cool/Compilers/Compiler/src/AST/Node.cpp" "CMakeFiles/Compiler.dir/src/AST/Node.cpp.obj" "gcc" "CMakeFiles/Compiler.dir/src/AST/Node.cpp.obj.d"
   "C:/Users/nasooh/Desktop/School_is_cool/Compilers/Compiler/src/parsers/Parser.cpp" "CMakeFiles/Compiler.dir/src/parsers/Parser.cpp.obj" "gcc" "CMakeFiles/Compiler.dir/src/parsers/Parser.cpp.obj.d"
   "C:/Users/nasooh/Desktop/School_is_cool/Compilers/Compiler/src/parsers/Scanner.cpp" "CMakeFiles/Compiler.dir/src/parsers/Scanner.cpp.obj" "gcc" "CMakeFiles/Compiler.dir/src/parsers/Scanner.cpp.obj.d"
+  "C:/Users/nasooh/Desktop/School_is_cool/Compilers/Compiler/src/util/lg.cpp" "CMakeFiles/Compiler.dir/src/util/lg.cpp.obj" "gcc" "CMakeFiles/Compiler.dir/src/util/lg.cpp.obj.d"
   )
 
 # Targets to which this target links.

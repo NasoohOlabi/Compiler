@@ -18,5 +18,10 @@
   "directory": "C:/Users/nasooh/Desktop/School_is_cool/Compilers/Compiler/build",
   "command": "C:\\MinGW\\bin\\mingw32-g++.exe  @CMakeFiles/Compiler.dir/includes_CXX.rsp -O3 -DNDEBUG -o CMakeFiles\\Compiler.dir\\src\\parsers\\Scanner.cpp.obj -c C:\\Users\\nasooh\\Desktop\\School_is_cool\\Compilers\\Compiler\\src\\parsers\\Scanner.cpp",
   "file": "C:/Users/nasooh/Desktop/School_is_cool/Compilers/Compiler/src/parsers/Scanner.cpp"
+},
+{
+  "directory": "C:/Users/nasooh/Desktop/School_is_cool/Compilers/Compiler/build",
+  "command": "C:\\MinGW\\bin\\mingw32-g++.exe  @CMakeFiles/Compiler.dir/includes_CXX.rsp -O3 -DNDEBUG -o CMakeFiles\\Compiler.dir\\src\\util\\lg.cpp.obj -c C:\\Users\\nasooh\\Desktop\\School_is_cool\\Compilers\\Compiler\\src\\util\\lg.cpp",
+  "file": "C:/Users/nasooh/Desktop/School_is_cool/Compilers/Compiler/src/util/lg.cpp"
 }
 ]

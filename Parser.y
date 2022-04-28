@@ -76,7 +76,7 @@ expr: INTEGER_LITERAL
 
 int yyerror(const char * s){
 
-	cout << "Sub Syntax Error.... " << endl;
+	cout << "Syntax Error.... " << endl;
 	
 	auto tmp = s;
 	while (tmp){

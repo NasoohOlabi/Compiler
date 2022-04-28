@@ -1,25 +1,29 @@
+#include <fstream>
 #include <iostream>
 
-// #include "BSlogger.hpp"
-// #include "Flogger.hpp"
+#include "BSlogger.hpp"
 #include "Node.hpp"
 #include "Parser.h"
 
 using std::cout;
 using std::endl;
+using std::ios;
+using std::ofstream;
+
 extern int yyparse();
 
 int main() {
 	cout << "Hello" << endl;
 	int x = 4;
 
-	// // Initiate logger (default name is 'log')
-	// LOG_INIT_CERR();
+	ofstream myfile;
+	myfile.open("../last_run.log", ios::out);
 
-	// log(LOG_INFO) << "Arg: "
-	//               << " => " << '\n';
+	// LOG_INIT_CUSTOM(myfile);
+	LOG_INIT_COUT();
+	log(LOG_INFO) << "test " << '\n';
 
-	// ige::FileLogger flogger("log");
+	myfile.close();
 
 	yyparse();
 

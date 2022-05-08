@@ -6,6 +6,7 @@
 -[X] Thin the herd and untrack unnecessary files e.g. build .vscode.
 -[X] fix the build pipeline currently you need two consecutive builds to see changes in yac.
 -[ ] start building the AST classes according to the instructor' instructions.
+-[ ] augment Shadi's scanner.l with the previous scanner.l (our old scanner.l)
 
 ## Notes
 

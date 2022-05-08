@@ -2,7 +2,7 @@
 #include <iostream>
 
 #include "BSlogger.hpp"
-#include "Node.hpp"
+#include "ast.h"
 #include "Parser.h"
 
 #define pretty_print(x) std::cout << #x "=" << x << '\n'

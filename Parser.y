@@ -1,89 +1,133 @@
-
 %{
-
+	#include "ast.h"
+	
 	#include <iostream>
 	using std::cout;
-	using std::endl;
+	using std::endl;	
+	
 	extern int yylex();
 	extern int yyerror(const char *);
+		
+	Func *root;
+	int lin = 0, col =0;
 
 %}
 
-%token IDENT
-%token IF
-%token PROCEDURE
-%token PROGRAM
-%token VAR
-%token INTEGER
-%token REAL
-%token TRUE
-%token FALSE
-%token LE
-%token SE
-%token EQ
-%token NQ
-%token NE
-%token BOOLEAN
-%token RETURN
-%token DECREMENT
-%token INCREMENT
-%token NUL
-%token FOR
-%token WHILE
-%token DOUBLE
-%token FUNCTION
-%token DO
-%token BEG
-%token END
-%token ARRAY
-%token DIV
-%token OF
-%token OR
-%token AND
-%token NOT
-%token INTEGER_LITERAL
-%token REAL_LITERAL
+%union
+{
+		Func *tFunc;
+		Args *tArgs;
+		Arg *tArg;
+		int tInt;
+		Expr *tExpr;
+		Stmts *tStmts;
+		Stmt *tStmt;
+		Num *tNum;
+		Ident *tIdent;
+}
+
+%type <tFunc> func
+%type <tArg> arg
+%type <tArgs> args args_e
+%type <tInt> type
+%type <tExpr> expr
+%type <tStmt> stmt
+%type <tStmts> stmts
 
 
-%nonassoc ELSE
-%nonassoc IFPREC
 
-%left '-'
-%left '*' 
-%left MINUS
 
-%%
+%token <tIdent> IDENT
+%token <tNum> NUM
 
-stmts: stmt 
-		| stmts stmt 
-		;
+%token INT
 
-stmt: IDENT '=' expr ';' 
-		| IF '(' expr ')' stmt %prec IFPREC 
-		| IF '(' expr ')' stmts ELSE stmts
-		;
 
-expr: INTEGER_LITERAL
-		| REAL_LITERAL
-		| IDENT 
-		| expr '-' expr 
-		| expr '*' expr 
-		| '-' expr %prec MINUS
-		;
+
+%left  '='
+%left '+'
+
 
 
 %%
+func: type IDENT '(' args_e ')' '{' stmts '}' 
+		{ 
+			$$ = new Func($1, $2, $4, $7, lin, col);
+			root = $$;
+			cout << "Parsing is done Correctly!!!" << endl;
+		}
+										
+;
+arg : type IDENT
+		{
+			$$ = new Arg($1, $2, lin, col);
+		}
+;
+args:	arg 
+			{
+				$$ = new Args($1, lin, col);
+			}
+		| args ',' arg
+			{
+				$$ = $1;
+				$$->AddArg($3);
+			}
+;
+args_e:		/* empty */
+			{
+				$$ = new Args(lin, col);
+			}
+		| args
+		 {
+			$$ = $1;
+		 }
+			
 
-int yyerror(const char * s){
+;
+type: INT
+		{
+			// the type in integer
+			$$ = 1;
+		}
 
-	cout << "Syntax Error.... " << endl;
-	
-	auto tmp = s;
-	while (tmp){
-		cout << *tmp;
-		tmp++;
-	}
+;
+expr:		NUM
+				{
+					$$ = new NumExpr($1, lin, col);
+				}
+		| IDENT
+			{
+				$$ = new IdExpr($1, lin, col);
+			}
+		| IDENT '=' expr
+		{
+				$$ = new Assign($1, $3,  lin, col);
+		}
+		| expr '+' expr
+		{
+				$$ = new Add($1, $3, lin, col);
+		}
+;
+stmt:		expr ';'
+			{
+				$$ = new ExprStmt($1, lin, col);
+			}
+;
+stmts: /* Empty */
+			{
+				$$ = new Stmts(lin, col);
+			}
+		|stmts stmt
+			{
+				$1->AddStmt($2);
+				$$ = $1;
+			} 
+;
+
+%%
+int yyerror(const char* s)
+{
+	cout << "OOPs, synatx error" << endl;
 
 	return 1;
-
 }

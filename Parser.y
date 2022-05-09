@@ -125,7 +125,7 @@ stmts: /* Empty */
 ;
 
 %%
-int yyerror(const char* s)
+int yyerror(const char* s) /*uyuy*/
 {
 	cout << "OOPs, synatx error" << endl;
 

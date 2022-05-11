@@ -32,7 +32,7 @@
 		Procedure *tProcedure;
 		While *tWhile;
 		Do *tDo;
-		Begin *tBegin;
+		KBegin *tBegin;
 		End *tEnd;
 		If *tIf;
 		Then *tThen;
@@ -59,11 +59,6 @@
 %token <tIdent> IDENT
 %token <tNum> NUM
 
-
-=======
->>>>>>> b58d47bb421ba3904b3532ab9123a7c7c4b7b459
-
-
 %token INT
 
 /* New Nodes */
@@ -77,7 +72,7 @@
 %token <tProcedure> PROCEDURE
 %token <tWhile> WHILE
 %token <tDo> DO
-%token <tBegin> BEGIN
+%token <tBegin> KBEGIN
 %token <tEnd> END
 %token <tIf> IF
 %token <tThen> THEN

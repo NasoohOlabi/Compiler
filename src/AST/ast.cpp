@@ -124,42 +124,40 @@ Add::Add(Expr *l, Expr *r, int lin, int col) : Expr(lin, col)
 	right->father = this;
 }
 
-Keyword::Keyword(int lin, int col) : Node(lin, col) {}
+Program::Program(int lin, int col) : Node(lin, col) {}
 
-Program::Program(int lin, int col) : Keyword(lin, col) {}
+Var::Var(int lin, int col) : Node(lin, col) {}
 
-Var::Var(int lin, int col) : Keyword(lin, col) {}
+Integer::Integer(int lin, int col) : Node(lin, col) {}
 
-Integer::Integer(int lin, int col) : Keyword(lin, col) {}
+Real::Real(int lin, int col) : Node(lin, col) {}
 
-Real::Real(int lin, int col) : Keyword(lin, col) {}
+Function::Function(int lin, int col) : Node(lin, col) {}
 
-Function::Function(int lin, int col) : Keyword(lin, col) {}
+Procedure::Procedure(int lin, int col) : Node(lin, col) {}
 
-Procedure::Procedure(int lin, int col) : Keyword(lin, col) {}
+While::While(int lin, int col) : Node(lin, col) {}
 
-While::While(int lin, int col) : Keyword(lin, col) {}
+Do::Do(int lin, int col) : Node(lin, col) {}
 
-Do::Do(int lin, int col) : Keyword(lin, col) {}
+KBegin::KBegin(int lin, int col) : Node(lin, col) {}
 
-Begin::Begin(int lin, int col) : Keyword(lin, col) {}
+End::End(int lin, int col) : Node(lin, col) {}
 
-End::End(int lin, int col) : Keyword(lin, col) {}
+If::If(int lin, int col) : Node(lin, col) {}
 
-If::If(int lin, int col) : Keyword(lin, col) {}
+Then::Then(int lin, int col) : Node(lin, col) {}
 
-Then::Then(int lin, int col) : Keyword(lin, col) {}
+Else::Else(int lin, int col) : Node(lin, col) {}
 
-Else::Else(int lin, int col) : Keyword(lin, col) {}
+Array::Array(int lin, int col) : Node(lin, col) {}
 
-Array::Array(int lin, int col) : Keyword(lin, col) {}
+Of::Of(int lin, int col) : Node(lin, col) {}
 
-Of::Of(int lin, int col) : Keyword(lin, col) {}
+Div::Div(int lin, int col) : Node(lin, col) {}
 
-Div::Div(int lin, int col) : Keyword(lin, col) {}
+Not::Not(int lin, int col) : Node(lin, col) {}
 
-Not::Not(int lin, int col) : Keyword(lin, col) {}
+Or::Or(int lin, int col) : Node(lin, col) {}
 
-Or::Or(int lin, int col) : Keyword(lin, col) {}
-
-And::And(int lin, int col) : Keyword(lin, col) {}
+And::And(int lin, int col) : Node(lin, col) {}

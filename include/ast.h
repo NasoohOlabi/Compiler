@@ -18,7 +18,6 @@ class arg;
 class Stmt;
 class Stmts;
 
-class Keyword;
 class Program;
 class Var;
 class Integer;
@@ -27,7 +26,7 @@ class Function;
 class Procedure;
 class While;
 class Do;
-class Begin;
+class KBegin;
 class End;
 class If;
 class Then;
@@ -154,12 +153,6 @@ public:
 
 /* Keywords */
 
-class Keyword : public Node
-{
-public:
-	Keyword(int l, int c);
-};
-
 class Program : public Node
 {
 public:
@@ -208,10 +201,10 @@ public:
 	Do(int l, int c);
 };
 
-class Begin : public Node
+class KBegin : public Node
 {
 public:
-	Begin(int l, int c);
+	KBegin(int l, int c);
 };
 
 class End : public Node

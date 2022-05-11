@@ -26,6 +26,7 @@
 		Ident *tIdent;
 }
 
+
 %type <tFunc> func
 %type <tArg> arg
 %type <tArgs> args args_e
@@ -36,9 +37,30 @@
 
 
 
-
 %token <tIdent> IDENT
 %token <tNum> NUM
+
+%token PROGRAM
+%token VAR
+%token INTEGER
+%token REAL
+%token FUNCTION
+%token PROCEDURE
+%token WHILE
+%token DO
+%token BEGIN
+%token END
+%token IF
+%token THEN
+%token ELSE
+%token ARRAY
+%token OF
+%token DIV
+%token NOT
+%token OR
+%token AND
+
+
 
 %token INT
 

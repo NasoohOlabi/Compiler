@@ -1,7 +1,6 @@
 %{
 	#include "ast.h"
 	#include "parser.h"
-<<<<<<< HEAD
 	#include<iostream>
 	#include<string>
 	using std::cout;
@@ -16,7 +15,6 @@
 %option caseless
 %option noyywrap
 %x comment
-=======
 
 %}
 
@@ -56,7 +54,6 @@ Real_Num 					{
 }
 
 "int"      return INT;
->>>>>>> b58d47bb421ba3904b3532ab9123a7c7c4b7b459
 
 
 

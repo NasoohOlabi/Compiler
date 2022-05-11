@@ -12,13 +12,12 @@ Ident::Ident(string s, int l, int c) : Node(l, c)
 	this->name = s;
 }
 
-Func::Func(int t, Ident *n, Args *as, Stmts
-	*ss, int l, int c) : Node(l, c)
+Func::Func(int t, Ident *n, Args *as, Stmts *ss, int l, int c) : Node(l, c)
 {
 	this->type = t;
 	this->name = n;
 	this->args = as;
-	this->stmts = ss;	
+	this->stmts = ss;
 	n->father = this;
 	as->father = this;
 	ss->father = this;
@@ -41,8 +40,7 @@ Args::Args(Arg *a, int l, int c) : Node(l, c)
 	this->args = new vector<Arg *>;
 	this->AddArg(a);
 }
-void
-Args::AddArg(Arg *a)
+void Args::AddArg(Arg *a)
 {
 	this->args->push_back(a);
 	a->father = this;
@@ -58,14 +56,13 @@ Stmts::Stmts(int l, int c) : Node(l, c)
 {
 	this->stmts = NULL;
 }
-Stmts::Stmts(Stmt *s, int l, int c) :	Node(l, c)
+Stmts::Stmts(Stmt *s, int l, int c) : Node(l, c)
 {
 	this->stmts = NULL;
 	this->AddStmt(s);
 }
 
-void
-Stmts::AddStmt(Stmt *s)
+void Stmts::AddStmt(Stmt *s)
 {
 	if (this->stmts == NULL)
 	{
@@ -83,7 +80,6 @@ Stmts::AddStmt(Stmt *s)
 	}
 }
 
-
 Num::Num(int value, int lin, int col) : Node(lin, col)
 {
 	this->value = value;
@@ -93,8 +89,6 @@ Expr::Expr(int lin, int col) : Node(lin, col)
 {
 	this->type = -1;
 }
-
-
 
 ExprStmt::ExprStmt(Expr *expr, int l, int c) : Stmt(l, c)
 {
@@ -108,7 +102,6 @@ NumExpr::NumExpr(Num *n, int l, int c) : Expr(l, c)
 	n->father = this;
 	this->type = 1;
 }
-
 
 IdExpr::IdExpr(Ident *id, int lin, int col) : Expr(lin, col)
 {
@@ -130,3 +123,43 @@ Add::Add(Expr *l, Expr *r, int lin, int col) : Expr(lin, col)
 	left->father = this;
 	right->father = this;
 }
+
+Keyword::Keyword(int lin, int col) : Node(lin, col) {}
+
+Program::Program(int lin, int col) : Keyword(lin, col) {}
+
+Var::Var(int lin, int col) : Keyword(lin, col) {}
+
+Integer::Integer(int lin, int col) : Keyword(lin, col) {}
+
+Real::Real(int lin, int col) : Keyword(lin, col) {}
+
+Function::Function(int lin, int col) : Keyword(lin, col) {}
+
+Procedure::Procedure(int lin, int col) : Keyword(lin, col) {}
+
+While::While(int lin, int col) : Keyword(lin, col) {}
+
+Do::Do(int lin, int col) : Keyword(lin, col) {}
+
+Begin::Begin(int lin, int col) : Keyword(lin, col) {}
+
+End::End(int lin, int col) : Keyword(lin, col) {}
+
+If::If(int lin, int col) : Keyword(lin, col) {}
+
+Then::Then(int lin, int col) : Keyword(lin, col) {}
+
+Else::Else(int lin, int col) : Keyword(lin, col) {}
+
+Array::Array(int lin, int col) : Keyword(lin, col) {}
+
+Of::Of(int lin, int col) : Keyword(lin, col) {}
+
+Div::Div(int lin, int col) : Keyword(lin, col) {}
+
+Not::Not(int lin, int col) : Keyword(lin, col) {}
+
+Or::Or(int lin, int col) : Keyword(lin, col) {}
+
+And::And(int lin, int col) : Keyword(lin, col) {}

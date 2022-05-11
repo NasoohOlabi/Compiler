@@ -1,6 +1,7 @@
 %{
 	#include "ast.h"
 	#include "parser.h"
+<<<<<<< HEAD
 	#include<iostream>
 	#include<string>
 	using std::cout;
@@ -15,17 +16,56 @@
 %option caseless
 %option noyywrap
 %x comment
+=======
 
-lower [a-z]
-upper [A-Z]
-digit [0-9]
+%}
+
+
+/* Options */
+
+%option noyywrap
+%option caseless
+
+
+/* Definitions */
+
+
+Digit 		[0-9]
+Alpha 		[a-z]
+Id      	[{Alpha}_][{Alpha}{Digit}_]*
+Int_Num 	0|([1-9]{Digit}*)
+Real_Num	(0|[1-9][0-9]*)"."[0-9]*([eE][-+]?(0|[1-9][0-9]*))?|"."[0-9]+([eE][-+]?(0|[1-9][0-9]*))?|(0|[1-9][0-9]*)([eE][-+]?(0|[1-9][0-9]*))
+
+%%
+
+\n 					{
+						col = 1;
+						lin++;
+					}
+
+Id 					{
+						cout << "Id:\n" << yytext;
+					}	
+
+Int_Num 					{
+						cout << "Int_Num:\n" << yytext;
+}
+
+Real_Num 					{
+						cout << "Real_Num:\n" << yytext;
+}
+
+"int"      return INT;
+>>>>>>> b58d47bb421ba3904b3532ab9123a7c7c4b7b459
+
+
 
 ordinary [-+=<>@\*\/;%~^:&,\|\[\]\(\)\{\}]
 white_space [ /t/n]
 
-alpha {lower}|{upper}
+alpha [a-z]|[A-Z]
 
-int_num 0|[1-9]{digit}*
+int_num 0|[1-9][0-9]*
 
 
 %%

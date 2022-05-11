@@ -24,6 +24,25 @@
 		Stmt *tStmt;
 		Num *tNum;
 		Ident *tIdent;
+		Program *tProgram;
+		Var *tVar;
+		Integer *tInteger;
+		Real *tReal;
+		Function *tFunction;
+		Procedure *tProcedure;
+		While *tWhile;
+		Do *tDo;
+		Begin *tBegin;
+		End *tEnd;
+		If *tIf;
+		Then *tThen;
+		Else *tElse;
+		Array *tArray;
+		Of *tOf;
+		Div *tDiv;
+		Not *tNot;
+		Or *tOr;
+		And *tAnd;
 }
 
 
@@ -40,29 +59,35 @@
 %token <tIdent> IDENT
 %token <tNum> NUM
 
-%token PROGRAM
-%token VAR
-%token INTEGER
-%token REAL
-%token FUNCTION
-%token PROCEDURE
-%token WHILE
-%token DO
-%token BEGIN
-%token END
-%token IF
-%token THEN
-%token ELSE
-%token ARRAY
-%token OF
-%token DIV
-%token NOT
-%token OR
-%token AND
 
+=======
+>>>>>>> b58d47bb421ba3904b3532ab9123a7c7c4b7b459
 
 
 %token INT
+
+/* New Nodes */
+
+
+%token <tProgram> PROGRAM
+%token <tVar> VAR
+%token <tInteger> INTEGER
+%token <tReal> REAL
+%token <tFunction> FUNCTION
+%token <tProcedure> PROCEDURE
+%token <tWhile> WHILE
+%token <tDo> DO
+%token <tBegin> BEGIN
+%token <tEnd> END
+%token <tIf> IF
+%token <tThen> THEN
+%token <tElse> ELSE
+%token <tArray> ARRAY
+%token <tOf> OF
+%token <tDiv> DIV
+%token <tNot> NOT
+%token <tOr> OR
+%token <tAnd> AND
 
 
 

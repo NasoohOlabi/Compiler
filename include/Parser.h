@@ -50,9 +50,10 @@
      NOT = 276,
      OR = 277,
      AND = 278,
-     IDENT = 279,
-     INT_NUM = 280,
-     REAL_NUM = 281
+     BR = 279,
+     IDENT = 280,
+     INT_NUM = 281,
+     REAL_NUM = 282
    };
 #endif
 /* Tokens.  */
@@ -77,9 +78,10 @@
 #define NOT 276
 #define OR 277
 #define AND 278
-#define IDENT 279
-#define INT_NUM 280
-#define REAL_NUM 281
+#define BR 279
+#define IDENT 280
+#define INT_NUM 281
+#define REAL_NUM 282
 
 
 
@@ -95,7 +97,7 @@ typedef union YYSTYPE {
 	Type *tType;
 } YYSTYPE;
 /* Line 1447 of yacc.c.  */
-#line 99 "../include/Parser.h"
+#line 101 "../include/Parser.h"
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
 # define YYSTYPE_IS_TRIVIAL 1

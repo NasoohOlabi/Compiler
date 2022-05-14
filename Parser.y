@@ -27,7 +27,7 @@
 
 %token PROGRAM VAR INTEGER REAL BOOLEAN FUNCTION PROCEDURE DD //DD is .. (Double Dots)
 
-%token WHILE DO BEG END IF THEN ELSE ARRAY OF DIV NOT OR AND
+%token WHILE DO BEG END IF THEN ELSE ARRAY OF DIV NOT OR AND BR
 
 %token <tIdent> IDENT
 %token <tInt_Num> INT_NUM
@@ -43,6 +43,7 @@
 
 %%
 
+
 type: standard_type 
 					{
 						cout << "Type found :: " << $1->type ;
@@ -50,8 +51,8 @@ type: standard_type
 					}
 				| ARRAY '[' INT_NUM DD INT_NUM ']' OF standard_type
 					{
-						$$ = new Type($8, $3->value, $5->value, lin, col);
 						cout << "Type array found";
+						$$ = new Type($8, $3->value, $5->value, lin, col);
 					}			
 ;
 

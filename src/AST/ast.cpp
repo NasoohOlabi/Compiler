@@ -36,3 +36,22 @@ Real_Num::Real_Num(float v, int l, int c) : Node(l, c)
 {
 	this->value = v;
 }
+
+Standard_Type::Standard_Type(char t, int l, int c) : Node(l, c)
+{
+	this->type = t;
+}
+
+Type::Type(Standard_Type *st, int f, int lst, int l, int c) : Node(l, c)
+{
+	this->std_type = st;
+	this->first = f;
+	this->last = lst;
+	this->is_array = true;
+}
+
+Type::Type(Standard_Type *st, int l, int c) : Node(l, c)
+{
+	this->std_type = st;
+	this->is_array = false;
+}

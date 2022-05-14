@@ -51,3 +51,21 @@ public:
 	float value;
 	Real_Num(float, int, int);
 };
+
+class Standard_Type : public Node
+{
+public:
+	char type;
+	Standard_Type(char, int, int);
+};
+
+class Type : public Node
+{
+public:
+	bool is_array;
+	int first;
+	int last;
+	Standard_Type *std_type;
+	Type(Standard_Type *, int, int, int, int);
+	Type(Standard_Type *, int, int);
+};

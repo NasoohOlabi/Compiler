@@ -19,11 +19,13 @@
 	Ident_List *tIdent_List;
 	Int_Num *tInt_Num;
 	Real_Num *tReal_Num;
+	Standard_Type *tStandard_Type;
+	Type *tType;
 }
 
 /* Tokens Section (Terminals) */
 
-%token PROGRAM VAR INTEGER REAL BOOLEAN FUNCTION PROCEDURE
+%token PROGRAM VAR INTEGER REAL BOOLEAN FUNCTION PROCEDURE DD //DD is .. (Double Dots)
 
 %token WHILE DO BEG END IF THEN ELSE ARRAY OF DIV NOT OR AND
 
@@ -35,15 +37,39 @@
 /* Types Section (Non-Terminals) */
 
 %type <tIdent_List> ident_list
+%type <tStandard_Type> standard_type
+%type <tType> type
+
 
 %%
 
-standard_type: INTEGER  //Maybe turn to node?
-			| REAL
-			| BOOLEAN
-			{
-				cout << "TYPE KEYWORD\n" ;
-			}
+type: standard_type 
+					{
+						cout << "Type found :: " << $1->type ;
+						$$ = new Type($1, lin, col);
+					}
+				| ARRAY '[' INT_NUM DD INT_NUM ']' OF standard_type
+					{
+						$$ = new Type($8, $3->value, $5->value, lin, col);
+						cout << "Type array found";
+					}			
+;
+
+standard_type: INTEGER 
+					{
+						$$ = new Standard_Type('I', lin, col);
+						cout << "INTEGER KEYWORD\n" ;
+					}
+				| REAL
+					{
+						$$ = new Standard_Type('R', lin, col);
+						cout << "REAL KEYWORD\n" ;
+					}			
+				| BOOLEAN
+					{
+						$$ = new Standard_Type('B', lin, col);
+						cout << "BOOLEAN KEYWORD\n" ;
+					}
 ;
 
 ident_list: IDENT

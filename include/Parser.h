@@ -36,22 +36,23 @@
      BOOLEAN = 262,
      FUNCTION = 263,
      PROCEDURE = 264,
-     WHILE = 265,
-     DO = 266,
-     BEG = 267,
-     END = 268,
-     IF = 269,
-     THEN = 270,
-     ELSE = 271,
-     ARRAY = 272,
-     OF = 273,
-     DIV = 274,
-     NOT = 275,
-     OR = 276,
-     AND = 277,
-     IDENT = 278,
-     INT_NUM = 279,
-     REAL_NUM = 280
+     DD = 265,
+     WHILE = 266,
+     DO = 267,
+     BEG = 268,
+     END = 269,
+     IF = 270,
+     THEN = 271,
+     ELSE = 272,
+     ARRAY = 273,
+     OF = 274,
+     DIV = 275,
+     NOT = 276,
+     OR = 277,
+     AND = 278,
+     IDENT = 279,
+     INT_NUM = 280,
+     REAL_NUM = 281
    };
 #endif
 /* Tokens.  */
@@ -62,22 +63,23 @@
 #define BOOLEAN 262
 #define FUNCTION 263
 #define PROCEDURE 264
-#define WHILE 265
-#define DO 266
-#define BEG 267
-#define END 268
-#define IF 269
-#define THEN 270
-#define ELSE 271
-#define ARRAY 272
-#define OF 273
-#define DIV 274
-#define NOT 275
-#define OR 276
-#define AND 277
-#define IDENT 278
-#define INT_NUM 279
-#define REAL_NUM 280
+#define DD 265
+#define WHILE 266
+#define DO 267
+#define BEG 268
+#define END 269
+#define IF 270
+#define THEN 271
+#define ELSE 272
+#define ARRAY 273
+#define OF 274
+#define DIV 275
+#define NOT 276
+#define OR 277
+#define AND 278
+#define IDENT 279
+#define INT_NUM 280
+#define REAL_NUM 281
 
 
 
@@ -89,9 +91,11 @@ typedef union YYSTYPE {
 	Ident_List *tIdent_List;
 	Int_Num *tInt_Num;
 	Real_Num *tReal_Num;
+	Standard_Type *tStandard_Type;
+	Type *tType;
 } YYSTYPE;
 /* Line 1447 of yacc.c.  */
-#line 95 "../include/Parser.h"
+#line 99 "../include/Parser.h"
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
 # define YYSTYPE_IS_TRIVIAL 1

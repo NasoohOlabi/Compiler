@@ -19,6 +19,7 @@ id      	[{alpha}_][{alpha}{digit}_]*
 int_num 	0|([1-9]{digit}*)
 real_num	(0|[1-9][0-9]*)"."[0-9]*([eE][-+]?(0|[1-9][0-9]*))?|"."[0-9]+([eE][-+]?(0|[1-9][0-9]*))?|(0|[1-9][0-9]*)([eE][-+]?(0|[1-9][0-9]*))
 white_space [ /t/n]
+opreators	[+][*]
 
 
 %%
@@ -145,6 +146,16 @@ white_space [ /t/n]
 "and" {
 	col += yyleng;
 	return AND;
+}
+
+".." {
+	col += yyleng;
+	return DD;
+}
+
+{opreators} {
+	col += yyleng;
+	return *yytext;
 }
 
 

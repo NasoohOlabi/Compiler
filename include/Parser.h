@@ -33,23 +33,25 @@
      VAR = 259,
      INTEGER = 260,
      REAL = 261,
-     FUNCTION = 262,
-     PROCEDURE = 263,
-     WHILE = 264,
-     DO = 265,
-     BEG = 266,
-     END = 267,
-     IF = 268,
-     THEN = 269,
-     ELSE = 270,
-     ARRAY = 271,
-     OF = 272,
-     DIV = 273,
-     NOT = 274,
-     OR = 275,
-     AND = 276,
-     INT_NUM = 277,
-     REAL_NUM = 278
+     BOOLEAN = 262,
+     FUNCTION = 263,
+     PROCEDURE = 264,
+     WHILE = 265,
+     DO = 266,
+     BEG = 267,
+     END = 268,
+     IF = 269,
+     THEN = 270,
+     ELSE = 271,
+     ARRAY = 272,
+     OF = 273,
+     DIV = 274,
+     NOT = 275,
+     OR = 276,
+     AND = 277,
+     IDENT = 278,
+     INT_NUM = 279,
+     REAL_NUM = 280
    };
 #endif
 /* Tokens.  */
@@ -57,29 +59,39 @@
 #define VAR 259
 #define INTEGER 260
 #define REAL 261
-#define FUNCTION 262
-#define PROCEDURE 263
-#define WHILE 264
-#define DO 265
-#define BEG 266
-#define END 267
-#define IF 268
-#define THEN 269
-#define ELSE 270
-#define ARRAY 271
-#define OF 272
-#define DIV 273
-#define NOT 274
-#define OR 275
-#define AND 276
-#define INT_NUM 277
-#define REAL_NUM 278
+#define BOOLEAN 262
+#define FUNCTION 263
+#define PROCEDURE 264
+#define WHILE 265
+#define DO 266
+#define BEG 267
+#define END 268
+#define IF 269
+#define THEN 270
+#define ELSE 271
+#define ARRAY 272
+#define OF 273
+#define DIV 274
+#define NOT 275
+#define OR 276
+#define AND 277
+#define IDENT 278
+#define INT_NUM 279
+#define REAL_NUM 280
 
 
 
 
 #if ! defined (YYSTYPE) && ! defined (YYSTYPE_IS_DECLARED)
-typedef int YYSTYPE;
+#line 17 "../Parser.y"
+typedef union YYSTYPE {
+	Ident *tIdent;
+	Ident_List *tIdent_List;
+	Int_Num *tInt_Num;
+	Real_Num *tReal_Num;
+} YYSTYPE;
+/* Line 1447 of yacc.c.  */
+#line 95 "../include/Parser.h"
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
 # define YYSTYPE_IS_TRIVIAL 1

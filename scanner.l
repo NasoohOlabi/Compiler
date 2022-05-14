@@ -52,6 +52,12 @@ white_space [ /t/n]
 }
 
 
+"boolean" {
+	col += yyleng;
+	return BOOLEAN;
+}
+
+
 "function" {
 	col += yyleng;
 	return FUNCTION;
@@ -144,16 +150,19 @@ white_space [ /t/n]
 
 {id} {
 	col += yyleng;
-    //TODO: MAKE NODE ID
+	yylval.tIdent = new Ident(strdup(yytext), lin, col);
+    return IDENT;
 }
 
 {int_num} {
 	col += yyleng;
+	yylval.tInt_Num = new Int_Num(atoi(yytext), lin, col);
     return INT_NUM;
 }
 
 {real_num} {
 	col += yyleng;
+	yylval.tReal_Num = new Real_Num(atof(yytext), lin, col);
     return REAL_NUM;
 }
 

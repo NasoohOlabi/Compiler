@@ -12,27 +12,52 @@
 
 %}
 
-%token PROGRAM VAR INTEGER REAL FUNCTION PROCEDURE WHILE
+/* Union Definition Section */
 
-%token  DO BEG END IF THEN ELSE ARRAY OF DIV NOT OR AND
+%union{
+	Ident *tIdent;
+	Ident_List *tIdent_List;
+	Int_Num *tInt_Num;
+	Real_Num *tReal_Num;
+}
 
-%token INT_NUM REAL_NUM
+/* Tokens Section (Terminals) */
 
+%token PROGRAM VAR INTEGER REAL BOOLEAN FUNCTION PROCEDURE
+
+%token WHILE DO BEG END IF THEN ELSE ARRAY OF DIV NOT OR AND
+
+%token <tIdent> IDENT
+%token <tInt_Num> INT_NUM
+%token <tReal_Num> REAL_NUM
+
+
+/* Types Section (Non-Terminals) */
+
+%type <tIdent_List> ident_list
 
 %%
 
-y: REAL_NUM
-{
-	cout << "REAL NUMBER\n";
-}
+standard_type: INTEGER  //Maybe turn to node?
+			| REAL
+			| BOOLEAN
+			{
+				cout << "TYPE KEYWORD\n" ;
+			}
 ;
 
-x: INT_NUM
-{
-	cout << "INT NUMBER\n";
-}
+ident_list: IDENT
+		{
+			$$ = new Ident_List($1, lin, col);
+			cout << "SINGLE IDENT: " << $1;
+		}
+			| ident_list ',' IDENT
+		{
+			$1->AddIdent($3);
+			cout << "MULTIPLE IDENTS: Added" << $3;
+			$$ = $1;
+		}
 ;
-
 
 
 %%

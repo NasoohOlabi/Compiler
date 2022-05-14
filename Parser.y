@@ -12,18 +12,27 @@
 
 %}
 
+%token PROGRAM VAR INTEGER REAL FUNCTION PROCEDURE WHILE
 
-%token NUM
+%token  DO BEG END IF THEN ELSE ARRAY OF DIV NOT OR AND
+
+%token INT_NUM REAL_NUM
 
 
 %%
 
-
-x: NUM
+y: REAL_NUM
 {
-	cout << "NUMBER";
+	cout << "REAL NUMBER\n";
 }
 ;
+
+x: INT_NUM
+{
+	cout << "INT NUMBER\n";
+}
+;
+
 
 
 %%

@@ -29,11 +29,51 @@
    /* Put the tokens into the symbol table, so that GDB and other debuggers
       know about them.  */
    enum yytokentype {
-     NUM = 258
+     PROGRAM = 258,
+     VAR = 259,
+     INTEGER = 260,
+     REAL = 261,
+     FUNCTION = 262,
+     PROCEDURE = 263,
+     WHILE = 264,
+     DO = 265,
+     BEG = 266,
+     END = 267,
+     IF = 268,
+     THEN = 269,
+     ELSE = 270,
+     ARRAY = 271,
+     OF = 272,
+     DIV = 273,
+     NOT = 274,
+     OR = 275,
+     AND = 276,
+     INT_NUM = 277,
+     REAL_NUM = 278
    };
 #endif
 /* Tokens.  */
-#define NUM 258
+#define PROGRAM 258
+#define VAR 259
+#define INTEGER 260
+#define REAL 261
+#define FUNCTION 262
+#define PROCEDURE 263
+#define WHILE 264
+#define DO 265
+#define BEG 266
+#define END 267
+#define IF 268
+#define THEN 269
+#define ELSE 270
+#define ARRAY 271
+#define OF 272
+#define DIV 273
+#define NOT 274
+#define OR 275
+#define AND 276
+#define INT_NUM 277
+#define REAL_NUM 278
 
 
 

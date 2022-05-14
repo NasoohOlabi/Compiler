@@ -47,12 +47,15 @@
 
 %%
 
-declaration: ident_list //':' type ';' 
+//Just for debugging idents :(
+
+bbbb: IDENT '['
 					{
-						cout << "Declaration";
-						// $$ = new Declaration($2, $4, lin, col);
+						cout << "ident";
+						
 					}
 ;
+
 
 type: standard_type 
 					{

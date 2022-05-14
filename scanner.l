@@ -148,10 +148,12 @@ opreators	[\[\]:;]
 	return AND;
 }
 
+
 ".." {
 	col += yyleng;
 	return DD;
 }
+
 
 {opreators} {
 	col += yyleng;
@@ -159,17 +161,12 @@ opreators	[\[\]:;]
 }
 
 
-{id} {
-	col += yyleng;
-	yylval.tIdent = new Ident(strdup(yytext), lin, col);
-    return IDENT;
-}
-
 {int_num} {
 	col += yyleng;
 	yylval.tInt_Num = new Int_Num(atoi(yytext), lin, col);
     return INT_NUM;
 }
+
 
 {real_num} {
 	col += yyleng;
@@ -182,6 +179,12 @@ opreators	[\[\]:;]
 	/* IGNORE */
 }
 
-. {}
+
+{id} {
+	col += yyleng;
+	yylval.tIdent = new Ident(strdup(yytext), lin, col);
+    return IDENT;
+}
+
 
 %%

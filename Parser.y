@@ -21,13 +21,15 @@
 	Real_Num *tReal_Num;
 	Standard_Type *tStandard_Type;
 	Type *tType;
+	Declaration *tDeclaration;
+	Declarations *tDeclarations;
 }
 
 /* Tokens Section (Terminals) */
 
 %token PROGRAM VAR INTEGER REAL BOOLEAN FUNCTION PROCEDURE DD //DD is .. (Double Dots)
 
-%token WHILE DO BEG END IF THEN ELSE ARRAY OF DIV NOT OR AND BR
+%token WHILE DO BEG END IF THEN ELSE ARRAY OF DIV NOT OR AND
 
 %token <tIdent> IDENT
 %token <tInt_Num> INT_NUM
@@ -39,10 +41,18 @@
 %type <tIdent_List> ident_list
 %type <tStandard_Type> standard_type
 %type <tType> type
+%type <tDeclaration> declaration
+%type <tDeclarations> declarations
 
 
 %%
 
+declaration: ident_list //':' type ';' 
+					{
+						cout << "Declaration";
+						// $$ = new Declaration($2, $4, lin, col);
+					}
+;
 
 type: standard_type 
 					{
@@ -75,13 +85,13 @@ standard_type: INTEGER
 
 ident_list: IDENT
 		{
-			$$ = new Ident_List($1, lin, col);
 			cout << "SINGLE IDENT: " << $1;
+			$$ = new Ident_List($1, lin, col);
 		}
 			| ident_list ',' IDENT
 		{
-			$1->AddIdent($3);
 			cout << "MULTIPLE IDENTS: Added" << $3;
+			$1->AddIdent($3);
 			$$ = $1;
 		}
 ;

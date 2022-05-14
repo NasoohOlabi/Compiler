@@ -12,6 +12,10 @@ using std::string;
 class Node;
 class Ident;
 class Ident_List;
+class Int_Num;
+class Standard_Type;
+class Type;
+class Declaration;
 
 class Node
 {
@@ -68,4 +72,21 @@ public:
 	Standard_Type *std_type;
 	Type(Standard_Type *, int, int, int, int);
 	Type(Standard_Type *, int, int);
+};
+
+class Declaration : public Node
+{
+public:
+	Ident_List *ident_list;
+	Type *type;
+	Declaration(Ident_List *, Type *, int, int);
+};
+
+class Declarations : public Node
+{
+public:
+	vector<Declaration *> *decs;
+	Declarations(int, int);
+	Declarations(Declaration *, int, int);
+	void AddDec(Declaration *);
 };

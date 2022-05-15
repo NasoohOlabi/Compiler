@@ -15,11 +15,11 @@
 
 digit 		[0-9]
 alpha 		[a-z]
-id      	[{alpha}_][{alpha}{digit}_]*
+id      	({alpha}|_)({alpha}|{digit}|_)*
 int_num 	0|([1-9]{digit}*)
 real_num	(0|[1-9][0-9]*)"."[0-9]*([eE][-+]?(0|[1-9][0-9]*))?|"."[0-9]+([eE][-+]?(0|[1-9][0-9]*))?|(0|[1-9][0-9]*)([eE][-+]?(0|[1-9][0-9]*))
 white_space [ /t/n]
-opreators	[\[\]:;]
+opreators	[\[\]:;,]
 
 
 %%
@@ -174,17 +174,15 @@ opreators	[\[\]:;]
     return REAL_NUM;
 }
 
-
-{white_space} {
-	/* IGNORE */
-}
-
-
 {id} {
+	// cout << "\n\nIDENT LEX: " << yytext << "\n\n";
 	col += yyleng;
 	yylval.tIdent = new Ident(strdup(yytext), lin, col);
     return IDENT;
 }
 
+{white_space} {
+	/* IGNORE */
+}
 
 %%

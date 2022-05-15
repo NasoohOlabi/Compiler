@@ -12,6 +12,7 @@
 
 %}
 
+
 /* Union Definition Section */
 
 %union{
@@ -47,19 +48,32 @@
 
 %%
 
-//Just for debugging idents :(
 
-bbbb: IDENT '['
-					{
-						cout << "ident";
-						
-					}
-;
+declarations: declaration 
+						{
+							$$ = new Declarations($1 ,lin, col);
+							cout << "single declaration\n";
+						}
+			| declarations declaration
+				{
+					$1->AddDec($2);
+					$$ = $1;
+					cout << "dec added to declarations\n";
+				}
+			| /* Empty */
+				{
+					cout << "no declerations\n";
+				}
 
+declaration: VAR ident_list ':' type ';'	
+										{
+											cout << "declaration";
+											$$ = new Declaration($2, $4, lin, col);
+										}
 
 type: standard_type 
 					{
-						cout << "Type found :: " << $1->type ;
+						cout << "Type found :: " << $1->type << "\n";
 						$$ = new Type($1, lin, col);
 					}
 				| ARRAY '[' INT_NUM DD INT_NUM ']' OF standard_type
@@ -88,12 +102,12 @@ standard_type: INTEGER
 
 ident_list: IDENT
 		{
-			cout << "SINGLE IDENT: " << $1;
+			cout << "SINGLE IDENT: " << $1->name << "\n";
 			$$ = new Ident_List($1, lin, col);
 		}
 			| ident_list ',' IDENT
 		{
-			cout << "MULTIPLE IDENTS: Added" << $3;
+			cout << "MULTIPLE IDENTS: Added\n" << $3;
 			$1->AddIdent($3);
 			$$ = $1;
 		}

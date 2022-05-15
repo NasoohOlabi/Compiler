@@ -85,7 +85,7 @@
 
 
 #if ! defined (YYSTYPE) && ! defined (YYSTYPE_IS_DECLARED)
-#line 17 "../Parser.y"
+#line 18 "../Parser.y"
 typedef union YYSTYPE {
 	Ident *tIdent;
 	Ident_List *tIdent_List;
@@ -93,9 +93,11 @@ typedef union YYSTYPE {
 	Real_Num *tReal_Num;
 	Standard_Type *tStandard_Type;
 	Type *tType;
+	Declaration *tDeclaration;
+	Declarations *tDeclarations;
 } YYSTYPE;
 /* Line 1447 of yacc.c.  */
-#line 99 "../include/Parser.h"
+#line 101 "../include/Parser.h"
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
 # define YYSTYPE_IS_TRIVIAL 1

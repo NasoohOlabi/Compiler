@@ -107,3 +107,9 @@ void Declarations::AddDec(Declaration *dec)
 	this->decs->push_back(dec);
 	dec->father = this;
 }
+
+Arguments::Arguments(Parameter_List *p_lst, int l, int c) : Node(l, c)
+{
+	this->param_lst = p_lst;
+	p_lst->father = this;
+}

@@ -23,15 +23,17 @@
 	Standard_Type *tStandard_Type;
 	Type *tType;
 	Parameter *tParameter;
+	Parameter_List *tParameter_List;
 	Declaration *tDeclaration;
 	Declarations *tDeclarations;
+	Arguments *tArguments;
 }
 
 /* Tokens Section (Terminals) */
 
 %token PROGRAM VAR INTEGER REAL BOOLEAN FUNCTION PROCEDURE DD //DD is .. (Double Dots)
 
-%token WHILE DO BEG END IF THEN ELSE ARRAY OF DIV NOT OR AND
+%token WHILE DO BEG END IF THEN ELSE ARRAY OF UNARY_OPERATOR
 
 %token <tIdent> IDENT
 %token <tInt_Num> INT_NUM
@@ -44,11 +46,28 @@
 %type <tStandard_Type> standard_type
 %type <tType> type
 %type <tParameter> parameter
+%type <tParameter_List> parameter_list
 %type <tDeclaration> declaration
 %type <tDeclarations> declarations
+%type <tArguments> arguments
 
 
 %%
+
+
+
+
+
+arguments: '(' parameter_list ')'
+						{
+							$$ = new Arguments($2 ,lin, col);
+							cout << "arguments\n";
+						}
+			| /* Empty */
+				{
+					cout << "no arguments\n";
+				}
+;
 
 
 declarations: declaration 
@@ -66,12 +85,27 @@ declarations: declaration
 				{
 					cout << "no declerations\n";
 				}
+;
 
 declaration: VAR parameter ';'	
 										{
 											cout << "declaration\n";
 											$$ = new Declaration($2, lin, col);
 										}
+;
+
+parameter_list: parameter
+						{
+							$$ = new Parameter_List($1 ,lin, col);
+							cout << "single parameter\n";
+						}
+						| parameter_list ';' parameter
+						{
+							cout << "multiple parameterss\n";
+							$1->AddParam($3);
+							$$ = $1;
+						}
+;
 
 parameter: ident_list ':' type	{
 									cout << "Parameter\n";
@@ -115,7 +149,7 @@ ident_list: IDENT
 		}
 			| ident_list ',' IDENT
 		{
-			cout << "MULTIPLE IDENTS: Added\n" << $3;
+			cout << "MULTIPLE IDENTS: Added\n";
 			$1->AddIdent($3);
 			$$ = $1;
 		}

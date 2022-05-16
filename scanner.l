@@ -20,6 +20,7 @@ int_num 	0|([1-9]{digit}*)
 real_num	(0|[1-9][0-9]*)"."[0-9]*([eE][-+]?(0|[1-9][0-9]*))?|"."[0-9]+([eE][-+]?(0|[1-9][0-9]*))?|(0|[1-9][0-9]*)([eE][-+]?(0|[1-9][0-9]*))
 white_space [ /t/n]
 opreators	[\[\]:;,)(]
+unary_operators "<="|">="|"<>"|"and"|"or"|"not"|"div"|[+*/\-=<>]
 
 
 %%
@@ -125,33 +126,15 @@ opreators	[\[\]:;,)(]
 }
 
 
-"div" {
-	col += yyleng;
-	return DIV;
-}
-
-
-"not" {
-	col += yyleng;
-	return NOT;
-}
-
-
-"or" {
-	col += yyleng;
-	return OR;
-}
-
-
-"and" {
-	col += yyleng;
-	return AND;
-}
-
-
 ".." {
 	col += yyleng;
 	return DD;
+}
+
+
+{unary_operators} {
+	col += yyleng;
+	return UNARY_OPERATOR;
 }
 
 

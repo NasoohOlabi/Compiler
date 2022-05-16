@@ -109,3 +109,10 @@ public:
 	Declarations(Declaration *, int, int);
 	void AddDec(Declaration *);
 };
+
+class Arguments : public Node
+{
+public:
+	Parameter_List *param_lst;
+	Arguments(Parameter_List *, int, int);
+};

@@ -14,11 +14,21 @@ class Ident;
 class Ident_List;
 class Int_Num;
 class Real_Num;
+class Unary_Operator;
 class Standard_Type;
 class Type;
 class Parameter;
 class Declaration;
 class Declarations;
+class Expression;
+class Int_Expression;
+class Real_Expression;
+class Boolean_Expression;
+class Ident_Expression;
+class Expression_Expression;
+class Unary_Expression;
+class Not_Expression;
+class Expression_List;
 
 class Node
 {
@@ -57,6 +67,13 @@ class Real_Num : public Node
 public:
 	float value;
 	Real_Num(float, int, int);
+};
+
+class Unary_Operator : public Node
+{
+public:
+	string op;
+	Unary_Operator(string, int, int);
 };
 
 class Standard_Type : public Node
@@ -115,4 +132,65 @@ class Arguments : public Node
 public:
 	Parameter_List *param_lst;
 	Arguments(Parameter_List *, int, int);
+};
+class Expression : public Node
+{
+public:
+	Expression(int, int);
+};
+
+class Int_Expression : public Expression
+{
+public:
+	int value;
+	Int_Expression(int, int, int);
+};
+class Real_Expression : public Expression
+{
+public:
+	float value;
+	Real_Expression(float, int, int);
+};
+class Boolean_Expression : public Expression
+{
+public:
+	bool value;
+	Boolean_Expression(bool, int, int);
+};
+class Ident_Expression : public Expression
+{
+public:
+	Ident *ident;
+	Expression_List *expr_lst;
+	Ident_Expression(Ident *, Expression_List *, int, int);
+	Ident_Expression(Ident *, int, int);
+};
+class Expression_Expression : public Expression
+{
+public:
+	Expression *expression;
+	Expression_Expression(Expression *, int, int);
+};
+class Unary_Expression : public Expression
+{
+public:
+	Expression *left_exp;
+	Unary_Operator *op;
+	Expression *right_exp;
+	Unary_Expression(Expression *, Unary_Operator *, Expression *, int, int);
+};
+class Not_Expression : public Expression
+{
+public:
+	Expression *expression;
+	Not_Expression(Expression *, int, int);
+};
+
+class Expression_List : public Node
+{
+public:
+	vector<Expression *> *exprs;
+	Expression_List(int, int);
+	Expression_List(Expression *, int, int);
+	void AddExpr(Expression *);
 };

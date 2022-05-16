@@ -48,7 +48,8 @@
      OF = 274,
      IDENT = 275,
      INT_NUM = 276,
-     REAL_NUM = 277
+     REAL_NUM = 277,
+     UNARY_OPERATOR = 278
    };
 #endif
 /* Tokens.  */
@@ -72,6 +73,7 @@
 #define IDENT 275
 #define INT_NUM 276
 #define REAL_NUM 277
+#define UNARY_OPERATOR 278
 
 
 
@@ -83,6 +85,7 @@ typedef union YYSTYPE {
 	Ident_List *tIdent_List;
 	Int_Num *tInt_Num;
 	Real_Num *tReal_Num;
+	Unary_Operator *tUnary_Operator;
 	Standard_Type *tStandard_Type;
 	Type *tType;
 	Parameter *tParameter;
@@ -92,7 +95,7 @@ typedef union YYSTYPE {
 	Arguments *tArguments;
 } YYSTYPE;
 /* Line 1447 of yacc.c.  */
-#line 96 "../include/Parser.h"
+#line 99 "../include/Parser.h"
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
 # define YYSTYPE_IS_TRIVIAL 1

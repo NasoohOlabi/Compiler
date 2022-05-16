@@ -20,6 +20,7 @@
 	Ident_List *tIdent_List;
 	Int_Num *tInt_Num;
 	Real_Num *tReal_Num;
+	Unary_Operator *tUnary_Operator;
 	Standard_Type *tStandard_Type;
 	Type *tType;
 	Parameter *tParameter;
@@ -33,11 +34,12 @@
 
 %token PROGRAM VAR INTEGER REAL BOOLEAN FUNCTION PROCEDURE DD //DD is .. (Double Dots)
 
-%token WHILE DO BEG END IF THEN ELSE ARRAY OF UNARY_OPERATOR
+%token WHILE DO BEG END IF THEN ELSE ARRAY OF
 
 %token <tIdent> IDENT
 %token <tInt_Num> INT_NUM
 %token <tReal_Num> REAL_NUM
+%token <tUnary_Operator> UNARY_OPERATOR
 
 
 /* Types Section (Non-Terminals) */

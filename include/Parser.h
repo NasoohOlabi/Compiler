@@ -93,11 +93,12 @@ typedef union YYSTYPE {
 	Real_Num *tReal_Num;
 	Standard_Type *tStandard_Type;
 	Type *tType;
+	Parameter *tParameter;
 	Declaration *tDeclaration;
 	Declarations *tDeclarations;
 } YYSTYPE;
 /* Line 1447 of yacc.c.  */
-#line 101 "../include/Parser.h"
+#line 102 "../include/Parser.h"
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
 # define YYSTYPE_IS_TRIVIAL 1

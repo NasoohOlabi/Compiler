@@ -22,6 +22,7 @@
 	Real_Num *tReal_Num;
 	Standard_Type *tStandard_Type;
 	Type *tType;
+	Parameter *tParameter;
 	Declaration *tDeclaration;
 	Declarations *tDeclarations;
 }
@@ -42,6 +43,7 @@
 %type <tIdent_List> ident_list
 %type <tStandard_Type> standard_type
 %type <tType> type
+%type <tParameter> parameter
 %type <tDeclaration> declaration
 %type <tDeclarations> declarations
 
@@ -65,11 +67,17 @@ declarations: declaration
 					cout << "no declerations\n";
 				}
 
-declaration: VAR ident_list ':' type ';'	
+declaration: VAR parameter ';'	
 										{
-											cout << "declaration";
-											$$ = new Declaration($2, $4, lin, col);
+											cout << "declaration\n";
+											$$ = new Declaration($2, lin, col);
 										}
+
+parameter: ident_list ':' type	{
+									cout << "Parameter\n";
+									$$ = new Parameter($1, $3, lin, col);
+								}
+;
 
 type: standard_type 
 					{

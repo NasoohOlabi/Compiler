@@ -13,9 +13,12 @@ class Node;
 class Ident;
 class Ident_List;
 class Int_Num;
+class Real_Num;
 class Standard_Type;
 class Type;
+class Parameter;
 class Declaration;
+class Declarations;
 
 class Node
 {
@@ -74,12 +77,28 @@ public:
 	Type(Standard_Type *, int, int);
 };
 
-class Declaration : public Node
+class Parameter : public Node
 {
 public:
 	Ident_List *ident_list;
 	Type *type;
-	Declaration(Ident_List *, Type *, int, int);
+	Parameter(Ident_List *, Type *, int, int);
+};
+
+class Parameter_List : public Node
+{
+public:
+	vector<Parameter *> *params;
+	Parameter_List(int, int);
+	Parameter_List(Parameter *, int, int);
+	void AddParam(Parameter *);
+};
+
+class Declaration : public Node
+{
+public:
+	Parameter *param;
+	Declaration(Parameter *, int, int);
 };
 
 class Declarations : public Node

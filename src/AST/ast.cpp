@@ -60,12 +60,35 @@ Type::Type(Standard_Type *st, int l, int c) : Node(l, c)
 	st->father = this;
 }
 
-Declaration::Declaration(Ident_List *id_lst, Type *t, int l, int c) : Node(l, c)
+Parameter::Parameter(Ident_List *id_lst, Type *t, int l, int c) : Node(l, c)
 {
 	this->ident_list = id_lst;
 	this->type = t;
 	id_lst->father = this;
 	t->father = this;
+}
+
+Parameter_List::Parameter_List(int l, int c) : Node(l, c)
+{
+	this->params = new vector<Parameter *>;
+}
+
+Parameter_List::Parameter_List(Parameter *p, int l, int c) : Node(l, c)
+{
+	this->params = new vector<Parameter *>;
+	this->AddParam(p);
+}
+
+void Parameter_List::AddParam(Parameter *p)
+{
+	this->params->push_back(p);
+	p->father = this;
+}
+
+Declaration::Declaration(Parameter *p, int l, int c) : Node(l, c)
+{
+	this->param = p;
+	p->father = this;
 }
 
 Declarations::Declarations(int l, int c) : Node(l, c)

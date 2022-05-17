@@ -262,6 +262,9 @@ ident_list: IDENT
 		}
 ;
 
+/*
+
+
 subprogram_head: FUNCTION IDENT arguments ':' standard_type ';'
 				 | PROCEDURE IDENT arguments ';'
 
@@ -276,13 +279,15 @@ statement_list : statement
 				 | statement_list ';' statement
 
 opional_statement: statement_list
-					| /*Empty*/
+					| Empty
 compound_statement: BEG opional_statement END
 
 subprogram_declaration: subprogram_head compound_statement
 
 subprogram_declarations : subprogram_declarations subprogram_declaration ';'
-						  | /*Empty*/
+						  | Empty
+
+*/
 
 %%
 

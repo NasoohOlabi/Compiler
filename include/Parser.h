@@ -108,9 +108,11 @@ typedef union YYSTYPE {
 	Unary_Expression *tUnary_Expression;
 	Not_Expression *tNot_Expression;
 	Expression_List *tExpression_List;
+	Procedure_Statement *tProcedure_Statement;
+	Variable *tVariable;
 } YYSTYPE;
 /* Line 1447 of yacc.c.  */
-#line 114 "../include/Parser.h"
+#line 116 "../include/Parser.h"
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
 # define YYSTYPE_IS_TRIVIAL 1

@@ -131,6 +131,11 @@ unary_operators "<="|">="|"<>"|"and"|"or"|"div"|[+*/\-=<>]
 	return DD;
 }
 
+":=" {
+	col += yyleng;
+	return ASSIGN;
+}
+
 "not" {
 	col += yyleng;
 	return NOT;
@@ -181,5 +186,8 @@ unary_operators "<="|">="|"<>"|"and"|"or"|"div"|[+*/\-=<>]
 {white_space} {
 	/* IGNORE */
 }
+
+
+
 
 %%

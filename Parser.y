@@ -38,12 +38,16 @@
 	Not_Expression *tNot_Expression;
 	Expression_List *tExpression_List;
 	Procedure_Statement *tProcedure_Statement;
+	Statement *tStatement;
+	Statement_list * tStatement_list;
+	Opional_statement * tOpional_statement;
+	Compound_statement * tCompound_statement;
 	Variable *tVariable;
 }
 
 /* Tokens Section (Terminals) */
 
-%token PROGRAM VAR INTEGER REAL BOOLEAN FUNCTION PROCEDURE DD //DD is .. (Double Dots)
+%token PROGRAM VAR INTEGER REAL BOOLEAN FUNCTION PROCEDURE DD ASSIGN //DD is .. (Double Dots)
 
 %token WHILE DO BEG END IF THEN ELSE ARRAY OF TRUE FALSE NOT
 
@@ -52,6 +56,10 @@
 %token <tReal_Num> REAL_NUM
 %token <tUnary_Operator> UNARY_OPERATOR
 
+/*--*/
+
+%nonassoc IF_PREC
+%nonassoc ELSE
 
 /* Types Section (Non-Terminals) */
 
@@ -76,6 +84,10 @@
 %type <tExpression_List> expression_list
 %type <tProcedure_Statement> procedure_statement
 %type <tVariable> variable
+%type <tStatement> statement
+%type <tStatement_list> statement_list
+%type <tOpional_statement> opional_statement 
+%type <tCompound_statement> compound_statement
 
 %%
 
@@ -262,32 +274,67 @@ ident_list: IDENT
 		}
 ;
 
-/*
 
 
+/* 
 subprogram_head: FUNCTION IDENT arguments ':' standard_type ';'
-				 | PROCEDURE IDENT arguments ';'
+				 | PROCEDURE IDENT arguments ';' */
 
-statement : variable expression
+statement : variable ASSIGN expression
+					{
+						 $$= new Var_ass_exp($1, $3, line, col);
+					}
 			| procedure_statement
+					{
+						$$ = $1;
+					}
 			| compound_statement
-			| IF expression THEN statement
+					{
+						 $$= new St_compound_statement($1->optional_statements, line, col);
+					}
+			| IF expression THEN statement %prec IF_PREC 
+					{
+						 $$= new If($2, $4, line, col);
+					}
 			| IF expression THEN statement ELSE statement
+					{
+						 $$= new If_else($2, $4, $6, line, col);
+					}
 			| WHILE expression DO statement
-
+					{
+						 $$= new While($2, $4, line, col);
+					}
+;
 statement_list : statement 
+					{
+						$$= new Statement_list($1, line, col);
+					}
 				 | statement_list ';' statement
-
+				 	{
+						$1->AddStatement($2); 
+						$$=$1;
+					}
+;
 opional_statement: statement_list
-					| Empty
+					{
+						$$= new Optional_statements($1, line, col);
+					}
+					| /* Empty */
+					{
+						$$= new Optional_statements(NULL, line, col);
+					}
+;
 compound_statement: BEG opional_statement END
-
-subprogram_declaration: subprogram_head compound_statement
-
+					{
+						$$= new Compound_statement($2, line, col);
+					}
+;
+/* 
+subprogram_declaration: subprogram_head compound_statement */
+/* 
 subprogram_declarations : subprogram_declarations subprogram_declaration ';'
-						  | Empty
+						  | Empty */
 
-*/
 
 %%
 

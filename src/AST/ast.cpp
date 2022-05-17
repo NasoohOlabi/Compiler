@@ -205,6 +205,107 @@ Procedure_Statement::Procedure_Statement(Ident *i, Expression_List *el, int l, i
 	el->father = this;
 }
 
+Statement::Statement(int a,int b):Node(a,b)
+{
+	this->next=NULL;
+	this->perv=NULL;
+}
+
+
+Var_ass_exp::Var_ass_exp(Variable * v, Expression * e, int lin, int col) :Statement(lin, col)
+{
+	this->variable = v;
+	this->expression = e;
+	if (v != NULL)
+		v->father = this;
+	if (e != NULL)
+		e->father = this;
+}
+
+
+Compound_statement::Compound_statement(Optional_statements * os, int lin, int col) :Node(lin, col)
+{
+	this->optional_statements = os;
+	if (os != NULL)
+		os->father = this;
+}
+
+
+St_compound_statement::St_compound_statement(Optional_statements * os, int lin, int col) :Statement(lin, col)
+{
+	this->optional_statements = os;
+	if (os != NULL)
+		os->father = this;
+}
+
+
+
+If::If(Expression * e, Statement * s, int lin, int col) :Statement(lin, col)
+{
+	this->expression = e;
+	this->statement = s;
+	if (e != NULL)
+		e->father = this;
+	if (s != NULL)
+		s->father = this;
+}
+
+
+If_else::If_else(Expression * e, Statement * s1, Statement * s2, int lin, int col) :Statement(lin, col)
+{
+	this->statement1 = s1;
+	this->statement2 = s2;
+	this->expression = e;
+	if (s1 != NULL)
+		s1->father = this;
+	if (s2 != NULL)
+		s2->father = this;
+	if (e != NULL)
+		e->father = this;
+}
+
+
+While::While(Expression * e, Statement * s, int lin, int col) :Statement(lin, col)
+{
+	this->expression = e;
+	this->statement = s;
+	if (e != NULL)
+		e->father = this;
+	if (s != NULL)
+		s->father = this;
+}
+
+
+Optional_statements::Optional_statements(Statement_list * sl, int lin, int col) :Node(lin, col)
+{
+	this->statement_list = sl;
+	if (sl != NULL)
+		sl->father = this;
+}
+
+
+Statement_list::Statement_list(int lin, int col)
+	:Node(lin, col)
+{
+	this->IDs = new vector<Statement *>;
+}
+
+
+Statement_list::Statement_list(Statement * s, int lin, int col) :Node(lin, col)
+{
+	this->IDs = new vector<Statement *>;
+	this->AddStatement(s);
+}
+
+
+void Statement_list::AddStatement(Statement * s)
+{
+	this->IDs->push_back(s);
+	if (s != NULL)
+		s->father = this;
+}
+
+
 Variable::Variable(Ident *i, int l, int c) : Node(l, c)
 {
 	this->id = i;

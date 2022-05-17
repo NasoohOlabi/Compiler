@@ -37,6 +37,8 @@
 	Unary_Expression *tUnary_Expression;
 	Not_Expression *tNot_Expression;
 	Expression_List *tExpression_List;
+	Procedure_Statement *tProcedure_Statement;
+	Variable *tVariable;
 }
 
 /* Tokens Section (Terminals) */
@@ -72,10 +74,35 @@
 %type <tNot_Expression> not_expression
 */
 %type <tExpression_List> expression_list
-
+%type <tProcedure_Statement> procedure_statement
+%type <tVariable> variable
 
 %%
 
+variable: IDENT
+				{
+					cout << "variable\n";
+					$$ = new Variable($1, lin, col);
+				}
+			| IDENT '[' expression ']'
+				{
+					cout << "variable with expr\n";
+					$$ = new Variable($1, $3, lin, col);
+				}
+;
+
+
+procedure_statement: IDENT
+							{
+								cout << "procedure stmt\n";
+								$$ = new Procedure_Statement($1, lin, col);
+							}
+					| IDENT '(' expression_list ')'
+							{
+								cout << "procedure stmt with list\n";
+								$$ = new Procedure_Statement($1, $3, lin, col);
+							}
+;
 
 
 expression_list: expression

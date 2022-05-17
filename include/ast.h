@@ -29,6 +29,8 @@ class Expression_Expression;
 class Unary_Expression;
 class Not_Expression;
 class Expression_List;
+class Procedure_Statement;
+class Variable;
 
 class Node
 {
@@ -193,4 +195,22 @@ public:
 	Expression_List(int, int);
 	Expression_List(Expression *, int, int);
 	void AddExpr(Expression *);
+};
+
+class Procedure_Statement : public Node
+{
+public:
+	Ident *id;
+	Expression_List *expr_lst;
+	Procedure_Statement(Ident *, int, int);
+	Procedure_Statement(Ident *, Expression_List *, int, int);
+};
+
+class Variable : public Node
+{
+public:
+	Ident *id;
+	Expression *expr;
+	Variable(Ident *, int, int);
+	Variable(Ident *, Expression *, int, int);
 };

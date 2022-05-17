@@ -190,3 +190,31 @@ void Expression_List::AddExpr(Expression *e)
 	this->exprs->push_back(e);
 	e->father = this;
 }
+
+Procedure_Statement::Procedure_Statement(Ident *i, int l, int c) : Node(l, c)
+{
+	this->id = i;
+	i->father = this;
+}
+
+Procedure_Statement::Procedure_Statement(Ident *i, Expression_List *el, int l, int c) : Node(l, c)
+{
+	this->id = i;
+	i->father = this;
+	this->expr_lst = el;
+	el->father = this;
+}
+
+Variable::Variable(Ident *i, int l, int c) : Node(l, c)
+{
+	this->id = i;
+	i->father = this;
+}
+
+Variable::Variable(Ident *i, Expression *e, int l, int c) : Node(l, c)
+{
+	this->id = i;
+	i->father = this;
+	this->expr = e;
+	e->father = this;
+}

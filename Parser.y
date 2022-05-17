@@ -40,14 +40,14 @@
 	Procedure_Statement *tProcedure_Statement;
 	Statement *tStatement;
 	Statement_list * tStatement_list;
-	Opional_statement * tOpional_statement;
+	Optional_Statements *tOptional_Statements;
 	Compound_statement * tCompound_statement;
 	Variable *tVariable;
 }
 
 /* Tokens Section (Terminals) */
 
-%token PROGRAM VAR INTEGER REAL BOOLEAN FUNCTION PROCEDURE DD ASSIGN //DD is .. (Double Dots)
+%token PROGRAM VAR INTEGER REAL BOOLEAN FUNCTION PROCEDURE DD ASSIGN
 
 %token WHILE DO BEG END IF THEN ELSE ARRAY OF TRUE FALSE NOT
 
@@ -86,7 +86,7 @@
 %type <tVariable> variable
 %type <tStatement> statement
 %type <tStatement_list> statement_list
-%type <tOpional_statement> opional_statement 
+%type <tOptional_Statements> optional_statements
 %type <tCompound_statement> compound_statement
 
 %%
@@ -311,11 +311,11 @@ statement_list : statement
 					}
 				 | statement_list ';' statement
 				 	{
-						$1->AddStatement($2); 
+						$1->AddStatement($3); 
 						$$=$1;
 					}
 ;
-opional_statement: statement_list
+optional_statements: statement_list
 					{
 						$$= new Optional_statements($1, line, col);
 					}
@@ -324,7 +324,7 @@ opional_statement: statement_list
 						$$= new Optional_statements(NULL, line, col);
 					}
 ;
-compound_statement: BEG opional_statement END
+compound_statement: BEG optional_statements END
 					{
 						$$= new Compound_statement($2, line, col);
 					}

@@ -205,14 +205,13 @@ Procedure_Statement::Procedure_Statement(Ident *i, Expression_List *el, int l, i
 	el->father = this;
 }
 
-Statement::Statement(int a,int b):Node(a,b)
+Statement::Statement(int a, int b) : Node(a, b)
 {
-	this->next=NULL;
-	this->perv=NULL;
+	this->next = NULL;
+	this->perv = NULL;
 }
 
-
-Var_ass_exp::Var_ass_exp(Variable * v, Expression * e, int lin, int col) :Statement(lin, col)
+Var_ass_exp::Var_ass_exp(Variable *v, Expression *e, int lin, int col) : Statement(lin, col)
 {
 	this->variable = v;
 	this->expression = e;
@@ -222,25 +221,21 @@ Var_ass_exp::Var_ass_exp(Variable * v, Expression * e, int lin, int col) :Statem
 		e->father = this;
 }
 
-
-Compound_statement::Compound_statement(Optional_statements * os, int lin, int col) :Node(lin, col)
+Compound_statement::Compound_statement(Optional_Statements *os, int lin, int col) : Node(lin, col)
 {
 	this->optional_statements = os;
 	if (os != NULL)
 		os->father = this;
 }
 
-
-St_compound_statement::St_compound_statement(Optional_statements * os, int lin, int col) :Statement(lin, col)
+St_compound_statement::St_compound_statement(Optional_Statements *os, int lin, int col) : Statement(lin, col)
 {
 	this->optional_statements = os;
 	if (os != NULL)
 		os->father = this;
 }
 
-
-
-If::If(Expression * e, Statement * s, int lin, int col) :Statement(lin, col)
+If::If(Expression *e, Statement *s, int lin, int col) : Statement(lin, col)
 {
 	this->expression = e;
 	this->statement = s;
@@ -250,8 +245,7 @@ If::If(Expression * e, Statement * s, int lin, int col) :Statement(lin, col)
 		s->father = this;
 }
 
-
-If_else::If_else(Expression * e, Statement * s1, Statement * s2, int lin, int col) :Statement(lin, col)
+If_else::If_else(Expression *e, Statement *s1, Statement *s2, int lin, int col) : Statement(lin, col)
 {
 	this->statement1 = s1;
 	this->statement2 = s2;
@@ -264,8 +258,7 @@ If_else::If_else(Expression * e, Statement * s1, Statement * s2, int lin, int co
 		e->father = this;
 }
 
-
-While::While(Expression * e, Statement * s, int lin, int col) :Statement(lin, col)
+While::While(Expression *e, Statement *s, int lin, int col) : Statement(lin, col)
 {
 	this->expression = e;
 	this->statement = s;
@@ -275,36 +268,31 @@ While::While(Expression * e, Statement * s, int lin, int col) :Statement(lin, co
 		s->father = this;
 }
 
-
-Optional_statements::Optional_statements(Statement_list * sl, int lin, int col) :Node(lin, col)
+Optional_Statements::Optional_Statements(Statement_list *sl, int lin, int col) : Node(lin, col)
 {
 	this->statement_list = sl;
 	if (sl != NULL)
 		sl->father = this;
 }
 
-
 Statement_list::Statement_list(int lin, int col)
-	:Node(lin, col)
+	: Node(lin, col)
 {
 	this->IDs = new vector<Statement *>;
 }
 
-
-Statement_list::Statement_list(Statement * s, int lin, int col) :Node(lin, col)
+Statement_list::Statement_list(Statement *s, int lin, int col) : Node(lin, col)
 {
 	this->IDs = new vector<Statement *>;
 	this->AddStatement(s);
 }
 
-
-void Statement_list::AddStatement(Statement * s)
+void Statement_list::AddStatement(Statement *s)
 {
 	this->IDs->push_back(s);
 	if (s != NULL)
 		s->father = this;
 }
-
 
 Variable::Variable(Ident *i, int l, int c) : Node(l, c)
 {

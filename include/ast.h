@@ -211,13 +211,12 @@ public:
 	Procedure_Statement(Ident *, Expression_List *, int, int);
 };
 
-
-class Optional_statements : public Node
+class Optional_Statements : public Node
 {
 public:
-	Statement_list * statement_list;
+	Statement_list *statement_list;
 	// bool returnValue = false;
-	Optional_statements(Statement_list *, int, int);
+	Optional_Statements(Statement_list *, int, int);
 };
 
 class Statement_list : public Node
@@ -230,7 +229,7 @@ public:
 	void AddStatement(Statement *);
 };
 
-class Statement: public Node
+class Statement : public Node
 {
 public:
 	Statement *perv;
@@ -238,7 +237,7 @@ public:
 	Statement(int, int);
 };
 
-class Var_ass_exp: public Statement
+class Var_ass_exp : public Statement
 {
 public:
 	Variable *variable;
@@ -247,23 +246,20 @@ public:
 	Var_ass_exp(Variable *, Expression *, int, int);
 };
 
-
 class Compound_statement : public Node
 {
 public:
-	Optional_statements *optional_statements;
+	Optional_Statements *optional_statements;
 	// bool returnValue = false;
-	Compound_statement(Optional_statements *, int, int);
+	Compound_statement(Optional_Statements *, int, int);
 };
-
 
 class St_compound_statement : public Statement
 {
 public:
-	Optional_statements *optional_statements;
-	St_compound_statement(Optional_statements *, int, int);
+	Optional_Statements *optional_statements;
+	St_compound_statement(Optional_Statements *, int, int);
 };
-
 
 class If : public Statement
 {
@@ -272,7 +268,7 @@ public:
 	Statement *statement;
 	If(Expression *, Statement *, int, int);
 };
-class If_else :public Statement
+class If_else : public Statement
 {
 public:
 	Expression *expression;
@@ -281,7 +277,6 @@ public:
 	If_else(Expression *, Statement *, Statement *, int, int);
 };
 
-
 class While : public Statement
 {
 public:
@@ -289,8 +284,6 @@ public:
 	Statement *statement;
 	While(Expression *, Statement *, int, int);
 };
-
-
 
 class Variable : public Node
 {

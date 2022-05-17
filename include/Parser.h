@@ -37,22 +37,24 @@
      FUNCTION = 263,
      PROCEDURE = 264,
      DD = 265,
-     WHILE = 266,
-     DO = 267,
-     BEG = 268,
-     END = 269,
-     IF = 270,
-     THEN = 271,
-     ELSE = 272,
-     ARRAY = 273,
-     OF = 274,
-     TRUE = 275,
-     FALSE = 276,
-     NOT = 277,
-     IDENT = 278,
-     INT_NUM = 279,
-     REAL_NUM = 280,
-     UNARY_OPERATOR = 281
+     ASSIGN = 266,
+     WHILE = 267,
+     DO = 268,
+     BEG = 269,
+     END = 270,
+     IF = 271,
+     THEN = 272,
+     ELSE = 273,
+     ARRAY = 274,
+     OF = 275,
+     TRUE = 276,
+     FALSE = 277,
+     NOT = 278,
+     IDENT = 279,
+     INT_NUM = 280,
+     REAL_NUM = 281,
+     UNARY_OPERATOR = 282,
+     IF_PREC = 283
    };
 #endif
 /* Tokens.  */
@@ -64,22 +66,24 @@
 #define FUNCTION 263
 #define PROCEDURE 264
 #define DD 265
-#define WHILE 266
-#define DO 267
-#define BEG 268
-#define END 269
-#define IF 270
-#define THEN 271
-#define ELSE 272
-#define ARRAY 273
-#define OF 274
-#define TRUE 275
-#define FALSE 276
-#define NOT 277
-#define IDENT 278
-#define INT_NUM 279
-#define REAL_NUM 280
-#define UNARY_OPERATOR 281
+#define ASSIGN 266
+#define WHILE 267
+#define DO 268
+#define BEG 269
+#define END 270
+#define IF 271
+#define THEN 272
+#define ELSE 273
+#define ARRAY 274
+#define OF 275
+#define TRUE 276
+#define FALSE 277
+#define NOT 278
+#define IDENT 279
+#define INT_NUM 280
+#define REAL_NUM 281
+#define UNARY_OPERATOR 282
+#define IF_PREC 283
 
 
 
@@ -109,10 +113,14 @@ typedef union YYSTYPE {
 	Not_Expression *tNot_Expression;
 	Expression_List *tExpression_List;
 	Procedure_Statement *tProcedure_Statement;
+	Statement *tStatement;
+	Statement_list * tStatement_list;
+	Optional_Statements *tOptional_Statements;
+	Compound_statement * tCompound_statement;
 	Variable *tVariable;
 } YYSTYPE;
 /* Line 1447 of yacc.c.  */
-#line 116 "../include/Parser.h"
+#line 124 "../include/Parser.h"
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
 # define YYSTYPE_IS_TRIVIAL 1

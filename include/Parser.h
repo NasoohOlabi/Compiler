@@ -46,10 +46,13 @@
      ELSE = 272,
      ARRAY = 273,
      OF = 274,
-     IDENT = 275,
-     INT_NUM = 276,
-     REAL_NUM = 277,
-     UNARY_OPERATOR = 278
+     TRUE = 275,
+     FALSE = 276,
+     NOT = 277,
+     IDENT = 278,
+     INT_NUM = 279,
+     REAL_NUM = 280,
+     UNARY_OPERATOR = 281
    };
 #endif
 /* Tokens.  */
@@ -70,10 +73,13 @@
 #define ELSE 272
 #define ARRAY 273
 #define OF 274
-#define IDENT 275
-#define INT_NUM 276
-#define REAL_NUM 277
-#define UNARY_OPERATOR 278
+#define TRUE 275
+#define FALSE 276
+#define NOT 277
+#define IDENT 278
+#define INT_NUM 279
+#define REAL_NUM 280
+#define UNARY_OPERATOR 281
 
 
 
@@ -93,9 +99,18 @@ typedef union YYSTYPE {
 	Declaration *tDeclaration;
 	Declarations *tDeclarations;
 	Arguments *tArguments;
+	Expression *tExpression;
+	Int_Expression *tInt_Expression;
+	Real_Expression *tReal_Expression;
+	Boolean_Expression *tBoolean_Expression;
+	Ident_Expression *tIdent_Expression;
+	Expression_Expression *tExpression_Expression;
+	Unary_Expression *tUnary_Expression;
+	Not_Expression *tNot_Expression;
+	Expression_List *tExpression_List;
 } YYSTYPE;
 /* Line 1447 of yacc.c.  */
-#line 99 "../include/Parser.h"
+#line 114 "../include/Parser.h"
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
 # define YYSTYPE_IS_TRIVIAL 1

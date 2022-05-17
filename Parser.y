@@ -28,13 +28,22 @@
 	Declaration *tDeclaration;
 	Declarations *tDeclarations;
 	Arguments *tArguments;
+	Expression *tExpression;
+	Int_Expression *tInt_Expression;
+	Real_Expression *tReal_Expression;
+	Boolean_Expression *tBoolean_Expression;
+	Ident_Expression *tIdent_Expression;
+	Expression_Expression *tExpression_Expression;
+	Unary_Expression *tUnary_Expression;
+	Not_Expression *tNot_Expression;
+	Expression_List *tExpression_List;
 }
 
 /* Tokens Section (Terminals) */
 
 %token PROGRAM VAR INTEGER REAL BOOLEAN FUNCTION PROCEDURE DD //DD is .. (Double Dots)
 
-%token WHILE DO BEG END IF THEN ELSE ARRAY OF
+%token WHILE DO BEG END IF THEN ELSE ARRAY OF TRUE FALSE NOT
 
 %token <tIdent> IDENT
 %token <tInt_Num> INT_NUM
@@ -52,13 +61,82 @@
 %type <tDeclaration> declaration
 %type <tDeclarations> declarations
 %type <tArguments> arguments
+%type <tExpression> expression
+/*
+%type <tInt_Expression> int_expression
+%type <tReal_Expression> real_expression
+%type <tBoolean_Expression> boolean_expression
+%type <tIdent_Expression> ident_expression
+%type <tExpression_Expression> expression_expression
+%type <tUnary_Expression> unary_expression
+%type <tNot_Expression> not_expression
+*/
+%type <tExpression_List> expression_list
 
 
 %%
 
 
 
+expression_list: expression
+						{
+							$$ = new Expression_List($1 ,lin, col);
+							cout << "single expression\n";
+						}
+						| expression_list ',' expression
+						{
+							cout << "multiple expressions\n";
+							$1->AddExpr($3);
+							$$ = $1;
+						}
+;
 
+expression: INT_NUM
+								{
+									$$ = new Int_Expression($1, lin, col);
+									cout << "Int Expression\n";
+								}			
+			| REAL_NUM
+								{
+									$$ = new Real_Expression($1, lin, col);
+									cout << "Real Expression\n";
+								}
+			| TRUE
+								{
+									$$ = new Boolean_Expression(true, lin, col);
+									cout << "Boolean true Expression\n";
+								}
+			| FALSE
+								{
+									$$ = new Boolean_Expression(false, lin, col);
+									cout << "Boolean false Expression\n";
+								}
+			| NOT expression
+								{
+									$$ = new Not_Expression($2 ,lin, col);
+									cout << "Not Expression\n";
+								}
+			| expression UNARY_OPERATOR expression
+								{
+									$$ = new Unary_Expression($1, $2, $3, lin, col);
+									cout << "Unary Expression\n";
+								}
+			| IDENT expression_list
+								{
+									$$ = new Ident_Expression($1, $2 ,lin, col);
+									cout << "Ident List Expression\n";
+								}
+			| IDENT 
+								{
+									$$ = new Ident_Expression($1, lin, col);
+									cout << "Ident Expression" << $1->name << "\n";
+								}
+			| '(' expression ')'
+								{
+									$$ = new Expression_Expression($2 ,lin, col);
+									cout << "Expression Expression\n";
+								}
+;
 
 arguments: '(' parameter_list ')'
 						{

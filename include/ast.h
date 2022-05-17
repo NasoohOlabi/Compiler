@@ -142,14 +142,14 @@ public:
 class Int_Expression : public Expression
 {
 public:
-	int value;
-	Int_Expression(int, int, int);
+	Int_Num *value;
+	Int_Expression(Int_Num *, int, int);
 };
 class Real_Expression : public Expression
 {
 public:
-	float value;
-	Real_Expression(float, int, int);
+	Real_Num *value;
+	Real_Expression(Real_Num *, int, int);
 };
 class Boolean_Expression : public Expression
 {

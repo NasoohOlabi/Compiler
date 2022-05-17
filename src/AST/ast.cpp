@@ -123,12 +123,12 @@ Expression::Expression(int l, int c) : Node(l, c)
 {
 }
 
-Int_Expression::Int_Expression(int v, int l, int c) : Expression(l, c)
+Int_Expression::Int_Expression(Int_Num *v, int l, int c) : Expression(l, c)
 {
 	this->value = v;
 }
 
-Real_Expression::Real_Expression(float v, int l, int c) : Expression(l, c)
+Real_Expression::Real_Expression(Real_Num *v, int l, int c) : Expression(l, c)
 {
 	this->value = v;
 }

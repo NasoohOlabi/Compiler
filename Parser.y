@@ -75,7 +75,7 @@
 %type <tDeclarations> declarations
 %type <tArguments> arguments
 %type <tExpression> expression
-<<<<<<< HEAD
+
 /*
 %type <tInt_Expression> int_expression
 %type <tReal_Expression> real_expression

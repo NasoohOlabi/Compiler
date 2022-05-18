@@ -1,15 +1,11 @@
 %{
 	#include "ast.h"
-	
 	#include <iostream>
 	using std::cout;
 	using std::endl;	
-	
 	extern int yylex();
 	extern int yyerror(const char *);
-
 	int lin = 0, col =0;
-
 %}
 
 
@@ -52,18 +48,17 @@
 /* Tokens Section (Terminals) */
 
 %token PROGRAM VAR INTEGER REAL BOOLEAN FUNCTION PROCEDURE DD ASSIGN
-
-%token WHILE DO BEG END IF THEN ELSE ARRAY OF TRUE FALSE NOT
-
+%token WHILE DO BEG END IF THEN ARRAY OF TRUE FALSE NOT
 %token <tIdent> IDENT
 %token <tInt_Num> INT_NUM
 %token <tReal_Num> REAL_NUM
 %token <tUnary_Operator> UNARY_OPERATOR
 
-/*--*/
+/* Precedences & Priorities Section */
 
-%nonassoc IF_PREC
 %nonassoc ELSE
+%nonassoc IF_PREC
+
 
 /* Types Section (Non-Terminals) */
 
@@ -76,15 +71,6 @@
 %type <tDeclarations> declarations
 %type <tArguments> arguments
 %type <tExpression> expression
-/*
-%type <tInt_Expression> int_expression
-%type <tReal_Expression> real_expression
-%type <tBoolean_Expression> boolean_expression
-%type <tIdent_Expression> ident_expression
-%type <tExpression_Expression> expression_expression
-%type <tUnary_Expression> unary_expression
-%type <tNot_Expression> not_expression
-*/
 %type <tExpression_List> expression_list
 %type <tProcedure_Statement> procedure_statement
 %type <tVariable> variable
@@ -236,8 +222,7 @@ arguments: '(' parameter_list ')'
 				}
 ;
 
-
-declarations: declaration 
+declarations: declaration
 						{
 							$$ = new Declarations($1 ,lin, col);
 							cout << "single declaration\n";
@@ -323,10 +308,6 @@ ident_list: IDENT
 		}
 ;
 
-/* 
-subprogram_head: FUNCTION IDENT arguments ':' standard_type ';'
-				 | PROCEDURE IDENT arguments ';' */
-
 statement : variable ASSIGN expression
 									{
 										cout << "Assign stmts\n";
@@ -356,6 +337,7 @@ statement : variable ASSIGN expression
 										$$= new While_Statement($2, $4, lin, col);
 									}
 ;
+
 statement_list : statement 
 					{
 						$$= new Statement_List($1, lin, col);
@@ -366,6 +348,7 @@ statement_list : statement
 						$$ = $1;
 					}
 ;
+
 optional_statements: statement_list
 					{
 						$$= new Optional_Statements($1, lin, col);
@@ -375,20 +358,15 @@ optional_statements: statement_list
 						$$= new Optional_Statements(lin, col);
 					}
 ;
+
 compound_statement: BEG optional_statements END
 					{
 						$$= new Compound_Statement($2, lin, col);
 					}
 ;
-/* 
-subprogram_declaration: subprogram_head compound_statement */
-/* 
-subprogram_declarations : subprogram_declarations subprogram_declaration ';'
-						  | Empty */
 
 
 %%
-
 
 int yyerror(const char* s)
 {

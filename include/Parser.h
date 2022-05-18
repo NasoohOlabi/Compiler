@@ -114,9 +114,9 @@ typedef union YYSTYPE {
 	Expression_List *tExpression_List;
 	Procedure_Statement *tProcedure_Statement;
 	Statement *tStatement;
-	Statement_list * tStatement_list;
+	Statement_List *tStatement_List;
 	Optional_Statements *tOptional_Statements;
-	Compound_statement * tCompound_statement;
+	Compound_Statement *tCompound_Statement;
 	Variable *tVariable;
 } YYSTYPE;
 /* Line 1447 of yacc.c.  */

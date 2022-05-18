@@ -191,13 +191,13 @@ void Expression_List::AddExpr(Expression *e)
 	e->father = this;
 }
 
-Procedure_Statement::Procedure_Statement(Ident *i, int l, int c) : Node(l, c)
+Procedure_Statement::Procedure_Statement(Ident *i, int l, int c) : Statement(l, c)
 {
 	this->id = i;
 	i->father = this;
 }
 
-Procedure_Statement::Procedure_Statement(Ident *i, Expression_List *el, int l, int c) : Node(l, c)
+Procedure_Statement::Procedure_Statement(Ident *i, Expression_List *el, int l, int c) : Statement(l, c)
 {
 	this->id = i;
 	i->father = this;
@@ -207,91 +207,74 @@ Procedure_Statement::Procedure_Statement(Ident *i, Expression_List *el, int l, i
 
 Statement::Statement(int a, int b) : Node(a, b)
 {
-	this->next = NULL;
-	this->perv = NULL;
 }
 
-Var_ass_exp::Var_ass_exp(Variable *v, Expression *e, int lin, int col) : Statement(lin, col)
+Variable_Statement::Variable_Statement(Variable *v, Expression *e, int l, int c) : Statement(l, c)
 {
 	this->variable = v;
 	this->expression = e;
-	if (v != NULL)
-		v->father = this;
-	if (e != NULL)
-		e->father = this;
+	v->father = this;
+	e->father = this;
 }
 
-Compound_statement::Compound_statement(Optional_Statements *os, int lin, int col) : Node(lin, col)
+Compound_Statement::Compound_Statement(Optional_Statements *os, int l, int c) : Statement(l, c)
 {
 	this->optional_statements = os;
 	if (os != NULL)
 		os->father = this;
 }
 
-St_compound_statement::St_compound_statement(Optional_Statements *os, int lin, int col) : Statement(lin, col)
-{
-	this->optional_statements = os;
-	if (os != NULL)
-		os->father = this;
-}
-
-If::If(Expression *e, Statement *s, int lin, int col) : Statement(lin, col)
+If_Statement::If_Statement(Expression *e, Statement *s, int l, int c) : Statement(l, c)
 {
 	this->expression = e;
 	this->statement = s;
-	if (e != NULL)
-		e->father = this;
-	if (s != NULL)
-		s->father = this;
+	e->father = this;
+	s->father = this;
 }
 
-If_else::If_else(Expression *e, Statement *s1, Statement *s2, int lin, int col) : Statement(lin, col)
+If_Else_Statement::If_Else_Statement(Expression *e, Statement *s1, Statement *s2, int l, int c) : Statement(l, c)
 {
 	this->statement1 = s1;
 	this->statement2 = s2;
 	this->expression = e;
-	if (s1 != NULL)
-		s1->father = this;
-	if (s2 != NULL)
-		s2->father = this;
-	if (e != NULL)
-		e->father = this;
+	s1->father = this;
+	s2->father = this;
+	e->father = this;
 }
 
-While::While(Expression *e, Statement *s, int lin, int col) : Statement(lin, col)
+While_Statement::While_Statement(Expression *e, Statement *s, int l, int c) : Statement(l, c)
 {
 	this->expression = e;
 	this->statement = s;
-	if (e != NULL)
-		e->father = this;
-	if (s != NULL)
-		s->father = this;
+	e->father = this;
+	s->father = this;
 }
 
-Optional_Statements::Optional_Statements(Statement_list *sl, int lin, int col) : Node(lin, col)
+Optional_Statements::Optional_Statements(Statement_List *sl, int l, int c) : Statement(l, c)
 {
 	this->statement_list = sl;
-	if (sl != NULL)
-		sl->father = this;
+	sl->father = this;
 }
 
-Statement_list::Statement_list(int lin, int col)
-	: Node(lin, col)
+Optional_Statements::Optional_Statements(int l, int c) : Statement(l, c)
 {
-	this->IDs = new vector<Statement *>;
 }
 
-Statement_list::Statement_list(Statement *s, int lin, int col) : Node(lin, col)
+Statement_List::Statement_List(int l, int c) : Node(l, c)
 {
-	this->IDs = new vector<Statement *>;
+	this->stmts = new vector<Statement *>;
+}
+
+Statement_List::Statement_List(Statement *s, int l, int c) : Node(l, c)
+{
+	this->stmts = new vector<Statement *>;
 	this->AddStatement(s);
 }
 
-void Statement_list::AddStatement(Statement *s)
+void Statement_List::AddStatement(Statement *s)
 {
-	this->IDs->push_back(s);
-	if (s != NULL)
-		s->father = this;
+	this->stmts->push_back(s);
+	s->father = this;
 }
 
 Variable::Variable(Ident *i, int l, int c) : Node(l, c)

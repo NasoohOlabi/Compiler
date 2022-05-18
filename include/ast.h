@@ -32,9 +32,9 @@ class Expression_List;
 class Procedure_Statement;
 class Optional_statements;
 class Statement;
-class Var_ass_exp;
+class Variable_Statement;
 
-class Statement_list;
+class Statement_List;
 class Variable;
 
 class Node
@@ -202,7 +202,13 @@ public:
 	void AddExpr(Expression *);
 };
 
-class Procedure_Statement : public Node
+class Statement : public Node
+{
+public:
+	Statement(int, int);
+};
+
+class Procedure_Statement : public Statement
 {
 public:
 	Ident *id;
@@ -211,78 +217,63 @@ public:
 	Procedure_Statement(Ident *, Expression_List *, int, int);
 };
 
-class Optional_Statements : public Node
+class Optional_Statements : public Statement
 {
 public:
-	Statement_list *statement_list;
+	Statement_List *statement_list;
 	// bool returnValue = false;
-	Optional_Statements(Statement_list *, int, int);
+	Optional_Statements(Statement_List *, int, int);
+	Optional_Statements(int, int);
 };
 
-class Statement_list : public Node
+class Statement_List : public Node
 {
 public:
-	vector<Statement *> *IDs;
+	vector<Statement *> *stmts;
 	// bool returnValue = false;
-	Statement_list(int, int);
-	Statement_list(Statement *, int, int);
+	Statement_List(int, int);
+	Statement_List(Statement *, int, int);
 	void AddStatement(Statement *);
 };
 
-class Statement : public Node
-{
-public:
-	Statement *perv;
-	Statement *next;
-	Statement(int, int);
-};
-
-class Var_ass_exp : public Statement
+class Variable_Statement : public Statement
 {
 public:
 	Variable *variable;
 	Expression *expression;
 	// string type;
-	Var_ass_exp(Variable *, Expression *, int, int);
+	Variable_Statement(Variable *, Expression *, int, int);
 };
 
-class Compound_statement : public Node
+class Compound_Statement : public Statement
 {
 public:
 	Optional_Statements *optional_statements;
-	// bool returnValue = false;
-	Compound_statement(Optional_Statements *, int, int);
+	Compound_Statement(Optional_Statements *, int, int);
 };
 
-class St_compound_statement : public Statement
-{
-public:
-	Optional_Statements *optional_statements;
-	St_compound_statement(Optional_Statements *, int, int);
-};
-
-class If : public Statement
+class If_Statement : public Statement
 {
 public:
 	Expression *expression;
 	Statement *statement;
-	If(Expression *, Statement *, int, int);
+	If_Statement(Expression *, Statement *, int, int);
 };
-class If_else : public Statement
+class If_Else_Statement : public Statement
 {
 public:
 	Expression *expression;
 	Statement *statement1;
 	Statement *statement2;
-	If_else(Expression *, Statement *, Statement *, int, int);
+	If_Else_Statement(Expression *, Statement *, Statement *, int, int);
 };
 
-class While : public Statement
+class While_Statement : public Statement
 {
 public:
 	Expression *expression;
 	Statement *statement;
-	While(Expression *, Statement *, int, int);
+	While_Statement(Expression *, Statement *, int, int);
 };
 
 class Variable : public Node

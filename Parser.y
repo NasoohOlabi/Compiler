@@ -39,9 +39,9 @@
 	Expression_List *tExpression_List;
 	Procedure_Statement *tProcedure_Statement;
 	Statement *tStatement;
-	Statement_list * tStatement_list;
+	Statement_List *tStatement_List;
 	Optional_Statements *tOptional_Statements;
-	Compound_statement * tCompound_statement;
+	Compound_Statement *tCompound_Statement;
 	Variable *tVariable;
 }
 
@@ -85,9 +85,9 @@
 %type <tProcedure_Statement> procedure_statement
 %type <tVariable> variable
 %type <tStatement> statement
-%type <tStatement_list> statement_list
+%type <tStatement_List> statement_list
 %type <tOptional_Statements> optional_statements
-%type <tCompound_statement> compound_statement
+%type <tCompound_Statement> compound_statement
 
 %%
 
@@ -274,59 +274,61 @@ ident_list: IDENT
 		}
 ;
 
-
-
 /* 
 subprogram_head: FUNCTION IDENT arguments ':' standard_type ';'
 				 | PROCEDURE IDENT arguments ';' */
 
 statement : variable ASSIGN expression
-					{
-						 $$= new Var_ass_exp($1, $3, line, col);
-					}
+									{
+										cout << "Assign stmts\n";
+										$$= new Variable_Statement($1, $3, lin, col);
+									}
 			| procedure_statement
-					{
-						$$ = $1;
-					}
+									{
+										/* $$ = $1; */
+									}
 			| compound_statement
-					{
-						 $$= new St_compound_statement($1->optional_statements, line, col);
-					}
+									{
+										$$= new Compound_Statement($1->optional_statements, lin, col);
+									}
 			| IF expression THEN statement %prec IF_PREC 
-					{
-						 $$= new If($2, $4, line, col);
-					}
+									{
+										cout << "If stmt\n";
+										$$= new If_Statement($2, $4, lin, col);
+									}
 			| IF expression THEN statement ELSE statement
-					{
-						 $$= new If_else($2, $4, $6, line, col);
-					}
+									{
+										cout << "If else stmts\n";
+										$$= new If_Else_Statement($2, $4, $6, lin, col);
+									}
 			| WHILE expression DO statement
-					{
-						 $$= new While($2, $4, line, col);
-					}
+									{
+										cout << "While stmts\n";
+										$$= new While_Statement($2, $4, lin, col);
+									}
 ;
 statement_list : statement 
 					{
-						$$= new Statement_list($1, line, col);
+						$$= new Statement_List($1, lin, col);
 					}
 				 | statement_list ';' statement
 				 	{
 						$1->AddStatement($3); 
-						$$=$1;
+						$$ = $1;
 					}
 ;
 optional_statements: statement_list
 					{
-						$$= new Optional_statements($1, line, col);
+						$$= new Optional_statements($1, lin, col);
 					}
 					| /* Empty */
 					{
-						$$= new Optional_statements(NULL, line, col);
+						$$= new Optional_statements(lin, col);
 					}
 ;
 compound_statement: BEG optional_statements END
 					{
-						$$= new Compound_statement($2, line, col);
+						$$= new Compound_statement($2, lin, col);
 					}
 ;
 /* 

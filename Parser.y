@@ -305,14 +305,17 @@ add_expression: expression  '+'  expression
 					}
 minus_expression: expression  '-'  expression 
 				{
+						cout<<"Minus Expression found";
 						$$= new Minus_expression($1, $3, line, col);
 				}
 mul_expression: expression  '*'  expression 
 				{
+						cout<<"Mult Expression found";
 						$$= new Mul_expression($1, $3, line, col);
 				}
 divide_expression: expression  '/'  expression 
 				{
+						cout<<"Divide Expression found";
 						$$= new Divide_expression($1, $3, line, col);
 				}
 standard_type: INTEGER 

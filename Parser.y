@@ -43,6 +43,10 @@
 	Optional_Statements *tOptional_Statements;
 	Compound_Statement *tCompound_Statement;
 	Variable *tVariable;
+	Subprogram_Head *tSubprogram_Head;
+	Subprogram_Declaration *tSubprogram_Declaration;
+	Subprogram_Declarations *tSubprogram_Declarations;
+	Program *tProgram;
 }
 
 /* Tokens Section (Terminals) */
@@ -88,8 +92,52 @@
 %type <tStatement_List> statement_list
 %type <tOptional_Statements> optional_statements
 %type <tCompound_Statement> compound_statement
+%type <tSubprogram_Head> subprogram_head
+%type <tSubprogram_Declaration> subprogram_declaration
+%type <tSubprogram_Declarations> subprogram_declarations
+%type <tProgram> program
 
 %%
+
+program: PROGRAM IDENT ';' declarations subprogram_declarations compound_statement 
+	{
+		cout << "main program\n";
+		$$ = new Program($2, $4, $5, $6, lin, col);
+	}
+
+
+subprogram_declarations: subprogram_declarations subprogram_declaration ';'
+								{
+									$1->AddDec($2);
+									$$ = $1;
+									cout << "sub dec added to sub declarations\n";
+								}
+							| /* Empty */
+								{
+									cout << "no sub declerations\n";
+									$$ = new Subprogram_Declarations(lin, col);
+								}
+;
+
+
+subprogram_declaration: subprogram_head compound_statement
+							{
+								cout << "subprogram dec\n";
+								$$ = new Subprogram_Declaration($1, $2, lin, col);
+							}
+;
+
+subprogram_head: FUNCTION IDENT arguments ':' standard_type ';'
+					{
+						cout << "subprogram_head function\n";
+						$$ = new Subprogram_Head($3, $5, lin, col);
+					}
+				| PROCEDURE IDENT arguments ';'
+					{
+						cout << "subprogram_head procedure\n";
+						$$ = new Subprogram_Head($3, lin, col);
+					}
+;
 
 variable: IDENT
 				{
@@ -203,6 +251,7 @@ declarations: declaration
 			| /* Empty */
 				{
 					cout << "no declerations\n";
+					$$ = new Declarations(lin, col);
 				}
 ;
 
@@ -319,16 +368,16 @@ statement_list : statement
 ;
 optional_statements: statement_list
 					{
-						$$= new Optional_statements($1, lin, col);
+						$$= new Optional_Statements($1, lin, col);
 					}
 					| /* Empty */
 					{
-						$$= new Optional_statements(lin, col);
+						$$= new Optional_Statements(lin, col);
 					}
 ;
 compound_statement: BEG optional_statements END
 					{
-						$$= new Compound_statement($2, lin, col);
+						$$= new Compound_Statement($2, lin, col);
 					}
 ;
 /* 

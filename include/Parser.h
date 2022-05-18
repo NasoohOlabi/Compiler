@@ -118,9 +118,13 @@ typedef union YYSTYPE {
 	Optional_Statements *tOptional_Statements;
 	Compound_Statement *tCompound_Statement;
 	Variable *tVariable;
+	Subprogram_Head *tSubprogram_Head;
+	Subprogram_Declaration *tSubprogram_Declaration;
+	Subprogram_Declarations *tSubprogram_Declarations;
+	Program *tProgram;
 } YYSTYPE;
 /* Line 1447 of yacc.c.  */
-#line 124 "../include/Parser.h"
+#line 128 "../include/Parser.h"
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
 # define YYSTYPE_IS_TRIVIAL 1

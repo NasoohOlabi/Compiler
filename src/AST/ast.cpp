@@ -290,3 +290,60 @@ Variable::Variable(Ident *i, Expression *e, int l, int c) : Node(l, c)
 	this->expr = e;
 	e->father = this;
 }
+
+Subprogram_Head::Subprogram_Head(Arguments *a, int l, int c) : Node(l, c)
+{
+	this->args = a;
+	this->is_function = false;
+	if (a != NULL)
+		a->father = this;
+}
+
+Subprogram_Head::Subprogram_Head(Arguments *a, Standard_Type *s, int l, int c) : Node(l, c)
+{
+	this->args = a;
+	this->std_type = s;
+	this->is_function = true;
+	s->father = this;
+	if (a != NULL)
+		a->father = this;
+}
+
+Subprogram_Declaration::Subprogram_Declaration(Subprogram_Head *s, Compound_Statement *cs, int l, int c) : Node(l, c)
+{
+	this->sub_head = s;
+	this->comp_stmt = cs;
+	s->father = this;
+	cs->father = this;
+}
+
+Subprogram_Declarations::Subprogram_Declarations(int l, int c) : Node(l, c)
+{
+	this->decs = new vector<Subprogram_Declaration *>;
+}
+
+Subprogram_Declarations::Subprogram_Declarations(Subprogram_Declaration *dec, int l, int c) : Node(l, c)
+{
+	this->decs = new vector<Subprogram_Declaration *>;
+	this->AddDec(dec);
+}
+
+void Subprogram_Declarations::AddDec(Subprogram_Declaration *dec)
+{
+	this->decs->push_back(dec);
+	dec->father = this;
+}
+
+Program::Program(Ident *i, Declarations *d, Subprogram_Declarations *sd, Compound_Statement *cs, int l, int c) : Node(l, c)
+{
+	this->id = i;
+	this->decs = d;
+	this->sub_decs = sd;
+	this->comp_stmt = cs;
+	if (d != NULL)
+		d->father = this;
+	if (sd != NULL)
+		sd->father = this;
+	cs->father = this;
+	i->father = this;
+}

@@ -33,9 +33,12 @@ class Procedure_Statement;
 class Optional_statements;
 class Statement;
 class Variable_Statement;
-
 class Statement_List;
 class Variable;
+class Subprogram_Head;
+class Subprogram_Declaration;
+class Subprogram_Declarations;
+class Program;
 
 class Node
 {
@@ -283,4 +286,41 @@ public:
 	Expression *expr;
 	Variable(Ident *, int, int);
 	Variable(Ident *, Expression *, int, int);
+};
+
+class Subprogram_Head : public Node
+{
+public:
+	Arguments *args;
+	Standard_Type *std_type;
+	bool is_function;
+	Subprogram_Head(Arguments *, int, int);
+	Subprogram_Head(Arguments *, Standard_Type *, int, int);
+};
+
+class Subprogram_Declaration : public Node
+{
+public:
+	Subprogram_Head *sub_head;
+	Compound_Statement *comp_stmt;
+	Subprogram_Declaration(Subprogram_Head *, Compound_Statement *, int, int);
+};
+
+class Subprogram_Declarations : public Node
+{
+public:
+	vector<Subprogram_Declaration *> *decs;
+	Subprogram_Declarations(int, int);
+	Subprogram_Declarations(Subprogram_Declaration *, int, int);
+	void AddDec(Subprogram_Declaration *);
+};
+
+class Program : public Node
+{
+public:
+	Ident *id;
+	Declarations *decs;
+	Subprogram_Declarations *sub_decs;
+	Compound_Statement *comp_stmt;
+	Program(Ident *, Declarations *, Subprogram_Declarations *, Compound_Statement *, int, int);
 };

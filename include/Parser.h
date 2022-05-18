@@ -122,9 +122,10 @@ typedef union YYSTYPE {
 	Subprogram_Declaration *tSubprogram_Declaration;
 	Subprogram_Declarations *tSubprogram_Declarations;
 	Program *tProgram;
-} YYSTYPE;
+	Add_expression *tAdd_expression;
+ } YYSTYPE;
 /* Line 1447 of yacc.c.  */
-#line 128 "../include/Parser.h"
+#line 129 "../include/Parser.h"
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
 # define YYSTYPE_IS_TRIVIAL 1

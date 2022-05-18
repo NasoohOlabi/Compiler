@@ -39,6 +39,8 @@ class Subprogram_Head;
 class Subprogram_Declaration;
 class Subprogram_Declarations;
 class Program;
+class Add_expression;
+
 
 class Node
 {
@@ -324,3 +326,13 @@ public:
 	Compound_Statement *comp_stmt;
 	Program(Ident *, Declarations *, Subprogram_Declarations *, Compound_Statement *, int, int);
 };
+
+
+class Add_expression :public Expression
+{
+public:
+	Expression *expression1;
+	Expression *expression2;
+	Add_expression(Expression *, Expression *, int, int);
+};
+

@@ -47,7 +47,8 @@
 	Subprogram_Declaration *tSubprogram_Declaration;
 	Subprogram_Declarations *tSubprogram_Declarations;
 	Program *tProgram;
-}
+	Add_expression *tAdd_expression;
+ }
 
 /* Tokens Section (Terminals) */
 
@@ -76,6 +77,7 @@
 %type <tDeclarations> declarations
 %type <tArguments> arguments
 %type <tExpression> expression
+%type <tAdd_expression> add_expression
 /*
 %type <tInt_Expression> int_expression
 %type <tReal_Expression> real_expression
@@ -292,7 +294,11 @@ type: standard_type
 						$$ = new Type($8, $3->value, $5->value, lin, col);
 					}			
 ;
-
+add_expression: expression  '+'  expression 
+					{
+						cout<<"Add Expression found";
+						$$= new Add_expression($1, $3, line, col);
+					}
 standard_type: INTEGER 
 					{
 						$$ = new Standard_Type('I', lin, col);

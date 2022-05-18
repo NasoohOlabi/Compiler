@@ -336,3 +336,12 @@ public:
 	Add_expression(Expression *, Expression *, int, int);
 };
 
+
+class Minus_expression :public Expression
+{
+public:
+	Expression *expression1;
+	Expression *expression2;
+	Minus_expression(Expression *, Expression *, int, int);
+};
+

@@ -44,6 +44,7 @@
 	Subprogram_Declarations *tSubprogram_Declarations;
 	Program *tProgram;
 	Add_expression *tAdd_expression;
+	Minus_expression *tMinus_expression;
  }
 
 /* Tokens Section (Terminals) */
@@ -96,6 +97,7 @@
 %type <tSubprogram_Declarations> subprogram_declarations
 %type <tProgram> program
 %type <tAdd_expression> add_expression
+%type <tMinus_expression> minus_expression
 
 
 %%
@@ -297,6 +299,10 @@ add_expression: expression  '+'  expression
 						cout<<"Add Expression found";
 						$$= new Add_expression($1, $3, line, col);
 					}
+minus_expression: expression  '-'  expression 
+				{
+						$$= new Minus_expression($1, $3, line, col);
+				}
 standard_type: INTEGER 
 					{
 						$$ = new Standard_Type('I', lin, col);

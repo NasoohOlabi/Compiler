@@ -44,16 +44,16 @@
      END = 270,
      IF = 271,
      THEN = 272,
-     ELSE = 273,
-     ARRAY = 274,
-     OF = 275,
-     TRUE = 276,
-     FALSE = 277,
-     NOT = 278,
-     IDENT = 279,
-     INT_NUM = 280,
-     REAL_NUM = 281,
-     UNARY_OPERATOR = 282,
+     ARRAY = 273,
+     OF = 274,
+     TRUE = 275,
+     FALSE = 276,
+     NOT = 277,
+     IDENT = 278,
+     INT_NUM = 279,
+     REAL_NUM = 280,
+     UNARY_OPERATOR = 281,
+     ELSE = 282,
      IF_PREC = 283
    };
 #endif
@@ -73,23 +73,23 @@
 #define END 270
 #define IF 271
 #define THEN 272
-#define ELSE 273
-#define ARRAY 274
-#define OF 275
-#define TRUE 276
-#define FALSE 277
-#define NOT 278
-#define IDENT 279
-#define INT_NUM 280
-#define REAL_NUM 281
-#define UNARY_OPERATOR 282
+#define ARRAY 273
+#define OF 274
+#define TRUE 275
+#define FALSE 276
+#define NOT 277
+#define IDENT 278
+#define INT_NUM 279
+#define REAL_NUM 280
+#define UNARY_OPERATOR 281
+#define ELSE 282
 #define IF_PREC 283
 
 
 
 
 #if ! defined (YYSTYPE) && ! defined (YYSTYPE_IS_DECLARED)
-#line 18 "../Parser.y"
+#line 14 "../Parser.y"
 typedef union YYSTYPE {
 	Ident *tIdent;
 	Ident_List *tIdent_List;

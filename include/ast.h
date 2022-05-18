@@ -345,3 +345,13 @@ public:
 	Minus_expression(Expression *, Expression *, int, int);
 };
 
+
+class Mul_expression :public Expression
+{
+public:
+	Expression *expression1;
+	Expression *expression2;
+	Mul_expression(Expression *, Expression *, int, int);
+};
+
+

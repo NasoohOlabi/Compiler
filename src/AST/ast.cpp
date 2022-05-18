@@ -381,3 +381,14 @@ Mul_expression::Mul_expression(Expression * e1, Expression * e2, int lin, int co
 	if (e2 != NULL)
 		e2->father = this;
 }
+
+
+Divide_expression::Divide_expression(Expression * e1, Expression * e2, int lin, int col) :Expression(lin, col)
+{
+	this->expression1 = e1;
+	this->expression2 = e2;
+	if (e1 != NULL)
+		e1->father = this;
+	if (e2 != NULL)
+		e2->father = this;
+}

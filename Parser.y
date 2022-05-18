@@ -46,6 +46,7 @@
 	Add_expression *tAdd_expression;
 	Minus_expression *tMinus_expression;
 	Mul_expression *tMul_expression;
+	Divide_expression *tDivide_expression;
  }
 
 /* Tokens Section (Terminals) */
@@ -100,6 +101,7 @@
 %type <tAdd_expression> add_expression
 %type <tMinus_expression> minus_expression
 %type <tMul_expression> mul_expression
+%type <tDivide_expression> divide_expression
 
 
 %%
@@ -308,6 +310,10 @@ minus_expression: expression  '-'  expression
 mul_expression: expression  '*'  expression 
 				{
 						$$= new Mul_expression($1, $3, line, col);
+				}
+divide_expression: expression  '/'  expression 
+				{
+						$$= new Divide_expression($1, $3, line, col);
 				}
 standard_type: INTEGER 
 					{

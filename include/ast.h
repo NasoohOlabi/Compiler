@@ -355,3 +355,13 @@ public:
 };
 
 
+class Divide_expression :public Expression
+{
+public:
+	Expression *expression1;
+	Expression *expression2;
+	Divide_expression(Expression *, Expression *, int, int);
+};
+
+
+

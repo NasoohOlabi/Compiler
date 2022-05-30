@@ -1,6 +1,29 @@
 Program ArrayExample;
-Var
-    myVar : Integer;
+
+Var var1 : Integer;
+Var var2 : Real;
+Var var3 : Boolean;
+
+function MYFUNC (x,y : integer) : boolean;
+
+Begin
+    if var1 then
+        var2 := 42
+End;
+
+function MYFUNC (x,y : integer) : boolean;
+
+Begin
+    if var1 then
+        var2 := 42
+End;
+
+function MYFUNC (x,y : integer) : boolean;
+
+Begin
+    if var1 then
+        var2 := 42
+End;
 
 Begin
     myVar := 999

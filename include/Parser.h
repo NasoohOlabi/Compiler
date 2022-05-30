@@ -30,60 +30,74 @@
       know about them.  */
    enum yytokentype {
      PROGRAM = 258,
-     VAR = 259,
-     INTEGER = 260,
-     REAL = 261,
-     BOOLEAN = 262,
-     FUNCTION = 263,
-     PROCEDURE = 264,
-     DD = 265,
-     ASSIGN = 266,
-     WHILE = 267,
-     DO = 268,
-     BEG = 269,
-     END = 270,
-     IF = 271,
-     THEN = 272,
-     ARRAY = 273,
-     OF = 274,
-     TRUE = 275,
-     FALSE = 276,
-     NOT = 277,
-     IDENT = 278,
-     INT_NUM = 279,
-     REAL_NUM = 280,
-     UNARY_OPERATOR = 281,
-     ELSE = 282,
-     IF_PREC = 283
+     INTEGER = 259,
+     REAL = 260,
+     BOOLEAN = 261,
+     DD = 262,
+     ASSIGN = 263,
+     WHILE = 264,
+     DO = 265,
+     BEG = 266,
+     END = 267,
+     IF = 268,
+     THEN = 269,
+     ARRAY = 270,
+     OF = 271,
+     TRUE = 272,
+     FALSE = 273,
+     IDENT = 274,
+     INT_NUM = 275,
+     REAL_NUM = 276,
+     UNARY_OPERATOR = 277,
+     EXPRLST_PREC = 278,
+     ELSE = 279,
+     IF_PREC = 280,
+     NOSUBDECS_PREC = 281,
+     FUNCTION = 282,
+     PROCEDURE = 283,
+     SUBPROGRAMDEC_PREC = 284,
+     SUBDECS_PREC = 285,
+     NODECS_PREC = 286,
+     VAR = 287,
+     UNARY_PREC = 288,
+     NOT = 289,
+     EXPR_PREC = 290
    };
 #endif
 /* Tokens.  */
 #define PROGRAM 258
-#define VAR 259
-#define INTEGER 260
-#define REAL 261
-#define BOOLEAN 262
-#define FUNCTION 263
-#define PROCEDURE 264
-#define DD 265
-#define ASSIGN 266
-#define WHILE 267
-#define DO 268
-#define BEG 269
-#define END 270
-#define IF 271
-#define THEN 272
-#define ARRAY 273
-#define OF 274
-#define TRUE 275
-#define FALSE 276
-#define NOT 277
-#define IDENT 278
-#define INT_NUM 279
-#define REAL_NUM 280
-#define UNARY_OPERATOR 281
-#define ELSE 282
-#define IF_PREC 283
+#define INTEGER 259
+#define REAL 260
+#define BOOLEAN 261
+#define DD 262
+#define ASSIGN 263
+#define WHILE 264
+#define DO 265
+#define BEG 266
+#define END 267
+#define IF 268
+#define THEN 269
+#define ARRAY 270
+#define OF 271
+#define TRUE 272
+#define FALSE 273
+#define IDENT 274
+#define INT_NUM 275
+#define REAL_NUM 276
+#define UNARY_OPERATOR 277
+#define EXPRLST_PREC 278
+#define ELSE 279
+#define IF_PREC 280
+#define NOSUBDECS_PREC 281
+#define FUNCTION 282
+#define PROCEDURE 283
+#define SUBPROGRAMDEC_PREC 284
+#define SUBDECS_PREC 285
+#define NODECS_PREC 286
+#define VAR 287
+#define UNARY_PREC 288
+#define NOT 289
+#define EXPR_PREC 290
 
 
 
@@ -123,9 +137,12 @@ typedef union YYSTYPE {
 	Subprogram_Declarations *tSubprogram_Declarations;
 	Program *tProgram;
 	Add_expression *tAdd_expression;
+	Minus_expression *tMinus_expression;
+	Mul_expression *tMul_expression;
+	Divide_expression *tDivide_expression;
  } YYSTYPE;
 /* Line 1447 of yacc.c.  */
-#line 129 "../include/Parser.h"
+#line 146 "../include/Parser.h"
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
 # define YYSTYPE_IS_TRIVIAL 1

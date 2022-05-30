@@ -51,17 +51,43 @@
 
 /* Tokens Section (Terminals) */
 
-%token PROGRAM VAR INTEGER REAL BOOLEAN FUNCTION PROCEDURE DD ASSIGN
-%token WHILE DO BEG END IF THEN ARRAY OF TRUE FALSE NOT
+%token PROGRAM INTEGER REAL BOOLEAN DD ASSIGN
+%token WHILE DO BEG END IF THEN ARRAY OF TRUE FALSE
 %token <tIdent> IDENT
 %token <tInt_Num> INT_NUM
 %token <tReal_Num> REAL_NUM
-%token <tUnary_Operator> UNARY_OPERATOR
+
 
 /* Precedences & Priorities Section */
 
+
+
+%left '+' '-'
+%left '*' '/'
+
+%nonassoc <tUnary_Operator> UNARY_OPERATOR
+
+%nonassoc EXPRLST_PREC
+
 %nonassoc ELSE
 %nonassoc IF_PREC
+
+%nonassoc NOSUBDECS_PREC
+%nonassoc FUNCTION
+%nonassoc PROCEDURE
+%nonassoc SUBPROGRAMDEC_PREC
+%nonassoc SUBDECS_PREC
+
+
+%nonassoc NODECS_PREC
+%nonassoc VAR
+
+%nonassoc UNARY_PREC
+%nonassoc NOT
+
+%nonassoc EXPR_PREC
+%nonassoc ','
+
 
 
 /* Types Section (Non-Terminals) */
@@ -85,8 +111,7 @@
 %type <tUnary_Expression> unary_expression
 %type <tNot_Expression> not_expression
 */
-=======
->>>>>>> b2b6e21080107fcd0cb1838e1a18afd288a6a361
+
 %type <tExpression_List> expression_list
 %type <tProcedure_Statement> procedure_statement
 %type <tVariable> variable
@@ -113,13 +138,13 @@ program: PROGRAM IDENT ';' declarations subprogram_declarations compound_stateme
 	}
 
 
-subprogram_declarations: subprogram_declarations subprogram_declaration ';'
+subprogram_declarations: subprogram_declarations subprogram_declaration ';' %prec SUBDECS_PREC
 								{
 									$1->AddDec($2);
 									$$ = $1;
 									cout << "sub dec added to sub declarations\n";
 								}
-							| /* Empty */
+							| /* Empty */ %prec NOSUBDECS_PREC
 								{
 									cout << "no sub declerations\n";
 									$$ = new Subprogram_Declarations(lin, col);
@@ -127,7 +152,7 @@ subprogram_declarations: subprogram_declarations subprogram_declaration ';'
 ;
 
 
-subprogram_declaration: subprogram_head compound_statement
+subprogram_declaration: subprogram_head compound_statement %prec SUBPROGRAMDEC_PREC
 							{
 								cout << "subprogram dec\n";
 								$$ = new Subprogram_Declaration($1, $2, lin, col);
@@ -172,12 +197,12 @@ procedure_statement: IDENT
 ;
 
 
-expression_list: expression
+expression_list: expression %prec EXPRLST_PREC
 						{
 							$$ = new Expression_List($1 ,lin, col);
 							cout << "single expression\n";
 						}
-						| expression_list ',' expression
+						| expression_list ',' expression 
 						{
 							cout << "multiple expressions\n";
 							$1->AddExpr($3);
@@ -210,12 +235,28 @@ expression: INT_NUM
 									$$ = new Not_Expression($2 ,lin, col);
 									cout << "Not Expression\n";
 								}
-			| expression UNARY_OPERATOR expression
+			| add_expression
+								{
+									$$ = $1;
+								}
+			| minus_expression
+								{
+									$$ = $1;
+								}			
+			| mul_expression
+								{
+									$$ = $1;
+								}			
+			|divide_expression
+								{
+									$$ = $1;
+								}								
+			| expression UNARY_OPERATOR expression %prec UNARY_PREC
 								{
 									$$ = new Unary_Expression($1, $2, $3, lin, col);
 									cout << "Unary Expression\n";
 								}
-			| IDENT expression_list
+			| IDENT expression_list %prec EXPR_PREC
 								{
 									$$ = new Ident_Expression($1, $2 ,lin, col);
 									cout << "Ident List Expression\n";
@@ -254,7 +295,7 @@ declarations: declaration
 					$$ = $1;
 					cout << "dec added to declarations\n";
 				}
-			| /* Empty */
+			| /* Empty */  %prec NODECS_PREC
 				{
 					cout << "no declerations\n";
 					$$ = new Declarations(lin, col);
@@ -298,26 +339,35 @@ type: standard_type
 						$$ = new Type($8, $3->value, $5->value, lin, col);
 					}			
 ;
+
 add_expression: expression  '+'  expression 
 					{
 						cout<<"Add Expression found";
-						$$= new Add_expression($1, $3, line, col);
+						$$ = new Add_expression($1, $3, lin, col);
 					}
+;
+
 minus_expression: expression  '-'  expression 
 				{
 						cout<<"Minus Expression found";
-						$$= new Minus_expression($1, $3, line, col);
+						$$ = new Minus_expression($1, $3, lin, col);
 				}
+;
+
 mul_expression: expression  '*'  expression 
 				{
 						cout<<"Mult Expression found";
-						$$= new Mul_expression($1, $3, line, col);
+						$$ = new Mul_expression($1, $3, lin, col);
 				}
+;
+
 divide_expression: expression  '/'  expression 
 				{
 						cout<<"Divide Expression found";
-						$$= new Divide_expression($1, $3, line, col);
+						$$ = new Divide_expression($1, $3, lin, col);
 				}
+;
+
 standard_type: INTEGER 
 					{
 						$$ = new Standard_Type('I', lin, col);

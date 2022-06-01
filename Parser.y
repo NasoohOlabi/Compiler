@@ -6,6 +6,8 @@
 	extern int yylex();
 	extern int yyerror(const char *);
 	int lin = 0, col =0;
+
+	Program *root;
 %}
 
 

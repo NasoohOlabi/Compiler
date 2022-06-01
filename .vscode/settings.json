@@ -1,4 +1,19 @@
 {
 	"C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
-	"C_Cpp.errorSquiggles": "Disabled"
+	"C_Cpp.errorSquiggles": "Disabled",
+	"files.associations": {
+		"*.l": "lex",
+		"*.java": "java",
+		"iostream": "cpp",
+		"typeinfo": "cpp",
+		"optional": "cpp",
+		"istream": "cpp",
+		"ostream": "cpp",
+		"ratio": "cpp",
+		"system_error": "cpp",
+		"array": "cpp",
+		"tuple": "cpp",
+		"type_traits": "cpp",
+		"utility": "cpp"
+	}
 }

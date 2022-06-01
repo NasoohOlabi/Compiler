@@ -9,8 +9,8 @@ using std::vector;
 #include <string>
 using std::string;
 
-#include "hash_table.h"
-#include "hash_fun.h"
+// #include "hash_table.h"
+// #include "hash_fun.h"
 
 class Node;
 class Ident;
@@ -37,12 +37,22 @@ class Optional_statements;
 class Statement;
 class Variable_Statement;
 class Statement_List;
+class If_Statement;
+class While_Statement;
+class If_Else_Statement;
+class Compound_Statement;
 class Variable;
+class Parameter_List;
+class Arguments;
 class Subprogram_Head;
 class Subprogram_Declaration;
 class Subprogram_Declarations;
 class Program;
 class Add_expression;
+class Minus_expression;
+class Mul_expression;
+class Divide_expression;
+
 class NodeVisistor;
 class PrintVisistor;
 // class TypeVisitor;

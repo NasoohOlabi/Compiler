@@ -7,10 +7,10 @@ Node::Node(int line, int column)
 	this->father = NULL;
 }
 
-void Node::accept(NodeVisistor *nv)
-{
-	nv->Visit(this);
-}
+// void Node::accept(NodeVisistor *nv)
+// {
+// 	nv->Visit(this);
+// }
 
 Ident::Ident(string s, int l, int c) : Node(l, c)
 {

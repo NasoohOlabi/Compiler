@@ -6,12 +6,18 @@ Node::Node(int line, int column)
 	this->column = column;
 	this->father = NULL;
 }
-
+void Node::accept(NodeVisistor *nv)
+{
+	nv->Visit(this);
+}
 Ident::Ident(string s, int l, int c) : Node(l, c)
 {
 	this->name = s;
 }
-
+void Ident::accept(NodeVisistor *nv)
+{
+	nv->Visit(this);
+}
 Ident_List::Ident_List(int l, int c) : Node(l, c)
 {
 	this->idents = new vector<Ident *>;
@@ -28,27 +34,42 @@ void Ident_List::AddIdent(Ident *id)
 	this->idents->push_back(id);
 	id->father = this;
 }
-
+void Ident_list::accept(NodeVisistor *nv)
+{
+	nv->Visit(this);
+}
 Int_Num::Int_Num(int v, int l, int c) : Node(l, c)
 {
 	this->value = v;
 }
-
+void Int_Num::accept(NodeVisistor *nv)
+{
+	nv->Visit(this);
+}
 Real_Num::Real_Num(float v, int l, int c) : Node(l, c)
 {
 	this->value = v;
 }
-
+void Real_Num::accept(NodeVisistor *nv)
+{
+	nv->Visit(this);
+}
 Unary_Operator::Unary_Operator(string o, int l, int c) : Node(l, c)
 {
 	this->op = o;
 }
-
+void Unary_Operator::accept(NodeVisistor *nv)
+{
+	nv->Visit(this);
+}
 Standard_Type::Standard_Type(char t, int l, int c) : Node(l, c)
 {
 	this->type = t;
 }
-
+void Standard_Type::accept(NodeVisistor *nv)
+{
+	nv->Visit(this);
+}
 Type::Type(Standard_Type *st, int f, int lst, int l, int c) : Node(l, c)
 {
 	this->std_type = st;
@@ -57,14 +78,16 @@ Type::Type(Standard_Type *st, int f, int lst, int l, int c) : Node(l, c)
 	this->is_array = true;
 	st->father = this;
 }
-
 Type::Type(Standard_Type *st, int l, int c) : Node(l, c)
 {
 	this->std_type = st;
 	this->is_array = false;
 	st->father = this;
 }
-
+void Type::accept(NodeVisistor *nv)
+{
+	nv->Visit(this);
+}
 Parameter::Parameter(Ident_List *id_lst, Type *t, int l, int c) : Node(l, c)
 {
 	this->ident_list = id_lst;
@@ -72,7 +95,10 @@ Parameter::Parameter(Ident_List *id_lst, Type *t, int l, int c) : Node(l, c)
 	id_lst->father = this;
 	t->father = this;
 }
-
+void Parameter::accept(NodeVisistor *nv)
+{
+	nv->Visit(this);
+}
 Parameter_List::Parameter_List(int l, int c) : Node(l, c)
 {
 	this->params = new vector<Parameter *>;
@@ -89,13 +115,19 @@ void Parameter_List::AddParam(Parameter *p)
 	this->params->push_back(p);
 	p->father = this;
 }
-
+void Parameter_List::accept(NodeVisistor *nv)
+{
+	nv->Visit(this);
+}
 Declaration::Declaration(Parameter *p, int l, int c) : Node(l, c)
 {
 	this->param = p;
 	p->father = this;
 }
-
+void Declaration::accept(NodeVisistor *nv)
+{
+	nv->Visit(this);
+}
 Declarations::Declarations(int l, int c) : Node(l, c)
 {
 	this->decs = new vector<Declaration *>;
@@ -112,32 +144,50 @@ void Declarations::AddDec(Declaration *dec)
 	this->decs->push_back(dec);
 	dec->father = this;
 }
-
+void Declarations::accept(NodeVisistor *nv)
+{
+	nv->Visit(this);
+}
 Arguments::Arguments(Parameter_List *p_lst, int l, int c) : Node(l, c)
 {
 	this->param_lst = p_lst;
 	p_lst->father = this;
 }
-
+void Arguments::accept(NodeVisistor *nv)
+{
+	nv->Visit(this);
+}
 Expression::Expression(int l, int c) : Node(l, c)
 {
 }
-
+void Expression::accept(NodeVisistor *nv)
+{
+	nv->Visit(this);
+}
 Int_Expression::Int_Expression(Int_Num *v, int l, int c) : Expression(l, c)
 {
 	this->value = v;
 }
-
+void Int_Expression::accept(NodeVisistor *nv)
+{
+	nv->Visit(this);
+}
 Real_Expression::Real_Expression(Real_Num *v, int l, int c) : Expression(l, c)
 {
 	this->value = v;
 }
-
+void Real_Expression::accept(NodeVisistor *nv)
+{
+	nv->Visit(this);
+}
 Boolean_Expression::Boolean_Expression(bool v, int l, int c) : Expression(l, c)
 {
 	this->value = v;
 }
-
+void Boolean_Expression::accept(NodeVisistor *nv)
+{
+	nv->Visit(this);
+}
 Ident_Expression::Ident_Expression(Ident *id, int l, int c) : Expression(l, c)
 {
 	this->ident = id;
@@ -151,13 +201,19 @@ Ident_Expression::Ident_Expression(Ident *id, Expression_List *e_lst, int l, int
 	id->father = this;
 	e_lst->father = this;
 }
-
+void Ident_Expression::accept(NodeVisistor *nv)
+{
+	nv->Visit(this);
+}
 Expression_Expression::Expression_Expression(Expression *exp, int l, int c) : Expression(l, c)
 {
 	this->expression = exp;
 	exp->father = this;
 }
-
+void Expression_Expression::accept(NodeVisistor *nv)
+{
+	nv->Visit(this);
+}
 Unary_Expression::Unary_Expression(Expression *le, Unary_Operator *o, Expression *re, int l, int c) : Expression(l, c)
 {
 	this->left_exp = le;
@@ -167,13 +223,19 @@ Unary_Expression::Unary_Expression(Expression *le, Unary_Operator *o, Expression
 	o->father = this;
 	re->father = this;
 }
-
+void Unary_Expression::accept(NodeVisistor *nv)
+{
+	nv->Visit(this);
+}
 Not_Expression::Not_Expression(Expression *e, int l, int c) : Expression(l, c)
 {
 	this->expression = e;
 	e->father = this;
 }
-
+void Not_Expression::accept(NodeVisistor *nv)
+{
+	nv->Visit(this);
+}
 Expression_List::Expression_List(int l, int c) : Node(l, c)
 {
 	this->exprs = new vector<Expression *>;
@@ -190,7 +252,10 @@ void Expression_List::AddExpr(Expression *e)
 	this->exprs->push_back(e);
 	e->father = this;
 }
-
+void Expression_List::accept(NodeVisistor *nv)
+{
+	nv->Visit(this);
+}
 Procedure_Statement::Procedure_Statement(Ident *i, int l, int c) : Statement(l, c)
 {
 	this->id = i;
@@ -204,11 +269,17 @@ Procedure_Statement::Procedure_Statement(Ident *i, Expression_List *el, int l, i
 	this->expr_lst = el;
 	el->father = this;
 }
-
+void Procedure_Statement::accept(NodeVisistor *nv)
+{
+	nv->Visit(this);
+}
 Statement::Statement(int a, int b) : Node(a, b)
 {
 }
-
+void Statement::accept(NodeVisistor *nv)
+{
+	nv->Visit(this);
+}
 Variable_Statement::Variable_Statement(Variable *v, Expression *e, int l, int c) : Statement(l, c)
 {
 	this->variable = v;
@@ -216,14 +287,20 @@ Variable_Statement::Variable_Statement(Variable *v, Expression *e, int l, int c)
 	v->father = this;
 	e->father = this;
 }
-
+void Variable_Statement::accept(NodeVisistor *nv)
+{
+	nv->Visit(this);
+}
 Compound_Statement::Compound_Statement(Optional_Statements *os, int l, int c) : Statement(l, c)
 {
 	this->optional_statements = os;
 	if (os != NULL)
 		os->father = this;
 }
-
+void Compound_Statement::accept(NodeVisistor *nv)
+{
+	nv->Visit(this);
+}
 If_Statement::If_Statement(Expression *e, Statement *s, int l, int c) : Statement(l, c)
 {
 	this->expression = e;
@@ -231,7 +308,10 @@ If_Statement::If_Statement(Expression *e, Statement *s, int l, int c) : Statemen
 	e->father = this;
 	s->father = this;
 }
-
+void If_Statement::accept(NodeVisistor *nv)
+{
+	nv->Visit(this);
+}
 If_Else_Statement::If_Else_Statement(Expression *e, Statement *s1, Statement *s2, int l, int c) : Statement(l, c)
 {
 	this->statement1 = s1;
@@ -241,7 +321,10 @@ If_Else_Statement::If_Else_Statement(Expression *e, Statement *s1, Statement *s2
 	s2->father = this;
 	e->father = this;
 }
-
+void If_Else_Statement::accept(NodeVisistor *nv)
+{
+	nv->Visit(this);
+}
 While_Statement::While_Statement(Expression *e, Statement *s, int l, int c) : Statement(l, c)
 {
 	this->expression = e;
@@ -249,7 +332,10 @@ While_Statement::While_Statement(Expression *e, Statement *s, int l, int c) : St
 	e->father = this;
 	s->father = this;
 }
-
+void While_Statement::accept(NodeVisistor *nv)
+{
+	nv->Visit(this);
+}
 Optional_Statements::Optional_Statements(Statement_List *sl, int l, int c) : Statement(l, c)
 {
 	this->statement_list = sl;
@@ -259,7 +345,10 @@ Optional_Statements::Optional_Statements(Statement_List *sl, int l, int c) : Sta
 Optional_Statements::Optional_Statements(int l, int c) : Statement(l, c)
 {
 }
-
+void Optional_Statements::accept(NodeVisistor *nv)
+{
+	nv->Visit(this);
+}
 Statement_List::Statement_List(int l, int c) : Node(l, c)
 {
 	this->stmts = new vector<Statement *>;
@@ -276,7 +365,10 @@ void Statement_List::AddStatement(Statement *s)
 	this->stmts->push_back(s);
 	s->father = this;
 }
-
+void Statement_List::accept(NodeVisistor *nv)
+{
+	nv->Visit(this);
+}
 Variable::Variable(Ident *i, int l, int c) : Node(l, c)
 {
 	this->id = i;
@@ -290,7 +382,10 @@ Variable::Variable(Ident *i, Expression *e, int l, int c) : Node(l, c)
 	this->expr = e;
 	e->father = this;
 }
-
+void Variable::accept(NodeVisistor *nv)
+{
+	nv->Visit(this);
+}
 Subprogram_Head::Subprogram_Head(Arguments *a, int l, int c) : Node(l, c)
 {
 	this->args = a;
@@ -308,7 +403,10 @@ Subprogram_Head::Subprogram_Head(Arguments *a, Standard_Type *s, int l, int c) :
 	if (a != NULL)
 		a->father = this;
 }
-
+void Subprogram_Head::accept(NodeVisistor *nv)
+{
+	nv->Visit(this);
+}
 Subprogram_Declaration::Subprogram_Declaration(Subprogram_Head *s, Compound_Statement *cs, int l, int c) : Node(l, c)
 {
 	this->sub_head = s;
@@ -316,7 +414,10 @@ Subprogram_Declaration::Subprogram_Declaration(Subprogram_Head *s, Compound_Stat
 	s->father = this;
 	cs->father = this;
 }
-
+void Subprogram_Declaration::accept(NodeVisistor *nv)
+{
+	nv->Visit(this);
+}
 Subprogram_Declarations::Subprogram_Declarations(int l, int c) : Node(l, c)
 {
 	this->decs = new vector<Subprogram_Declaration *>;
@@ -333,7 +434,10 @@ void Subprogram_Declarations::AddDec(Subprogram_Declaration *dec)
 	this->decs->push_back(dec);
 	dec->father = this;
 }
-
+void Subprogram_Declarations::accept(NodeVisistor *nv)
+{
+	nv->Visit(this);
+}
 Program::Program(Ident *i, Declarations *d, Subprogram_Declarations *sd, Compound_Statement *cs, int l, int c) : Node(l, c)
 {
 	this->id = i;
@@ -358,7 +462,10 @@ Add_expression::Add_expression(Expression * e1, Expression * e2, int lin, int co
 	if (e2 != NULL)
 		e2->father = this;
 }
-
+void Add_expression::accept(NodeVisistor *nv)
+{
+	nv->Visit(this);
+}
 
 
 Minus_expression::Minus_expression(Expression * e1, Expression * e2, int lin, int col) :Expression(lin, col)
@@ -370,7 +477,10 @@ Minus_expression::Minus_expression(Expression * e1, Expression * e2, int lin, in
 	if (e2 != NULL)
 		e2->father = this;
 }
-
+void Minus_expression::accept(NodeVisistor *nv)
+{
+	nv->Visit(this);
+}
 
 Mul_expression::Mul_expression(Expression * e1, Expression * e2, int lin, int col) :Expression(lin, col)
 {
@@ -381,7 +491,10 @@ Mul_expression::Mul_expression(Expression * e1, Expression * e2, int lin, int co
 	if (e2 != NULL)
 		e2->father = this;
 }
-
+void Mul_expression::accept(NodeVisistor *nv)
+{
+	nv->Visit(this);
+}
 
 Divide_expression::Divide_expression(Expression * e1, Expression * e2, int lin, int col) :Expression(lin, col)
 {
@@ -391,4 +504,8 @@ Divide_expression::Divide_expression(Expression * e1, Expression * e2, int lin, 
 		e1->father = this;
 	if (e2 != NULL)
 		e2->father = this;
+}
+void Divide_expression::accept(NodeVisistor *nv)
+{
+	nv->Visit(this);
 }

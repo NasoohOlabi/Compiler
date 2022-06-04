@@ -11,6 +11,8 @@ add_custom_command(
 	DEPENDS ../Parser.y ../scanner.l
 	)
 	
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+# C++14: set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++1y")
 	
 file(GLOB_RECURSE sources src/* )
 add_executable(Compiler main.cpp ${sources})

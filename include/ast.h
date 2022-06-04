@@ -53,8 +53,8 @@ class Minus_expression;
 class Mul_expression;
 class Divide_expression;
 
-class NodeVisistor;
-class PrintVisistor;
+class NodeVisitor;
+class PrintVisitor;
 // class TypeVisitor;
 // class CodeVisitor;
 
@@ -67,7 +67,7 @@ public:
 	int column;
 	Node *father;
 	Node(int, int);
-	virtual void accept(NodeVisistor *);
+	virtual void accept(NodeVisitor *) = 0;
 };
 
 class Ident : public Node
@@ -75,7 +75,7 @@ class Ident : public Node
 public:
 	string name;
 	Ident(string n, int l, int c);
-	virtual void accept(NodeVisistor *);
+	void accept(NodeVisitor *) override;
 };
 
 class Ident_List : public Node
@@ -85,7 +85,7 @@ public:
 	Ident_List(int, int);
 	Ident_List(Ident *, int, int);
 	void AddIdent(Ident *);
-	virtual void accept(NodeVisistor *);
+	void accept(NodeVisitor *) override;
 };
 
 class Int_Num : public Node
@@ -93,7 +93,7 @@ class Int_Num : public Node
 public:
 	int value;
 	Int_Num(int, int, int);
-	virtual void accept(NodeVisistor *);
+	void accept(NodeVisitor *) override;
 };
 
 class Real_Num : public Node
@@ -101,7 +101,7 @@ class Real_Num : public Node
 public:
 	float value;
 	Real_Num(float, int, int);
-	virtual void accept(NodeVisistor *);
+	void accept(NodeVisitor *) override;
 };
 
 class Unary_Operator : public Node
@@ -109,7 +109,7 @@ class Unary_Operator : public Node
 public:
 	string op;
 	Unary_Operator(string, int, int);
-	virtual void accept(NodeVisistor *);
+	void accept(NodeVisitor *) override;
 };
 
 class Standard_Type : public Node
@@ -117,7 +117,7 @@ class Standard_Type : public Node
 public:
 	char type;
 	Standard_Type(char, int, int);
-	virtual void accept(NodeVisistor *);
+	void accept(NodeVisitor *) override;
 };
 
 class Type : public Node
@@ -129,7 +129,7 @@ public:
 	Standard_Type *std_type;
 	Type(Standard_Type *, int, int, int, int);
 	Type(Standard_Type *, int, int);
-	virtual void accept(NodeVisistor *);
+	void accept(NodeVisitor *) override;
 };
 
 class Parameter : public Node
@@ -138,7 +138,7 @@ public:
 	Ident_List *ident_list;
 	Type *type;
 	Parameter(Ident_List *, Type *, int, int);
-	virtual void accept(NodeVisistor *);
+	void accept(NodeVisitor *) override;
 };
 
 class Parameter_List : public Node
@@ -148,7 +148,7 @@ public:
 	Parameter_List(int, int);
 	Parameter_List(Parameter *, int, int);
 	void AddParam(Parameter *);
-	virtual void accept(NodeVisistor *);
+	void accept(NodeVisitor *) override;
 };
 
 class Declaration : public Node
@@ -156,7 +156,7 @@ class Declaration : public Node
 public:
 	Parameter *param;
 	Declaration(Parameter *, int, int);
-	virtual void accept(NodeVisistor *);
+	void accept(NodeVisitor *) override;
 };
 
 class Declarations : public Node
@@ -166,7 +166,7 @@ public:
 	Declarations(int, int);
 	Declarations(Declaration *, int, int);
 	void AddDec(Declaration *);
-	virtual void accept(NodeVisistor *);
+	void accept(NodeVisitor *) override;
 };
 
 class Arguments : public Node
@@ -174,13 +174,13 @@ class Arguments : public Node
 public:
 	Parameter_List *param_lst;
 	Arguments(Parameter_List *, int, int);
-	virtual void accept(NodeVisistor *);
+	void accept(NodeVisitor *) override;
 };
 class Expression : public Node
 {
 public:
 	Expression(int, int);
-	virtual void accept(NodeVisistor *);
+	void accept(NodeVisitor *) override;
 };
 
 class Int_Expression : public Expression
@@ -188,21 +188,21 @@ class Int_Expression : public Expression
 public:
 	Int_Num *value;
 	Int_Expression(Int_Num *, int, int);
-	virtual void accept(NodeVisistor *);
+	void accept(NodeVisitor *) override;
 };
 class Real_Expression : public Expression
 {
 public:
 	Real_Num *value;
 	Real_Expression(Real_Num *, int, int);
-	virtual void accept(NodeVisistor *);
+	void accept(NodeVisitor *) override;
 };
 class Boolean_Expression : public Expression
 {
 public:
 	bool value;
 	Boolean_Expression(bool, int, int);
-	virtual void accept(NodeVisistor *);
+	void accept(NodeVisitor *) override;
 };
 class Ident_Expression : public Expression
 {
@@ -211,14 +211,14 @@ public:
 	Expression_List *expr_lst;
 	Ident_Expression(Ident *, Expression_List *, int, int);
 	Ident_Expression(Ident *, int, int);
-	virtual void accept(NodeVisistor *);
+	void accept(NodeVisitor *) override;
 };
 class Expression_Expression : public Expression
 {
 public:
 	Expression *expression;
 	Expression_Expression(Expression *, int, int);
-	virtual void accept(NodeVisistor *);
+	void accept(NodeVisitor *) override;
 };
 class Unary_Expression : public Expression
 {
@@ -227,14 +227,14 @@ public:
 	Unary_Operator *op;
 	Expression *right_exp;
 	Unary_Expression(Expression *, Unary_Operator *, Expression *, int, int);
-	virtual void accept(NodeVisistor *);
+	void accept(NodeVisitor *) override;
 };
 class Not_Expression : public Expression
 {
 public:
 	Expression *expression;
 	Not_Expression(Expression *, int, int);
-	virtual void accept(NodeVisistor *);
+	void accept(NodeVisitor *) override;
 };
 
 class Expression_List : public Node
@@ -244,24 +244,24 @@ public:
 	Expression_List(int, int);
 	Expression_List(Expression *, int, int);
 	void AddExpr(Expression *);
-	virtual void accept(NodeVisistor *);
+	void accept(NodeVisitor *) override;
 };
 
 class Statement : public Node
 {
 public:
 	Statement(int, int);
-	virtual void accept(NodeVisistor *);
+	void accept(NodeVisitor *) override;
 };
 
 class Procedure_Statement : public Statement
 {
 public:
 	Ident *id;
-	Expression_List *expr_lst;
+	Expression_List *expr_lst{};
 	Procedure_Statement(Ident *, int, int);
 	Procedure_Statement(Ident *, Expression_List *, int, int);
-	virtual void accept(NodeVisistor *);
+	void accept(NodeVisitor *) override;
 };
 
 class Optional_Statements : public Statement
@@ -271,7 +271,7 @@ public:
 	// bool returnValue = false;
 	Optional_Statements(Statement_List *, int, int);
 	Optional_Statements(int, int);
-	virtual void accept(NodeVisistor *);
+	void accept(NodeVisitor *) override;
 };
 
 class Statement_List : public Node
@@ -282,7 +282,7 @@ public:
 	Statement_List(int, int);
 	Statement_List(Statement *, int, int);
 	void AddStatement(Statement *);
-	virtual void accept(NodeVisistor *);
+	void accept(NodeVisitor *) override;
 };
 
 class Variable_Statement : public Statement
@@ -292,7 +292,7 @@ public:
 	Expression *expression;
 	// string type;
 	Variable_Statement(Variable *, Expression *, int, int);
-	virtual void accept(NodeVisistor *);
+	void accept(NodeVisitor *) override;
 };
 
 class Compound_Statement : public Statement
@@ -300,7 +300,7 @@ class Compound_Statement : public Statement
 public:
 	Optional_Statements *optional_statements;
 	Compound_Statement(Optional_Statements *, int, int);
-	virtual void accept(NodeVisistor *);
+	void accept(NodeVisitor *) override;
 };
 
 class If_Statement : public Statement
@@ -309,7 +309,7 @@ public:
 	Expression *expression;
 	Statement *statement;
 	If_Statement(Expression *, Statement *, int, int);
-	virtual void accept(NodeVisistor *);
+	void accept(NodeVisitor *) override;
 };
 class If_Else_Statement : public Statement
 {
@@ -318,7 +318,7 @@ public:
 	Statement *statement1;
 	Statement *statement2;
 	If_Else_Statement(Expression *, Statement *, Statement *, int, int);
-	virtual void accept(NodeVisistor *);
+	void accept(NodeVisitor *) override;
 };
 
 class While_Statement : public Statement
@@ -327,17 +327,17 @@ public:
 	Expression *expression;
 	Statement *statement;
 	While_Statement(Expression *, Statement *, int, int);
-	virtual void accept(NodeVisistor *);
+	void accept(NodeVisitor *) override;
 };
 
 class Variable : public Node
 {
 public:
 	Ident *id;
-	Expression *expr;
+	Expression *expr{};
 	Variable(Ident *, int, int);
 	Variable(Ident *, Expression *, int, int);
-	virtual void accept(NodeVisistor *);
+	void accept(NodeVisitor *) override;
 };
 
 class Subprogram_Head : public Node
@@ -348,7 +348,7 @@ public:
 	bool is_function;
 	Subprogram_Head(Arguments *, int, int);
 	Subprogram_Head(Arguments *, Standard_Type *, int, int);
-	virtual void accept(NodeVisistor *);
+	void accept(NodeVisitor *) override;
 };
 
 class Subprogram_Declaration : public Node
@@ -357,7 +357,7 @@ public:
 	Subprogram_Head *sub_head;
 	Compound_Statement *comp_stmt;
 	Subprogram_Declaration(Subprogram_Head *, Compound_Statement *, int, int);
-	virtual void accept(NodeVisistor *);
+	void accept(NodeVisitor *) override;
 };
 
 class Subprogram_Declarations : public Node
@@ -367,7 +367,7 @@ public:
 	Subprogram_Declarations(int, int);
 	Subprogram_Declarations(Subprogram_Declaration *, int, int);
 	void AddDec(Subprogram_Declaration *);
-	virtual void accept(NodeVisistor *);
+	void accept(NodeVisitor *) override;
 };
 
 class Program : public Node
@@ -378,7 +378,7 @@ public:
 	Subprogram_Declarations *sub_decs;
 	Compound_Statement *comp_stmt;
 	Program(Ident *, Declarations *, Subprogram_Declarations *, Compound_Statement *, int, int);
-	virtual void accept(NodeVisistor *);
+	void accept(NodeVisitor *);
 };
 
 class Add_expression : public Expression
@@ -387,7 +387,7 @@ public:
 	Expression *expression1;
 	Expression *expression2;
 	Add_expression(Expression *, Expression *, int, int);
-	virtual void accept(NodeVisistor *);
+	void accept(NodeVisitor *) override;
 };
 
 class Minus_expression : public Expression
@@ -396,7 +396,7 @@ public:
 	Expression *expression1;
 	Expression *expression2;
 	Minus_expression(Expression *, Expression *, int, int);
-	virtual void accept(NodeVisistor *);
+	void accept(NodeVisitor *) override;
 };
 
 class Mul_expression : public Expression
@@ -405,7 +405,7 @@ public:
 	Expression *expression1;
 	Expression *expression2;
 	Mul_expression(Expression *, Expression *, int, int);
-	virtual void accept(NodeVisistor *);
+	void accept(NodeVisitor *) override;
 };
 
 class Divide_expression : public Expression
@@ -414,10 +414,10 @@ public:
 	Expression *expression1;
 	Expression *expression2;
 	Divide_expression(Expression *, Expression *, int, int);
-	virtual void accept(NodeVisistor *);
+	void accept(NodeVisitor *) override;
 };
 
-class NodeVisistor
+class NodeVisitor
 {
 public:
 	virtual void Visit(Node *) = 0;
@@ -462,52 +462,52 @@ public:
 	virtual void Visit(Divide_expression *) = 0;
 };
 
-class PrintVisistor : public NodeVisistor
+class PrintVisitor : public NodeVisitor
 {
 public:
-	virtual void Visit(Node *);
-	virtual void Visit(Ident *);
-	virtual void Visit(Ident_List *);
-	virtual void Visit(Int_Num *);
-	virtual void Visit(Real_Num *);
-	virtual void Visit(Unary_Operator *);
-	virtual void Visit(Standard_Type *);
-	virtual void Visit(Type *);
-	virtual void Visit(Parameter *);
-	virtual void Visit(Declaration *);
-	virtual void Visit(Declarations *);
-	virtual void Visit(Expression *);
-	virtual void Visit(Int_Expression *);
-	virtual void Visit(Real_Expression *);
-	virtual void Visit(Boolean_Expression *);
-	virtual void Visit(Ident_Expression *);
-	virtual void Visit(Expression_Expression *);
-	virtual void Visit(Expression_List *);
-	virtual void Visit(Unary_Expression *);
-	virtual void Visit(Not_Expression *);
-	virtual void Visit(Statement *);
-	virtual void Visit(Statement_List *);
-	virtual void Visit(If_Statement *);
-	virtual void Visit(While_Statement *);
-	virtual void Visit(If_Else_Statement *);
-	virtual void Visit(Compound_Statement *);
-	virtual void Visit(Optional_Statements *);
-	virtual void Visit(Variable_Statement *);
-	virtual void Visit(Parameter_List *);
-	virtual void Visit(Arguments *);
-	virtual void Visit(Procedure_Statement *);
-	virtual void Visit(Variable *);
-	virtual void Visit(Subprogram_Head *);
-	virtual void Visit(Subprogram_Declaration *);
-	virtual void Visit(Subprogram_Declarations *);
-	virtual void Visit(Program *);
-	virtual void Visit(Add_expression *);
-	virtual void Visit(Minus_expression *);
-	virtual void Visit(Mul_expression *);
-	virtual void Visit(Divide_expression *);
+	void Visit(Node *) override;
+	void Visit(Ident *) override;
+	void Visit(Ident_List *) override;
+	void Visit(Int_Num *) override;
+	void Visit(Real_Num *) override;
+	void Visit(Unary_Operator *) override;
+	void Visit(Standard_Type *) override;
+	void Visit(Type *) override;
+	void Visit(Parameter *) override;
+	void Visit(Declaration *) override;
+	void Visit(Declarations *) override;
+	void Visit(Expression *) override;
+	void Visit(Int_Expression *) override;
+	void Visit(Real_Expression *) override;
+	void Visit(Boolean_Expression *) override;
+	void Visit(Ident_Expression *) override;
+	void Visit(Expression_Expression *) override;
+	void Visit(Expression_List *) override;
+	void Visit(Unary_Expression *) override;
+	void Visit(Not_Expression *) override;
+	void Visit(Statement *) override;
+	void Visit(Statement_List *) override;
+	void Visit(If_Statement *) override;
+	void Visit(While_Statement *) override;
+	void Visit(If_Else_Statement *) override;
+	void Visit(Compound_Statement *) override;
+	void Visit(Optional_Statements *) override;
+	void Visit(Variable_Statement *) override;
+	void Visit(Parameter_List *) override;
+	void Visit(Arguments *) override;
+	void Visit(Procedure_Statement *) override;
+	void Visit(Variable *) override;
+	void Visit(Subprogram_Head *) override;
+	void Visit(Subprogram_Declaration *) override;
+	void Visit(Subprogram_Declarations *) override;
+	void Visit(Program *) override;
+	void Visit(Add_expression *) override;
+	void Visit(Minus_expression *) override;
+	void Visit(Mul_expression *) override;
+	void Visit(Divide_expression *) override;
 };
 
-// class TypeVisitor : public NodeVisistor
+// class TypeVisitor : public NodeVisitor
 // {
 // public:
 // 	// TypeVisitor() {}
@@ -553,7 +553,7 @@ public:
 // 	// virtual void Visit(Divide_expression *);
 // };
 
-// class CodeVisitor : public NodeVisistor
+// class CodeVisitor : public NodeVisitor
 // {
 // public:
 // 	// virtual void Visit(Node *)  ;

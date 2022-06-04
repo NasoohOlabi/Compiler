@@ -48,7 +48,7 @@ public:
   CHashTable(long tabsize = 10009, long (*VoidPtr)(const std::string &c, const long prime) = hash_fun1)
   {
     prime = 0;
-    map_array = NULL;
+    map_array = nullptr;
     hf = VoidPtr;
 
     long prime_table[8] = {1009, 5009, 10009, 20011, 50021, 100003, 200003, 500009};
@@ -98,8 +98,8 @@ public:
     if ((index < 0) || (index >= prime))
       return (false);
 
-    StrVoidPtrListT *list_ptr = NULL;
-    if (map_array[index] == NULL)
+    StrVoidPtrListT *list_ptr = nullptr;
+    if (map_array[index] == nullptr)
     {
       list_ptr = new StrVoidPtrListT;
       map_array[index] = list_ptr;
@@ -111,7 +111,7 @@ public:
     if (!list_ptr)
       return (false);
 
-    struct SStrVoidPtrPair *pair_ptr = NULL;
+    struct SStrVoidPtrPair *pair_ptr = nullptr;
     StrVoidPtrListT::iterator iter = list_ptr->begin();
     while (iter != list_ptr->end())
     {
@@ -235,7 +235,7 @@ public:
         key_iter++;
         continue;
       };
-      if (map_array[index] == NULL)
+      if (map_array[index] == nullptr)
       {
         key_iter++;
         continue;
@@ -258,7 +258,7 @@ public:
         list_iter++;
       }
       delete list_ptr;
-      map_array[index] = NULL;
+      map_array[index] = nullptr;
 
       key_iter++;
     }
@@ -277,19 +277,19 @@ public:
   T *GetMember(const std::string &key)
   {
     if (!map_array)
-      return (NULL);
+      return (nullptr);
     if (!hf)
-      return (NULL);
+      return (nullptr);
     if (prime <= 0)
-      return (NULL);
+      return (nullptr);
     if (key.empty())
-      return (NULL);
+      return (nullptr);
 
     long index = hf(key, prime);
     if ((index < 0) || (index >= prime))
-      return (NULL);
-    if (map_array[index] == NULL)
-      return (NULL);
+      return (nullptr);
+    if (map_array[index] == nullptr)
+      return (nullptr);
 
     StrVoidPtrListT *list_ptr = (StrVoidPtrListT *)map_array[index];
 
@@ -306,7 +306,7 @@ public:
       }
       iter++;
     }
-    return (NULL);
+    return (nullptr);
   };
 
 protected:

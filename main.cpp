@@ -10,7 +10,7 @@ int main()
 	yyparse();
 	cout << "Parsing is done...\n";
 	root;
-	NodeVisistor *pv = new PrintVisistor();
+	NodeVisitor *pv = new PrintVisitor();
 	root->accept(pv);
 	return 0;
 }

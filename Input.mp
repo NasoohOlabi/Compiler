@@ -3,6 +3,8 @@ Program ArrayExample;
 Var var1 : Integer;
 Var var2 : Real;
 Var var3 : Boolean;
+Var var1 : Integer;
+
 
 function MYFUNC (x,y : integer) : boolean;
 

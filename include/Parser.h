@@ -103,7 +103,7 @@
 
 
 #if ! defined (YYSTYPE) && ! defined (YYSTYPE_IS_DECLARED)
-#line 16 "../Parser.y"
+#line 17 "../Parser.y"
 typedef union YYSTYPE {
 	Ident *tIdent;
 	Ident_List *tIdent_List;

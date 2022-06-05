@@ -11,7 +11,6 @@ int main()
 	yyparse();
 	cout << "Parsing is done...\n";
 	root;
-	cout << root->id;
 	NodeVisitor *pv = new PrintVisitor();
 	root->accept(pv);
 	return 0;

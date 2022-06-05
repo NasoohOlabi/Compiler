@@ -8,6 +8,7 @@
 	int lin = 0, col =0;
 
 	Program *root;
+	SymbolTable *symbolTable = new SymbolTable();
 %}
 
 
@@ -308,6 +309,13 @@ declaration: VAR parameter ';'
 										{
 											cout << "declaration\n";
 											$$ = new Declaration($2, lin, col);
+
+											char t = $2->type->std_type->type;
+											cout << "&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&& "<<t<<"\n";
+											int n = $2->ident_list->idents->size();
+											for(int i=0;i<n;i++){
+												symbolTable->AddSymbol($2->ident_list->idents->at(i),1,t);
+											}
 										}
 ;
 

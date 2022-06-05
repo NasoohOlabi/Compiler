@@ -9,8 +9,9 @@ using std::vector;
 #include <string>
 using std::string;
 
-// #include "hash_table.h"
-// #include "hash_fun.h"
+#include "hash_table.h"
+#include "hash_fun.h"
+
 
 class Node;
 class Ident;
@@ -55,10 +56,14 @@ class Binary_opreator;
 
 class NodeVisitor;
 class PrintVisitor;
+class Symbol;
+class Scope;
+class SymbolTable;
 // class TypeVisitor;
 // class CodeVisitor;
 
-// typedef CHashTable <Symbol> HashTab;
+
+ typedef CHashTable <Symbol> HashTab;
 
 class Node
 {
@@ -597,3 +602,28 @@ public:
 // 	// virtual void Visit(Divide_expression *)  ;
 // 	// virtual void Visit(Binary_opreator *)  ;
 // };
+
+class Symbol
+{
+public:
+	string name;
+	int kind;
+	char type;
+	int location;
+	Symbol(string , int ,char);
+};
+class Scope
+{
+public:
+	HashTab *hashTab;
+	Scope();
+};
+
+class  SymbolTable
+{
+public:
+	vector <Scope*> * scopes;
+	Scope * current;
+	bool AddSymbol(Ident *,int ,char);
+	SymbolTable();
+	};

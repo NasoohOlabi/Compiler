@@ -908,3 +908,29 @@ void PrintVisitor::Visit(Divide_expression *n)
 	cout << "\nRight Expr -> \n";
 	n->expression2->accept(this);
 }
+Symbol::Symbol(string n, int k,char t){
+	this->name = n;
+	this->type = t;
+	this->kind = k;
+}
+Scope::Scope(){
+	this->hashTab = new HashTab;
+}
+SymbolTable::SymbolTable(){
+	this->scopes = new vector<Scope*>;
+	this->scopes->push_back(new Scope());
+	this->current= this->scopes->at(0);
+}
+bool SymbolTable::AddSymbol(Ident * ident, int kind, char type){
+	Symbol * s = new Symbol(ident->name, kind, type);
+	string key = "l"  + ident->name;
+	Symbol * temp = this -> current->hashTab->GetMember(key);
+	if (temp == NULL){
+		this->current->hashTab->AddKey(key,s);
+		return true;
+	}
+	else {
+		cout << "**************************************************Redefinition variable "<<ident->name<< " " << type<<"\n";
+		return false;
+	}
+}

@@ -18,7 +18,6 @@
 	Ident_List *tIdent_List;
 	Int_Num *tInt_Num;
 	Real_Num *tReal_Num;
-	Unary_Operator *tUnary_Operator;
 	Standard_Type *tStandard_Type;
 	Type *tType;
 	Parameter *tParameter;
@@ -32,7 +31,6 @@
 	Boolean_Expression *tBoolean_Expression;
 	Ident_Expression *tIdent_Expression;
 	Expression_Expression *tExpression_Expression;
-	Unary_Expression *tUnary_Expression;
 	Not_Expression *tNot_Expression;
 	Expression_List *tExpression_List;
 	Procedure_Statement *tProcedure_Statement;
@@ -49,6 +47,8 @@
 	Minus_expression *tMinus_expression;
 	Mul_expression *tMul_expression;
 	Divide_expression *tDivide_expression;
+	Binary_expression *tBinary_expression;
+	Binary_opreator *tBinary_Opreator;
  }
 
 /* Tokens Section (Terminals) */
@@ -67,7 +67,7 @@
 %left '+' '-'
 %left '*' '/'
 
-%nonassoc <tUnary_Operator> UNARY_OPERATOR
+%nonassoc <tBinary_Opreator> BINARY_OPERATOR
 
 %nonassoc EXPRLST_PREC
 
@@ -110,7 +110,6 @@
 %type <tBoolean_Expression> boolean_expression
 %type <tIdent_Expression> ident_expression
 %type <tExpression_Expression> expression_expression
-%type <tUnary_Expression> unary_expression
 %type <tNot_Expression> not_expression
 */
 
@@ -129,6 +128,7 @@
 %type <tMinus_expression> minus_expression
 %type <tMul_expression> mul_expression
 %type <tDivide_expression> divide_expression
+%type <tBinary_expression> binary_expression
 
 
 %%
@@ -137,6 +137,7 @@ program: PROGRAM IDENT ';' declarations subprogram_declarations compound_stateme
 	{
 		cout << "main program\n";
 		$$ = new Program($2, $4, $5, $6, lin, col);
+		root = $$;
 	}
 
 
@@ -253,10 +254,9 @@ expression: INT_NUM
 								{
 									$$ = $1;
 								}								
-			| expression UNARY_OPERATOR expression %prec UNARY_PREC
+			| binary_expression %prec UNARY_PREC
 								{
-									$$ = new Unary_Expression($1, $2, $3, lin, col);
-									cout << "Unary Expression\n";
+									$$ = $1;
 								}
 			| IDENT expression_list %prec EXPR_PREC
 								{
@@ -342,31 +342,38 @@ type: standard_type
 					}			
 ;
 
-add_expression: expression  '+'  expression 
+add_expression: expression '+' expression 
 					{
 						cout<<"Add Expression found";
 						$$ = new Add_expression($1, $3, lin, col);
 					}
 ;
 
-minus_expression: expression  '-'  expression 
+minus_expression: expression '-' expression 
 				{
 						cout<<"Minus Expression found";
 						$$ = new Minus_expression($1, $3, lin, col);
 				}
 ;
 
-mul_expression: expression  '*'  expression 
+mul_expression: expression '*' expression 
 				{
 						cout<<"Mult Expression found";
 						$$ = new Mul_expression($1, $3, lin, col);
 				}
 ;
 
-divide_expression: expression  '/'  expression 
+divide_expression: expression '/' expression 
 				{
 						cout<<"Divide Expression found";
 						$$ = new Divide_expression($1, $3, lin, col);
+				}
+;
+
+binary_expression: expression BINARY_OPERATOR expression 
+				{
+						cout<< "Binary Expression found";
+						$$ = new Binary_expression($1, $2, $3, lin, col);
 				}
 ;
 

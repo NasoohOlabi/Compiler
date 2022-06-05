@@ -48,7 +48,7 @@
      IDENT = 274,
      INT_NUM = 275,
      REAL_NUM = 276,
-     UNARY_OPERATOR = 277,
+     BINARY_OPERATOR = 277,
      EXPRLST_PREC = 278,
      ELSE = 279,
      IF_PREC = 280,
@@ -84,7 +84,7 @@
 #define IDENT 274
 #define INT_NUM 275
 #define REAL_NUM 276
-#define UNARY_OPERATOR 277
+#define BINARY_OPERATOR 277
 #define EXPRLST_PREC 278
 #define ELSE 279
 #define IF_PREC 280
@@ -109,7 +109,6 @@ typedef union YYSTYPE {
 	Ident_List *tIdent_List;
 	Int_Num *tInt_Num;
 	Real_Num *tReal_Num;
-	Unary_Operator *tUnary_Operator;
 	Standard_Type *tStandard_Type;
 	Type *tType;
 	Parameter *tParameter;
@@ -123,7 +122,6 @@ typedef union YYSTYPE {
 	Boolean_Expression *tBoolean_Expression;
 	Ident_Expression *tIdent_Expression;
 	Expression_Expression *tExpression_Expression;
-	Unary_Expression *tUnary_Expression;
 	Not_Expression *tNot_Expression;
 	Expression_List *tExpression_List;
 	Procedure_Statement *tProcedure_Statement;
@@ -140,6 +138,8 @@ typedef union YYSTYPE {
 	Minus_expression *tMinus_expression;
 	Mul_expression *tMul_expression;
 	Divide_expression *tDivide_expression;
+	Binary_expression *tBinary_expression;
+	Binary_opreator *tBinary_Opreator;
  } YYSTYPE;
 /* Line 1447 of yacc.c.  */
 #line 146 "../include/Parser.h"

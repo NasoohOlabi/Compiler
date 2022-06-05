@@ -17,7 +17,6 @@ class Ident;
 class Ident_List;
 class Int_Num;
 class Real_Num;
-class Unary_Operator;
 class Standard_Type;
 class Type;
 class Parameter;
@@ -29,7 +28,6 @@ class Real_Expression;
 class Boolean_Expression;
 class Ident_Expression;
 class Expression_Expression;
-class Unary_Expression;
 class Not_Expression;
 class Expression_List;
 class Procedure_Statement;
@@ -52,6 +50,8 @@ class Add_expression;
 class Minus_expression;
 class Mul_expression;
 class Divide_expression;
+class Binary_expression;
+class Binary_opreator;
 
 class NodeVisitor;
 class PrintVisitor;
@@ -101,14 +101,6 @@ class Real_Num : public Node
 public:
 	float value;
 	Real_Num(float, int, int);
-	void accept(NodeVisitor *) override;
-};
-
-class Unary_Operator : public Node
-{
-public:
-	string op;
-	Unary_Operator(string, int, int);
 	void accept(NodeVisitor *) override;
 };
 
@@ -208,7 +200,7 @@ class Ident_Expression : public Expression
 {
 public:
 	Ident *ident;
-	Expression_List *expr_lst;
+	Expression_List *expr_lst = NULL;
 	Ident_Expression(Ident *, Expression_List *, int, int);
 	Ident_Expression(Ident *, int, int);
 	void accept(NodeVisitor *) override;
@@ -218,15 +210,6 @@ class Expression_Expression : public Expression
 public:
 	Expression *expression;
 	Expression_Expression(Expression *, int, int);
-	void accept(NodeVisitor *) override;
-};
-class Unary_Expression : public Expression
-{
-public:
-	Expression *left_exp;
-	Unary_Operator *op;
-	Expression *right_exp;
-	Unary_Expression(Expression *, Unary_Operator *, Expression *, int, int);
 	void accept(NodeVisitor *) override;
 };
 class Not_Expression : public Expression
@@ -417,6 +400,23 @@ public:
 	void accept(NodeVisitor *) override;
 };
 
+class Binary_expression : public Expression
+{
+public:
+	Expression *expression1;
+	Expression *expression2;
+	Binary_opreator *op;
+	Binary_expression(Expression *, Binary_opreator *, Expression *, int, int);
+	void accept(NodeVisitor *) override;
+};
+class Binary_opreator : public Node
+{
+public:
+	string op;
+	Binary_opreator(string, int, int);
+	void accept(NodeVisitor *) override;
+};
+
 class NodeVisitor
 {
 public:
@@ -425,7 +425,6 @@ public:
 	virtual void Visit(Ident_List *) = 0;
 	virtual void Visit(Int_Num *) = 0;
 	virtual void Visit(Real_Num *) = 0;
-	virtual void Visit(Unary_Operator *) = 0;
 	virtual void Visit(Standard_Type *) = 0;
 	virtual void Visit(Type *) = 0;
 	virtual void Visit(Parameter *) = 0;
@@ -438,7 +437,7 @@ public:
 	virtual void Visit(Ident_Expression *) = 0;
 	virtual void Visit(Expression_Expression *) = 0;
 	virtual void Visit(Expression_List *) = 0;
-	virtual void Visit(Unary_Expression *) = 0;
+	virtual void Visit(Binary_expression *) = 0;
 	virtual void Visit(Not_Expression *) = 0;
 	virtual void Visit(Statement *) = 0;
 	virtual void Visit(Statement_List *) = 0;
@@ -460,6 +459,7 @@ public:
 	virtual void Visit(Minus_expression *) = 0;
 	virtual void Visit(Mul_expression *) = 0;
 	virtual void Visit(Divide_expression *) = 0;
+	virtual void Visit(Binary_opreator *) = 0;
 };
 
 class PrintVisitor : public NodeVisitor
@@ -470,7 +470,6 @@ public:
 	void Visit(Ident_List *) override;
 	void Visit(Int_Num *) override;
 	void Visit(Real_Num *) override;
-	void Visit(Unary_Operator *) override;
 	void Visit(Standard_Type *) override;
 	void Visit(Type *) override;
 	void Visit(Parameter *) override;
@@ -483,7 +482,7 @@ public:
 	void Visit(Ident_Expression *) override;
 	void Visit(Expression_Expression *) override;
 	void Visit(Expression_List *) override;
-	void Visit(Unary_Expression *) override;
+	void Visit(Binary_expression *) override;
 	void Visit(Not_Expression *) override;
 	void Visit(Statement *) override;
 	void Visit(Statement_List *) override;
@@ -505,6 +504,7 @@ public:
 	void Visit(Minus_expression *) override;
 	void Visit(Mul_expression *) override;
 	void Visit(Divide_expression *) override;
+	void Visit(Binary_opreator *) override;
 };
 
 // class TypeVisitor : public NodeVisitor
@@ -516,7 +516,6 @@ public:
 // 	// virtual void Visit(Ident_List *);
 // 	// virtual void Visit(Int_Num *);
 // 	// virtual void Visit(Real_Num *);
-// 	// virtual void Visit(Unary_Operator *);
 // 	// virtual void Visit(Standard_Type *);
 // 	// virtual void Visit(Type *);
 // 	// virtual void Visit(Parameter *);
@@ -529,7 +528,7 @@ public:
 // 	// virtual void Visit(Ident_Expression *);
 // 	// virtual void Visit(Expression_Expression *);
 // 	// virtual void Visit(Expression_List *);
-// 	// virtual void Visit(Unary_Expression *);
+// 	// virtual void Visit(Binary_expression *);
 // 	// virtual void Visit(Not_Expression *);
 // 	// virtual void Visit(Statement *);
 // 	// virtual void Visit(Statement_List *);
@@ -551,6 +550,7 @@ public:
 // 	// virtual void Visit(Minus_expression *);
 // 	// virtual void Visit(Mul_expression *);
 // 	// virtual void Visit(Divide_expression *);
+// 	// virtual void Visit(Binary_opreator *);
 // };
 
 // class CodeVisitor : public NodeVisitor
@@ -561,7 +561,6 @@ public:
 // 	// virtual void Visit(Ident_List *)  ;
 // 	// virtual void Visit(Int_Num *)  ;
 // 	// virtual void Visit(Real_Num *)  ;
-// 	// virtual void Visit(Unary_Operator *)  ;
 // 	// virtual void Visit(Standard_Type *)  ;
 // 	// virtual void Visit(Type *)  ;
 // 	// virtual void Visit(Parameter *)  ;
@@ -574,7 +573,7 @@ public:
 // 	// virtual void Visit(Ident_Expression *)  ;
 // 	// virtual void Visit(Expression_Expression *)  ;
 // 	// virtual void Visit(Expression_List *)  ;
-// 	// virtual void Visit(Unary_Expression *)  ;
+// 	// virtual void Visit(Binary_expression *)  ;
 // 	// virtual void Visit(Not_Expression *)  ;
 // 	// virtual void Visit(Statement *)  ;
 // 	// virtual void Visit(Statement_List *)  ;
@@ -596,4 +595,5 @@ public:
 // 	// virtual void Visit(Minus_expression *)  ;
 // 	// virtual void Visit(Mul_expression *)  ;
 // 	// virtual void Visit(Divide_expression *)  ;
+// 	// virtual void Visit(Binary_opreator *)  ;
 // };

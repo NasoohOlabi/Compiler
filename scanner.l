@@ -20,8 +20,8 @@ int_num 	0|([1-9]{digit}*)
 real_num	(0|[1-9][0-9]*)"."[0-9]*([eE][-+]?(0|[1-9][0-9]*))?|"."[0-9]+([eE][-+]?(0|[1-9][0-9]*))?|(0|[1-9][0-9]*)([eE][-+]?(0|[1-9][0-9]*))
 white_space [ /t/n]
 opreators	[\[\]:;,)(]
-unary_operators "<="|">="|"<>"|"and"|"or"|"div"|[=<>]
-binary_operators [+*/\-]
+binary_opreators "<="|">="|"<>"|"and"|"or"|"div"|[=<>]
+basic_opreators [+*/\-]
 
 
 %%
@@ -152,13 +152,15 @@ binary_operators [+*/\-]
 }
 
 
-{unary_operators} {
+{binary_opreators} {
+	cout << "********************** BINARY OPPPPPP ********************** \n";
 	col += yyleng;
-	return UNARY_OPERATOR;
+	yylval.tBinary_Opreator = new Binary_opreator(strdup(yytext), lin, col);
+	return BINARY_OPERATOR;
 }
 
 
-{binary_operators} {
+{basic_opreators} {
 	col += yyleng;
 	return *yytext;
 }

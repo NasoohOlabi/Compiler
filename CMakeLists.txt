@@ -20,6 +20,9 @@ target_include_directories(Compiler PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 add_dependencies(Compiler Parsers)
 
 
+add_definitions(-DSRC_PATH="${CMAKE_SOURCE_DIR}")
+
+
 set(CPACK_PROJECT_NAME ${PROJECT_NAME})
 set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
 include(CPack)

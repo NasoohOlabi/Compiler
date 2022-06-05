@@ -65,16 +65,6 @@ void Real_Num::accept(NodeVisitor *nv)
 	nv->Visit(this);
 }
 
-Unary_Operator::Unary_Operator(string o, int l, int c) : Node(l, c)
-{
-	this->op = std::move(o);
-}
-
-void Unary_Operator::accept(NodeVisitor *nv)
-{
-	nv->Visit(this);
-}
-
 Standard_Type::Standard_Type(char t, int l, int c) : Node(l, c)
 {
 	this->type = t;
@@ -249,21 +239,6 @@ Expression_Expression::Expression_Expression(Expression *exp, int l, int c) : Ex
 }
 
 void Expression_Expression::accept(NodeVisitor *nv)
-{
-	nv->Visit(this);
-}
-
-Unary_Expression::Unary_Expression(Expression *le, Unary_Operator *o, Expression *re, int l, int c) : Expression(l, c)
-{
-	this->left_exp = le;
-	this->op = o;
-	this->right_exp = re;
-	le->father = this;
-	o->father = this;
-	re->father = this;
-}
-
-void Unary_Expression::accept(NodeVisitor *nv)
 {
 	nv->Visit(this);
 }
@@ -523,6 +498,7 @@ Program::Program(Ident *i, Declarations *d, Subprogram_Declarations *sd, Compoun
 
 void Program::accept(NodeVisitor * nv) {
     cout<< "Program accepted node visitor";
+	nv->Visit(this);
 }
 
 Add_expression::Add_expression(Expression *e1, Expression *e2, int lin, int col) : Expression(lin, col)
@@ -577,11 +553,37 @@ Divide_expression::Divide_expression(Expression *e1, Expression *e2, int lin, in
 	if (e1 != nullptr)
 		e1->father = this;
 	if (e2 != nullptr)
-		;
-	e2->father = this;
+		e2->father = this;
+
 }
 
 void Divide_expression::accept(NodeVisitor *nv)
+{
+	nv->Visit(this);
+}
+
+Binary_expression::Binary_expression(Expression *e1, Binary_opreator *o, Expression *e2, int lin, int col) : Expression(lin, col)
+{
+	this->expression1 = e1;
+	this->op = o;
+	this->expression2 = e2;
+	if (e1 != nullptr)
+		e1->father = this;
+	if (e2 != nullptr)
+		e2->father = this;
+}
+
+void Binary_expression::accept(NodeVisitor *nv)
+{
+	nv->Visit(this);
+}
+
+Binary_opreator::Binary_opreator(string o, int lin, int col) : Node(lin, col)
+{
+	this->op = o;
+}
+
+void Binary_opreator::accept(NodeVisitor *nv)
 {
 	nv->Visit(this);
 }
@@ -595,7 +597,7 @@ void PrintVisitor::Visit(Node *n)
 
 void PrintVisitor::Visit(Ident *n)
 {
-	cout << "Identifier:: \nName -> " << n->name;
+	cout << "Identifier:: \nName -> " << n->name << "\n";
 }
 
 void PrintVisitor::Visit(Ident_List *n)
@@ -610,17 +612,12 @@ void PrintVisitor::Visit(Ident_List *n)
 
 void PrintVisitor::Visit(Int_Num *n)
 {
-	cout << "Int Number:: \nValue -> " << n->value;
+	cout << "Int Number:: \nValue -> " << n->value << "\n";
 }
 
 void PrintVisitor::Visit(Real_Num *n)
 {
-	cout << "Real Number:: \nValue -> " << n->value;
-}
-
-void PrintVisitor::Visit(Unary_Operator *n)
-{
-	cout << "Unary Operator:: \nOperation -> " << n->op;
+	cout << "Real Number:: \nValue -> " << n->value << "\n";
 }
 
 void PrintVisitor::Visit(Standard_Type *n)
@@ -674,24 +671,28 @@ void PrintVisitor::Visit(Expression *n)
 
 void PrintVisitor::Visit(Int_Expression *n)
 {
-	cout << "Int Expression:: \nValue -> " << n->value;
+	cout << "Int Expression:: \nValue -> \n";
+	n->value->accept(this);
 }
 
 void PrintVisitor::Visit(Real_Expression *n)
 {
-	cout << "Real Expression:: \nValue -> " << n->value;
+	cout << "Real Expression:: \nValue -> \n";
+	n->value->accept(this);
+
 }
 
 void PrintVisitor::Visit(Boolean_Expression *n)
 {
-	cout << "Boolean Expression:: \nValue -> " << n->value;
+	cout << "Boolean Expression:: \nValue ->" << n->value << "\n";
+
 }
 
 void PrintVisitor::Visit(Ident_Expression *n)
 {
 	cout << "Ident Expression:: \nIdent -> \n";
 	n->ident->accept(this);
-	if (n->expr_lst)
+	if (n->expr_lst != NULL)
 	{
 		cout << "Expr List -> \n";
 		n->expr_lst->accept(this);
@@ -714,14 +715,19 @@ void PrintVisitor::Visit(Expression_List *n)
 	}
 }
 
-void PrintVisitor::Visit(Unary_Expression *n)
+void PrintVisitor::Visit(Binary_expression *n)
 {
-	cout << "Unary Expression:: \nLeft Expr -> \n";
-	n->left_exp->accept(this);
-	cout << "\nOperator -> \n";
+	cout << "Binary Expression:: \nLeft Expr -> \n";
+	n->expression1->accept(this);
+	cout << "\nOperator -> ";
 	n->op->accept(this);
 	cout << "\nRight Expr -> \n";
-	n->right_exp->accept(this);
+	n->expression2->accept(this);
+}
+
+void PrintVisitor::Visit(Binary_opreator *n)
+{
+	cout << "Binary Opreator:: \nopreator -> " << n->op << "\n";
 }
 
 void PrintVisitor::Visit(Not_Expression *n)
@@ -811,7 +817,7 @@ void PrintVisitor::Visit(Procedure_Statement *n)
 {
 	cout << "Procedure Statement:: \nIdent -> \n";
 	n->id->accept(this);
-	if (n->expr_lst)
+	if (n->expr_lst != NULL)
 	{
 		cout << "Expr List -> \n";
 		n->expr_lst->accept(this);

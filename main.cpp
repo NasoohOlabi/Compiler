@@ -3,7 +3,8 @@
 
 extern int yyparse();
 
-extern Program *root;
+// extern Program *root;
+extern FUNCTION *root;
 
 int main()
 {
@@ -11,7 +12,7 @@ int main()
 	yyparse();
 	cout << "Parsing is done...\n";
 	root;
-	NodeVisitor *pv = new PrintVisitor();
-	root->accept(pv);
+	// NodeVisitor *pv = new PrintVisitor();
+	// root->accept(pv);
 	return 0;
 }

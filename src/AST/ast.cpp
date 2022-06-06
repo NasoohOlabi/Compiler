@@ -910,6 +910,350 @@ void PrintVisitor::Visit(Divide_expression *n)
 	cout << "\nRight Expr -> \n";
 	n->expression2->accept(this);
 }
+
+
+/************************ Type Visitors ************************/
+
+void TypeVisitor::Visit(Node *n)
+{
+	cout << "Type Node\n";
+}
+
+void TypeVisitor::Visit(Ident *n)
+{
+	cout << "Identifier:: \nName -> " << n->name << "\n";
+}
+
+void TypeVisitor::Visit(Ident_List *n)
+{
+	cout << "Identifiers List:: \n";
+	for (int i = 0; i < (n->idents)->size(); i++)
+	{
+		cout << "Identifier number " << i << " ::\n";
+		n->idents->at(i)->accept(this);
+	}
+}
+
+void TypeVisitor::Visit(Int_Num *n)
+{
+	cout << "Int Number:: \nValue -> " << n->value << "\n";
+}
+
+void TypeVisitor::Visit(Real_Num *n)
+{
+	cout << "Real Number:: \nValue -> " << n->value << "\n";
+}
+
+void TypeVisitor::Visit(Standard_Type *n)
+{
+	cout << "Standard Type:: \nType -> " << n->type;
+}
+
+void TypeVisitor::Visit(Type *n)
+{
+	bool b = n->is_array;
+	if (b)
+	{
+		cout << "Type (Array):: \nFirst -> " << n->first << "\nLast -> " << n->last << "\n";
+	}
+	else
+	{
+		cout << "Type (Non-Array):: \n";
+	}
+	cout << "Std Type ->\n";
+	n->std_type->accept(this);
+}
+
+void TypeVisitor::Visit(Parameter *n)
+{
+	cout << "Parameter:: \nType -> \n";
+	n->type->accept(this);
+	cout << "\nIdent List -> \n";
+	n->ident_list->accept(this);
+}
+
+void TypeVisitor::Visit(Declaration *n)
+{
+	cout << "Declaration:: \nParameter -> \n";
+	n->param->accept(this);
+}
+
+void TypeVisitor::Visit(Declarations *n)
+{
+	cout << "Declarations List:: \n";
+	for (int i = 0; i < (n->decs)->size(); i++)
+	{
+		cout << "Declaration number " << i << " ::\n";
+		n->decs->at(i)->accept(this);
+	}
+}
+
+void TypeVisitor::Visit(Expression *n)
+{
+	cout << "Expression:: \n";
+}
+
+void TypeVisitor::Visit(Int_Expression *n)
+{
+	cout << "Int Expression:: \nValue -> \n";
+	n->value->accept(this);
+}
+
+void TypeVisitor::Visit(Real_Expression *n)
+{
+	cout << "Real Expression:: \nValue -> \n";
+	n->value->accept(this);
+}
+
+void TypeVisitor::Visit(Boolean_Expression *n)
+{
+	cout << "Boolean Expression:: \nValue ->" << n->value << "\n";
+}
+
+void TypeVisitor::Visit(Ident_Expression *n)
+{
+	// cout<<"////////////////////////////////////////////////////   Type Visitor in Ident Expression \n";
+	// n->type = n->ident->symbol->type;
+	cout << "Ident Expression:: \nIdent -> \n";
+	n->ident->accept(this);
+	if (n->expr_lst != NULL)
+	{
+		cout << "Expr List -> \n";
+		n->expr_lst->accept(this);
+	}
+	else
+	{
+		cout << "\n";
+	}
+}
+
+void TypeVisitor::Visit(Expression_Expression *n)
+{
+	cout << "Expression Expression:: \nExpr -> \n";
+	n->expression->accept(this);
+}
+
+void TypeVisitor::Visit(Expression_List *n)
+{
+	cout << "Expressions List:: \n";
+	for (int i = 0; i < (n->exprs)->size(); i++)
+	{
+		cout << "Expression number " << i << " ::\n";
+		n->exprs->at(i)->accept(this);
+	}
+}
+
+void TypeVisitor::Visit(Binary_expression *n)
+{
+	cout << "Binary Expression:: \nLeft Expr -> \n";
+	n->expression1->accept(this);
+	cout << "\nOperator -> ";
+	n->op->accept(this);
+	cout << "\nRight Expr -> \n";
+	n->expression2->accept(this);
+}
+
+void TypeVisitor::Visit(Binary_opreator *n)
+{
+	cout << "Binary Opreator:: \nopreator -> " << n->op << "\n";
+}
+
+void TypeVisitor::Visit(Not_Expression *n)
+{
+	cout << "Not Expression:: \nExpr -> \n";
+	n->expression->accept(this);
+}
+
+void TypeVisitor::Visit(Statement *n)
+{
+	cout << "Statement:: \n";
+}
+
+void TypeVisitor::Visit(Statement_List *n)
+{
+	cout << "Statements List:: \n";
+	for (int i = 0; i < (n->stmts)->size(); i++)
+	{
+		cout << "Statement number " << i << " ::\n";
+		n->stmts->at(i)->accept(this);
+	}
+}
+
+void TypeVisitor::Visit(If_Statement *n)
+{
+	cout << "If Statement:: \nExpr -> \n";
+	n->expression->accept(this);
+	cout << "\nStmt -> \n";
+	n->statement->accept(this);
+}
+
+void TypeVisitor::Visit(While_Statement *n)
+{
+	cout << "While Statement:: \nExpr -> \n";
+	n->expression->accept(this);
+	cout << "\nStmt -> \n";
+	n->statement->accept(this);
+}
+
+void TypeVisitor::Visit(If_Else_Statement *n)
+{
+	cout << "If Else Statement:: \nExpr -> \n";
+	n->expression->accept(this);
+	cout << "\nStmt -> \n";
+	n->statement1->accept(this);
+	cout << "\nElse Stmt -> \n";
+	n->statement2->accept(this);
+}
+
+void TypeVisitor::Visit(Compound_Statement *n)
+{
+	cout << "Compound Statement:: \nOptional Stmts -> \n";
+	n->optional_statements->accept(this);
+}
+
+void TypeVisitor::Visit(Optional_Statements *n)
+{
+	cout << "Optional Statement:: \nStmt List -> \n";
+	n->statement_list->accept(this);
+}
+
+void TypeVisitor::Visit(Variable_Statement *n)
+{
+	cout << "Variable Statement:: \nVariable -> \n";
+	n->variable->accept(this);
+	cout << "\nExpr -> \n";
+	n->expression->accept(this);
+}
+
+void TypeVisitor::Visit(Parameter_List *n)
+{
+	cout << "Parameters List:: \n";
+	for (int i = 0; i < (n->params)->size(); i++)
+	{
+		cout << "Parameter number " << i << " ::\n";
+		n->params->at(i)->accept(this);
+	}
+}
+
+void TypeVisitor::Visit(Arguments *n)
+{
+	cout << "Arguments List:: \nParam List -> \n";
+	n->param_lst->accept(this);
+}
+
+void TypeVisitor::Visit(Procedure_Statement *n)
+{
+	cout << "Procedure Statement:: \nIdent -> \n";
+	n->id->accept(this);
+	if (n->expr_lst != NULL)
+	{
+		cout << "Expr List -> \n";
+		n->expr_lst->accept(this);
+	}
+}
+
+void TypeVisitor::Visit(Variable *n)
+{
+	cout << "Variable:: \nIdent -> \n";
+	n->id->accept(this);
+	if (n->expr)
+	{
+		cout << "Expr -> \n";
+		n->expr->accept(this);
+	}
+}
+
+void TypeVisitor::Visit(Subprogram_Head *n)
+{
+	cout << "Subprogram Head:: \nType -> " << (n->is_function ? "Function" : "Procedure");
+	cout << "\nArguments -> \n";
+	n->args->accept(this);
+	if (n->std_type)
+	{
+		cout << "\nStd type -> \n";
+		n->std_type->accept(this);
+	}
+}
+
+void TypeVisitor::Visit(Subprogram_Declaration *n)
+{
+	cout << "Subprogram Declaration:: \nSubHead -> \n";
+	n->sub_head->accept(this);
+	cout << "\nCompound Stmt -> \n";
+	n->comp_stmt->accept(this);
+}
+
+void TypeVisitor::Visit(Subprogram_Declarations *n)
+{
+	cout << "Subprogram Declarations List:: \n";
+	for (int i = 0; i < (n->decs)->size(); i++)
+	{
+		cout << "Subprogram Declaration number " << i << " ::\n";
+		n->decs->at(i)->accept(this);
+	}
+}
+
+void TypeVisitor::Visit(Program *n)
+{
+	cout << "Program (root):: \nIdent -> \n";
+	n->id->accept(this);
+	cout << "\nDeclarations -> \n";
+	n->decs->accept(this);
+	cout << "\nSubprogram Declarations -> \n";
+	n->sub_decs->accept(this);
+	cout << "\nCompound Stmt -> \n";
+	n->comp_stmt->accept(this);
+}
+
+void TypeVisitor::Visit(Add_expression *n)
+{
+	cout << "Add Expression:: \nLeft Expr -> \n";
+	n->expression1->accept(this);
+	cout << "\nRight Expr -> \n";
+	n->expression2->accept(this);
+
+	//type int : 1, double : 2, 
+
+	int left = n->expression1->type;
+	int right = n->expression2->type;
+	
+	if(left == 2 && right == 2){
+		n->type = 2;
+	}else if(left == 1 && right == 1){
+		n->type=1;
+	}else if((left == 1 && right == 2) || (left == 2 && right == 1)){
+		n->type = 2;
+		// n->expression1->type = 2;
+		// n->expression2->type = 2;
+	}
+
+
+}
+
+void TypeVisitor::Visit(Minus_expression *n)
+{
+	cout << "Minus Expression:: \nLeft Expr -> \n";
+	n->expression1->accept(this);
+	cout << "\nRight Expr -> \n";
+	n->expression2->accept(this);
+}
+
+void TypeVisitor::Visit(Mul_expression *n)
+{
+	cout << "Multiplication Expression:: \nLeft Expr -> \n";
+	n->expression1->accept(this);
+	cout << "\nRight Expr -> \n";
+	n->expression2->accept(this);
+}
+
+void TypeVisitor::Visit(Divide_expression *n)
+{
+	cout << "Division Expression:: \nLeft Expr -> \n";
+	n->expression1->accept(this);
+	cout << "\nRight Expr -> \n";
+	n->expression2->accept(this);
+}
+
 Symbol::Symbol(string n, int k, char t)
 {
 	this->name = n;

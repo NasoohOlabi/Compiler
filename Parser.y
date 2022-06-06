@@ -104,16 +104,6 @@
 %type <tDeclarations> declarations
 %type <tArguments> arguments
 %type <tExpression> expression
-
-/*
-%type <tInt_Expression> int_expression
-%type <tReal_Expression> real_expression
-%type <tBoolean_Expression> boolean_expression
-%type <tIdent_Expression> ident_expression
-%type <tExpression_Expression> expression_expression
-%type <tNot_Expression> not_expression
-*/
-
 %type <tExpression_List> expression_list
 %type <tProcedure_Statement> procedure_statement
 %type <tVariable> variable
@@ -156,10 +146,12 @@ subprogram_declarations: subprogram_declarations subprogram_declaration ';' %pre
 ;
 
 
-subprogram_declaration: subprogram_head compound_statement %prec SUBPROGRAMDEC_PREC
+subprogram_declaration: { symbolTable->startScope(); }
+						subprogram_head compound_statement 
+						{ symbolTable->endScope(); } %prec SUBPROGRAMDEC_PREC
 							{
 								cout << "subprogram dec\n";
-								$$ = new Subprogram_Declaration($1, $2, lin, col);
+								$$ = new Subprogram_Declaration($2, $3, lin, col);
 							}
 ;
 
@@ -167,11 +159,15 @@ subprogram_head: FUNCTION IDENT arguments ':' standard_type ';'
 					{
 						cout << "subprogram_head function\n";
 						$$ = new Subprogram_Head($3, $5, lin, col);
+
+						symbolTable->AddFunction($2, $3, 1, $5->type); // 1 is Function
 					}
 				| PROCEDURE IDENT arguments ';'
 					{
 						cout << "subprogram_head procedure\n";
 						$$ = new Subprogram_Head($3, lin, col);
+
+						symbolTable->AddFunction($2, $3, 2, 'x'); // 2 is Procedure
 					}
 ;
 
@@ -263,11 +259,15 @@ expression: INT_NUM
 								{
 									$$ = new Ident_Expression($1, $2 ,lin, col);
 									cout << "Ident List Expression\n";
+
+									symbolTable->lookUpSymbol($1);
 								}
 			| IDENT 
 								{
 									$$ = new Ident_Expression($1, lin, col);
 									cout << "Ident Expression" << $1->name << "\n";
+
+									symbolTable->lookUpSymbol($1);
 								}
 			| '(' expression ')'
 								{

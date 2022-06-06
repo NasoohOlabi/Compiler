@@ -15,7 +15,8 @@ Node::Node(int line, int column)
 
 Ident::Ident(string s, int l, int c) : Node(l, c)
 {
-	this->name = std::move(s);
+	this->name = s;
+	this->symbol = NULL;
 }
 
 void Ident::accept(NodeVisitor *nv)
@@ -496,8 +497,8 @@ Program::Program(Ident *i, Declarations *d, Subprogram_Declarations *sd, Compoun
 	i->father = this;
 }
 
-void Program::accept(NodeVisitor * nv) {
-    cout<< "Program accepted node visitor";
+void Program::accept(NodeVisitor *nv)
+{
 	nv->Visit(this);
 }
 
@@ -554,7 +555,6 @@ Divide_expression::Divide_expression(Expression *e1, Expression *e2, int lin, in
 		e1->father = this;
 	if (e2 != nullptr)
 		e2->father = this;
-
 }
 
 void Divide_expression::accept(NodeVisitor *nv)
@@ -679,13 +679,11 @@ void PrintVisitor::Visit(Real_Expression *n)
 {
 	cout << "Real Expression:: \nValue -> \n";
 	n->value->accept(this);
-
 }
 
 void PrintVisitor::Visit(Boolean_Expression *n)
 {
 	cout << "Boolean Expression:: \nValue ->" << n->value << "\n";
-
 }
 
 void PrintVisitor::Visit(Ident_Expression *n)
@@ -696,6 +694,10 @@ void PrintVisitor::Visit(Ident_Expression *n)
 	{
 		cout << "Expr List -> \n";
 		n->expr_lst->accept(this);
+	}
+	else
+	{
+		cout << "\n";
 	}
 }
 
@@ -908,29 +910,99 @@ void PrintVisitor::Visit(Divide_expression *n)
 	cout << "\nRight Expr -> \n";
 	n->expression2->accept(this);
 }
-Symbol::Symbol(string n, int k,char t){
+Symbol::Symbol(string n, int k, char t)
+{
 	this->name = n;
 	this->type = t;
 	this->kind = k;
 }
-Scope::Scope(){
+Scope::Scope()
+{
 	this->hashTab = new HashTab;
 }
-SymbolTable::SymbolTable(){
-	this->scopes = new vector<Scope*>;
+SymbolTable::SymbolTable()
+{
+	this->scopes = new vector<Scope *>;
 	this->scopes->push_back(new Scope());
-	this->current= this->scopes->at(0);
+	this->current = this->scopes->at(0);
 }
-bool SymbolTable::AddSymbol(Ident * ident, int kind, char type){
-	Symbol * s = new Symbol(ident->name, kind, type);
-	string key = "l"  + ident->name;
-	Symbol * temp = this -> current->hashTab->GetMember(key);
-	if (temp == NULL){
-		this->current->hashTab->AddKey(key,s);
+bool SymbolTable::AddSymbol(Ident *ident, int kind, char type)
+{
+	Symbol *s = new Symbol(ident->name, kind, type);
+	string key = "l" + ident->name;
+	Symbol *temp = this->current->hashTab->GetMember(key);
+	if (temp == NULL)
+	{
+		this->current->hashTab->AddKey(key, s);
+		ident->symbol = s;
 		return true;
 	}
-	else {
-		cout << "**************************************************Redefinition variable "<<ident->name<< " " << type<<"\n";
+	else
+	{
+		cout << "**************************************************Redefinition variable " << ident->name << " " << type << "\n";
 		return false;
 	}
+}
+
+bool SymbolTable::AddFunction(Ident *ident, Arguments *args, int kind, char type) // k = 0 -> function else procedure
+{
+	Symbol *s = new Symbol(ident->name, kind, type);
+	string key = "f" + ident->name;
+	int n = args->param_lst->params->size();
+
+	for (int i = 0; i < n; i++)
+	{
+		key += ("@" + args->param_lst->params->at(i)->type->std_type->type);
+	}
+
+	Symbol *temp = this->current->hashTab->GetMember(key);
+	if (temp == NULL)
+	{
+		this->current->hashTab->AddKey(key, s);
+		ident->symbol = s;
+		return true;
+	}
+	else
+	{
+		cout << "**************************************************Redefinition variable " << ident->name << " " << type << "\n";
+		return false;
+	}
+}
+
+Symbol *SymbolTable::lookUpSymbol(Ident *ident)
+{
+	// Assume local variable
+	string key = "l" + ident->name;
+	Symbol *sym = this->current->hashTab->GetMember(key);
+	if (sym != NULL)
+	{
+		ident->symbol = sym;
+		return sym;
+	}
+	else
+	{
+		key = "g" + ident->name;
+		Symbol *sym = this->scopes->at(this->scopes->size() - 2)->hashTab->GetMember(key);
+		if (sym != NULL)
+		{
+			ident->symbol = sym;
+			return sym;
+		}
+		else
+		{
+			cout << "**************************************************Undeclared variable " << ident->name << "\n";
+			return NULL;
+		}
+	}
+}
+
+void SymbolTable::startScope()
+{
+	this->scopes->push_back(new Scope());
+	this->current = this->scopes->back();
+}
+
+void SymbolTable::endScope()
+{
+	this->current = this->scopes->at(0);
 }

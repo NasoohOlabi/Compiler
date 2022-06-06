@@ -12,7 +12,6 @@ using std::string;
 #include "hash_table.h"
 #include "hash_fun.h"
 
-
 class Node;
 class Ident;
 class Ident_List;
@@ -62,8 +61,7 @@ class SymbolTable;
 // class TypeVisitor;
 // class CodeVisitor;
 
-
- typedef CHashTable <Symbol> HashTab;
+typedef CHashTable<Symbol> HashTab;
 
 class Node
 {
@@ -72,6 +70,7 @@ public:
 	int column;
 	Node *father;
 	Node(int, int);
+	Symbol *symbol;
 	virtual void accept(NodeVisitor *) = 0;
 };
 
@@ -366,7 +365,7 @@ public:
 	Subprogram_Declarations *sub_decs;
 	Compound_Statement *comp_stmt;
 	Program(Ident *, Declarations *, Subprogram_Declarations *, Compound_Statement *, int, int);
-	void accept(NodeVisitor *);
+	void accept(NodeVisitor *) override;
 };
 
 class Add_expression : public Expression
@@ -610,7 +609,7 @@ public:
 	int kind;
 	char type;
 	int location;
-	Symbol(string , int ,char);
+	Symbol(string, int, char);
 };
 class Scope
 {
@@ -619,11 +618,16 @@ public:
 	Scope();
 };
 
-class  SymbolTable
+class SymbolTable
 {
 public:
-	vector <Scope*> * scopes;
-	Scope * current;
-	bool AddSymbol(Ident *,int ,char);
+	vector<Scope *> *scopes;
+	Scope *current;
+	bool AddSymbol(Ident *, int, char);
+	bool AddFunction(Ident *, Arguments *, int, char);
+	bool AddProcedure(Ident *, Arguments *, int, char);
 	SymbolTable();
-	};
+	Symbol *lookUpSymbol(Ident *);
+	void startScope();
+	void endScope();
+};

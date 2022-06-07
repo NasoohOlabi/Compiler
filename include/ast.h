@@ -175,7 +175,7 @@ public:
 class Expression : public Node
 {
 public:
-	int type;
+	string type;
 	Expression(int, int);
 	void accept(NodeVisitor *) override;
 };

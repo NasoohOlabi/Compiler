@@ -3,8 +3,8 @@
 
 extern int yyparse();
 
-// extern Program *root;
-extern FUNCTION *root;
+ extern Program *root;
+// extern FUNCTION *root;
 
 int main()
 {

@@ -998,7 +998,7 @@ void TypeVisitor::Visit(Int_Expression *n)
 	// cout << "Int Expression:: \nValue -> \n";
 	n->value->accept(this);
 	n->type ="INT";
-	cout<<"--------------------------------------------------------------------INT Type:"<<n->type<<" at: "<<n->column<<" , "<<n->line<<"\n";
+	// cout<<"--------------------------------------------------------------------INT Type:"<<n->type<<" at: "<<n->column<<" , "<<n->line<<"\n";
 }
 
 void TypeVisitor::Visit(Real_Expression *n)
@@ -1006,14 +1006,14 @@ void TypeVisitor::Visit(Real_Expression *n)
 	// cout << "Real Expression:: \nValue -> \n";
 	n->value->accept(this);
 	n->type = "RL";
-	cout<<"--------------------------------------------------------------------RL Type:"<<n->type<<"\n";
+	// cout<<"--------------------------------------------------------------------RL Type:"<<n->type<<"\n";
 }
 
 void TypeVisitor::Visit(Boolean_Expression *n)
 {
 	// cout << "Boolean Expression:: \nValue ->" << n->value << "\n";
 	n->type = "BOOL";
-	cout<<"--------------------------------------------------------------------BOOL Type:"<<n->type<<"\n";
+	// cout<<"--------------------------------------------------------------------BOOL Type:"<<n->type<<"\n";
 }
 
 void TypeVisitor::Visit(Ident_Expression *n)
@@ -1215,7 +1215,7 @@ void TypeVisitor::Visit(Program *n)
 
 void TypeVisitor::Visit(Add_expression *n)
 {
-	cout<<"--------------------------------------------------------------------I am in Type Visitor for Add Expression:\n";
+	// cout<<"--------------------------------------------------------------------I am in Type Visitor for Add Expression:\n";
 	// cout << "Add Expression:: \nLeft Expr -> \n";
 	n->expression1->accept(this);
 	// cout << "\nRight Expr -> \n";
@@ -1226,11 +1226,11 @@ void TypeVisitor::Visit(Add_expression *n)
 	string left = n->expression1->type;
 	string right = n->expression2->type;
 	
-	cout<<"--------------------------------------------------------------------Left :"<<n->expression1<<" at: "<<n->column<<" , "<<n->line<<"\n";
-	cout<<"--------------------------------------------------------------------Right :"<<n->expression2<<" at: "<<n->column<<" , "<<n->line<<"\n";
+	// cout<<"--------------------------------------------------------------------Left :"<<n->expression1<<" at: "<<n->column<<" , "<<n->line<<"\n";
+	// cout<<"--------------------------------------------------------------------Right :"<<n->expression2<<" at: "<<n->column<<" , "<<n->line<<"\n";
 
-	cout<<"--------------------------------------------------------------------Left Type:"<<n->expression1->type<<" at: "<<n->column<<" , "<<n->line<<"\n";
-	cout<<"--------------------------------------------------------------------Right Type:"<<n->expression2->type<<" at: "<<n->column<<" , "<<n->line<<"\n";
+	// cout<<"--------------------------------------------------------------------Left Type:"<<n->expression1->type<<" at: "<<n->column<<" , "<<n->line<<"\n";
+	// cout<<"--------------------------------------------------------------------Right Type:"<<n->expression2->type<<" at: "<<n->column<<" , "<<n->line<<"\n";
 	if(left == "INT" && right == "INT"){
 		n->type = "INT";
 	}else if(left == "RL" && right == "RL"){
@@ -1240,8 +1240,8 @@ void TypeVisitor::Visit(Add_expression *n)
 		n->expression1->type = "RL";
 		n->expression2->type = "RL";
 	}
-	cout<<"--------------------------------------------------------------------Left Type:"<<n->expression1->type<<" at: "<<n->column<<" , "<<n->line<<"\n";
-	cout<<"--------------------------------------------------------------------Right Type:"<<n->expression2->type<<" at: "<<n->column<<" , "<<n->line<<"\n";
+	// cout<<"--------------------------------------------------------------------Left Type:"<<n->expression1->type<<" at: "<<n->column<<" , "<<n->line<<"\n";
+	// cout<<"--------------------------------------------------------------------Right Type:"<<n->expression2->type<<" at: "<<n->column<<" , "<<n->line<<"\n";
 }
 
 void TypeVisitor::Visit(Minus_expression *n)

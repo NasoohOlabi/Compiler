@@ -7,7 +7,7 @@ enable_testing()
 add_custom_target(Parsers ALL)
 add_custom_command(
 	TARGET Parsers PRE_BUILD
-	COMMAND powershell echo 'Generating Parsers...' & flex -o"../src/parsers/Scanner.cpp" "../scanner.l" &  s -dtv -o "../src/parsers/Parser.cpp" --define="../include/Parser.h" ../Parser.y & echo 'Finished generating Parsers.' & "/VM/vm.exe" -dump "../code.txt"
+	COMMAND powershell echo 'Generating Parsers...' & flex -o"../src/parsers/Scanner.cpp" "../scanner.l" &  s -dtv -o "../src/parsers/Parser.cpp" --define="../include/Parser.h" ../Parser.y & echo 'Finished generating Parsers.' & ".\\..\\VM\\vm.exe" -dump "../code.txt"
 	DEPENDS ../Parser.y ../scanner.l
 	)
 	

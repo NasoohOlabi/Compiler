@@ -335,6 +335,11 @@ parameter_list: parameter
 parameter: ident_list ':' type	{
 									cout << "Parameter\n";
 									$$ = new Parameter($1, $3, lin, col);
+									int n = $1->idents->size();
+									char t = $3->std_type->type;
+									for(int i=0;i<n;i++){
+										symbolTable->AddSymbol($1->idents->at(i),2,t);
+									}
 								}
 ;
 

@@ -12,6 +12,12 @@ using std::string;
 #include "hash_table.h"
 #include "hash_fun.h"
 
+#include <fstream>
+using std::ofstream;
+using std::ios;
+
+static ofstream vout("..\\code.txt", ios::out);
+
 class Node;
 class Ident;
 class Ident_List;
@@ -557,50 +563,51 @@ public:
 	virtual void Visit(Binary_opreator *);
 };
 
-// class CodeVisitor : public NodeVisitor
-// {
-// public:
-// 	// virtual void Visit(Node *)  ;
-// 	// virtual void Visit(Ident *)  ;
-// 	// virtual void Visit(Ident_List *)  ;
-// 	// virtual void Visit(Int_Num *)  ;
-// 	// virtual void Visit(Real_Num *)  ;
-// 	// virtual void Visit(Standard_Type *)  ;
-// 	// virtual void Visit(Type *)  ;
-// 	// virtual void Visit(Parameter *)  ;
-// 	// virtual void Visit(Declaration *)  ;
-// 	// virtual void Visit(Declarations *)  ;
-// 	// virtual void Visit(Expression *)  ;
-// 	// virtual void Visit(Int_Expression *)  ;
-// 	// virtual void Visit(Real_Expression *)  ;
-// 	// virtual void Visit(Boolean_Expression *)  ;
-// 	// virtual void Visit(Ident_Expression *)  ;
-// 	// virtual void Visit(Expression_Expression *)  ;
-// 	// virtual void Visit(Expression_List *)  ;
-// 	// virtual void Visit(Binary_expression *)  ;
-// 	// virtual void Visit(Not_Expression *)  ;
-// 	// virtual void Visit(Statement *)  ;
-// 	// virtual void Visit(Statement_List *)  ;
-// 	// virtual void Visit(If_Statement *)  ;
-// 	// virtual void Visit(While_Statement *)  ;
-// 	// virtual void Visit(If_Else_Statement *)  ;
-// 	// virtual void Visit(Compound_Statement *)  ;
-// 	// virtual void Visit(Optional_Statements *)  ;
-// 	// virtual void Visit(Variable_Statement *)  ;
-// 	// virtual void Visit(Parameter_List *)  ;
-// 	// virtual void Visit(Arguments *)  ;
-// 	// virtual void Visit(Procedure_Statement *)  ;
-// 	// virtual void Visit(Variable *)  ;
-// 	// virtual void Visit(Subprogram_Head *)  ;
-// 	// virtual void Visit(Subprogram_Declaration *)  ;
-// 	// virtual void Visit(Subprogram_Declarations *)  ;
-// 	// virtual void Visit(Program *)  ;
-// 	// virtual void Visit(Add_expression *)  ;
-// 	// virtual void Visit(Minus_expression *)  ;
-// 	// virtual void Visit(Mul_expression *)  ;
-// 	// virtual void Visit(Divide_expression *)  ;
-// 	// virtual void Visit(Binary_opreator *)  ;
-// };
+class CodeVisitor : public NodeVisitor
+{
+public:
+	int fp = -1;
+	virtual void Visit(Node *);
+	virtual void Visit(Ident *);
+	virtual void Visit(Ident_List *);
+	virtual void Visit(Int_Num *);
+	virtual void Visit(Real_Num *);
+	virtual void Visit(Standard_Type *);
+	virtual void Visit(Type *);
+	virtual void Visit(Parameter *);
+	virtual void Visit(Declaration *);
+	virtual void Visit(Declarations *);
+	virtual void Visit(Expression *);
+	virtual void Visit(Int_Expression *);
+	virtual void Visit(Real_Expression *);
+	virtual void Visit(Boolean_Expression *);
+	virtual void Visit(Ident_Expression *);
+	virtual void Visit(Expression_Expression *);
+	virtual void Visit(Expression_List *);
+	virtual void Visit(Binary_expression *);
+	virtual void Visit(Not_Expression *);
+	virtual void Visit(Statement *);
+	virtual void Visit(Statement_List *);
+	virtual void Visit(If_Statement *);
+	virtual void Visit(While_Statement *);
+	virtual void Visit(If_Else_Statement *);
+	virtual void Visit(Compound_Statement *);
+	virtual void Visit(Optional_Statements *);
+	virtual void Visit(Variable_Statement *);
+	virtual void Visit(Parameter_List *);
+	virtual void Visit(Arguments *);
+	virtual void Visit(Procedure_Statement *);
+	virtual void Visit(Variable *);
+	virtual void Visit(Subprogram_Head *);
+	virtual void Visit(Subprogram_Declaration *);
+	virtual void Visit(Subprogram_Declarations *);
+	virtual void Visit(Program *);
+	virtual void Visit(Add_expression *);
+	virtual void Visit(Minus_expression *);
+	virtual void Visit(Mul_expression *);
+	virtual void Visit(Divide_expression *);
+	virtual void Visit(Binary_opreator *);
+};
 
 class Symbol
 {

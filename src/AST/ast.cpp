@@ -1310,6 +1310,224 @@ void TypeVisitor::Visit(Divide_expression *n)
 	cout<<"The Type of Right is: "<<n->expression2->type<<"\n";
 }
 
+
+/************************ Code Visitors ************************/
+
+void CodeVisitor::Visit(Node *n)
+{
+}
+
+void CodeVisitor::Visit(Ident *n)
+{
+}
+
+void CodeVisitor::Visit(Ident_List *n)
+{
+	
+}
+
+void CodeVisitor::Visit(Int_Num *n)
+{
+}
+
+void CodeVisitor::Visit(Real_Num *n)
+{
+}
+
+void CodeVisitor::Visit(Standard_Type *n)
+{
+}
+
+void CodeVisitor::Visit(Type *n)
+{
+	
+}
+
+void CodeVisitor::Visit(Parameter *n)
+{
+	if(n->type->std_type->type == 'I'){
+		for (int i = 0; i < n->ident_list->idents->size(); i++)
+		{
+			fp++;
+			n->ident_list->idents->at(i)->symbol->location = fp;
+			// cout << n->ident_list->idents->at(i)->name << endl;
+			vout << "pushi 0" << "\n";
+			vout << "storel " << fp <<"\n";
+			vout << "pushl " << fp << "\n";
+		}
+		
+	}
+}
+
+void CodeVisitor::Visit(Declaration *n)
+{
+}
+
+void CodeVisitor::Visit(Declarations *n)
+{
+	
+}
+
+void CodeVisitor::Visit(Expression *n)
+{
+}
+
+void CodeVisitor::Visit(Int_Expression *n)
+{
+
+}
+
+void CodeVisitor::Visit(Real_Expression *n)
+{
+	
+}
+
+void CodeVisitor::Visit(Boolean_Expression *n)
+{
+}
+
+void CodeVisitor::Visit(Ident_Expression *n)
+{
+	
+}
+
+void CodeVisitor::Visit(Expression_Expression *n)
+{
+
+}
+
+void CodeVisitor::Visit(Expression_List *n)
+{
+}
+
+void CodeVisitor::Visit(Binary_expression *n)
+{
+	
+}
+
+void CodeVisitor::Visit(Binary_opreator *n)
+{
+}
+
+void CodeVisitor::Visit(Not_Expression *n)
+{
+	
+}
+
+void CodeVisitor::Visit(Statement *n)
+{
+}
+
+void CodeVisitor::Visit(Statement_List *n)
+{
+	
+}
+
+void CodeVisitor::Visit(If_Statement *n)
+{
+	
+}
+
+void CodeVisitor::Visit(While_Statement *n)
+{
+	
+}
+
+void CodeVisitor::Visit(If_Else_Statement *n)
+{
+	
+}
+
+void CodeVisitor::Visit(Compound_Statement *n)
+{
+	
+}
+
+void CodeVisitor::Visit(Optional_Statements *n)
+{
+
+}
+
+void CodeVisitor::Visit(Variable_Statement *n)
+{
+	
+}
+
+void CodeVisitor::Visit(Parameter_List *n)
+{
+
+	int pls = n->params->size();
+	for (int i = 0; i < pls; i++)
+	{
+		n->params->at(i)->accept(this);
+	}
+	
+
+}
+
+void CodeVisitor::Visit(Arguments *n)
+{
+	
+}
+
+void CodeVisitor::Visit(Procedure_Statement *n)
+{
+	
+}
+
+void CodeVisitor::Visit(Variable *n)
+{
+
+}
+
+void CodeVisitor::Visit(Subprogram_Head *n)
+{
+
+}
+
+void CodeVisitor::Visit(Subprogram_Declaration *n)
+{
+
+}
+
+void CodeVisitor::Visit(Subprogram_Declarations *n)
+{
+
+}
+
+void CodeVisitor::Visit(Program *n)
+{
+	vout << "start\n";
+	int n_of_functions = n->sub_decs->decs->size();
+	for (int i = 0; i < n_of_functions; i++)
+	{
+		n->sub_decs->decs->at(i)->sub_head->args->param_lst->accept(this);
+	}
+	
+
+	vout << "stop\n";
+}
+
+void CodeVisitor::Visit(Add_expression *n)
+{
+
+}
+
+void CodeVisitor::Visit(Minus_expression *n)
+{
+
+}
+
+void CodeVisitor::Visit(Mul_expression *n)
+{
+
+}
+
+void CodeVisitor::Visit(Divide_expression *n)
+{
+
+}
+
 Symbol::Symbol(string n, int k, char t)
 {
 	this->name = n;

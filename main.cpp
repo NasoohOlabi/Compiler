@@ -14,5 +14,7 @@ int main()
 	root;
 	// NodeVisitor *pv = new PrintVisitor();
 	// root->accept(pv);
+	NodeVisitor *pv = new TypeVisitor();
+	root->accept(pv);
 	return 0;
 }

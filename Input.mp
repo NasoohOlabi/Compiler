@@ -3,8 +3,7 @@ Program ArrayExample;
 Var var1 : Integer;
 Var var2 : Real;
 Var var3 : Boolean;
-
-
+Var var3 : Boolean;
 
 function MYFUNC (var1,y : integer) : boolean;
 
@@ -16,15 +15,15 @@ End;
 function MYFUNC (x : integer) : boolean;
 
 Begin
-    if y then
+    if x then
         var2 := 42
 End;
 
 function MYFUNC (x,y : integer) : boolean;
 
 Begin
-    if var5 then
-        var2 := 42
+    if (x > y) then
+        var2 := 42.6
 End;
 
 Begin

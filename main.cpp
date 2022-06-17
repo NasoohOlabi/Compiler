@@ -9,8 +9,9 @@ extern Program *root;
 int main()
 {
 	freopen(SRC_PATH "/Input.mp", "r", stdin);
+	cout << "\n\nParsing started...\n\n";
 	yyparse();
-	cout << "Parsing is done...\n";
+	cout << "\n\nParsing is done...\n\n";
 	root;
 	// NodeVisitor *pv = new PrintVisitor();
 	// root->accept(pv);

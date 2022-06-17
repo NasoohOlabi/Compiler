@@ -1107,6 +1107,13 @@ void TypeVisitor::Visit(Binary_expression *n)
 	// cout << "\nRight Expr -> \n";
 	n->expression2->accept(this);
 
+	if (n->expression1->type == n->expression2->type && n->expression1->type != "BOOL")
+		cout << "Binary Expression type checked correctly\n";
+	else
+	{
+		cout << "Type Error: line " << n->line << ", column " << n->column << endl;
+	}
+
 	n->type = "BOOL";
 }
 
@@ -1120,8 +1127,7 @@ void TypeVisitor::Visit(Logical_expression *n)
 	// cout << "\nRight Expr -> \n";
 	n->expression2->accept(this);
 
-	cout << "VISITOR HEEEEEREEEEE \n"
-		 << n->expression1->type << n->expression2->type;
+	cout << "VISITOR HEEEEEREEEEE \n";
 
 	if (n->expression1->type == "BOOL" && n->expression2->type == "BOOL")
 		cout << "Logical Expression type checked correctly\n";
@@ -1651,7 +1657,7 @@ bool SymbolTable::AddSymbol(Ident *ident, int kind, char type)
 	}
 	else
 	{
-		// cout << "**************************************************Redefinition variable " << ident->name << " " << type << "\n";
+		cout << "\n\nError:: variable redefinition " << ident->name << ", line " << ident->line << ", col " << ident->column << "\n\n";
 		return false;
 	}
 }
@@ -1676,7 +1682,7 @@ bool SymbolTable::AddFunction(Ident *ident, Arguments *args, int kind, char type
 	}
 	else
 	{
-		// cout << "**************************************************Redefinition variable " << ident->name << " " << type << "\n";
+		cout << "\n\nError:: function redefinition " << ident->name << ", line " << ident->line << ", col " << ident->column << "\n\n";
 		return false;
 	}
 }
@@ -1702,7 +1708,7 @@ Symbol *SymbolTable::lookUpSymbol(Ident *ident)
 		}
 		else
 		{
-			// cout << "**************************************************Undeclared variable " << ident->name << "\n";
+			cout << "\n\nError:: Undeclared variable " << ident->name << ", line " << ident->line << ", col " << ident->column << "\n\n";
 			return NULL;
 		}
 	}

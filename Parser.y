@@ -174,6 +174,11 @@ subprogram_head: FUNCTION IDENT arguments ':' standard_type ';'
 variable: IDENT
 				{
 					cout << "variable\n";
+					Symbol* s = symbolTable->lookUpSymbol($1);
+					$1->symbol = s;
+					if(s == NULL){
+						cout << "****************PARSER NULL***************\n" << $1->name;
+					}
 					$$ = new Variable($1, lin, col);
 				}
 			| IDENT '[' expression ']'

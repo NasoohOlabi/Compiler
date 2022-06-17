@@ -911,7 +911,6 @@ void PrintVisitor::Visit(Divide_expression *n)
 	n->expression2->accept(this);
 }
 
-
 /************************ Type Checking Visitor ************************/
 
 void TypeVisitor::Visit(Node *n)
@@ -997,7 +996,7 @@ void TypeVisitor::Visit(Int_Expression *n)
 {
 	// cout << "Int Expression:: \nValue -> \n";
 	n->value->accept(this);
-	n->type ="INT";
+	n->type = "INT";
 	// cout<<"--------------------------------------------------------------------INT Type:"<<n->type<<" at: "<<n->column<<" , "<<n->line<<"\n";
 }
 
@@ -1051,13 +1050,14 @@ void TypeVisitor::Visit(Expression_List *n)
 
 void TypeVisitor::Visit(Binary_expression *n)
 {
-	// cout << "Binary Expression:: \nLeft Expr -> \n";
+	// TODO
+	//  cout << "Binary Expression:: \nLeft Expr -> \n";
 	n->expression1->accept(this);
 	// cout << "\nOperator -> ";
 	n->op->accept(this);
 	// cout << "\nRight Expr -> \n";
 	n->expression2->accept(this);
-	n->type="bool";
+	n->type = "BOOL";
 }
 
 void TypeVisitor::Visit(Binary_opreator *n)
@@ -1069,7 +1069,7 @@ void TypeVisitor::Visit(Not_Expression *n)
 {
 	// cout << "Not Expression:: \nExpr -> \n";
 	n->expression->accept(this);
-	n->type="BOOL";
+	n->type = "BOOL";
 }
 
 void TypeVisitor::Visit(Statement *n)
@@ -1127,10 +1127,23 @@ void TypeVisitor::Visit(Optional_Statements *n)
 
 void TypeVisitor::Visit(Variable_Statement *n)
 {
-	// cout << "Variable Statement:: \nVariable -> \n";
+
 	n->variable->accept(this);
-	// cout << "\nExpr -> \n";
 	n->expression->accept(this);
+
+	char ident_type = n->variable->id->symbol->type;
+
+	string expr_type = n->expression->type;
+
+	if (ident_type == 'I' && expr_type == "INT" || ident_type == 'R' && expr_type == "RL" || ident_type == 'B' && expr_type == "BOOL")
+	{
+		cout << "TYPE ACCEPTED\n";
+	}
+	else
+	{
+		cout << "Type Error: line " << n->line << ", column " << n->column << endl;
+		cout << "left:: " << ident_type << "  right:: " << expr_type << endl;
+	}
 }
 
 void TypeVisitor::Visit(Parameter_List *n)
@@ -1194,15 +1207,19 @@ void TypeVisitor::Visit(Subprogram_Declaration *n)
 void TypeVisitor::Visit(Subprogram_Declarations *n)
 {
 	// cout << "Subprogram Declarations List:: \n";
-	for (int i = 0; i < (n->decs)->size(); i++)
+
+	for (int i = 0; i < n->decs->size(); i++)
 	{
 		// cout << "Subprogram Declaration number " << i << " ::\n";
+		cout << "Visiting Subprogram " << i << endl;
+
 		n->decs->at(i)->accept(this);
 	}
 }
 
 void TypeVisitor::Visit(Program *n)
 {
+	cout << "PROGRAM VISITOR\n";
 	// cout << "Program (root):: \nIdent -> \n";
 	n->id->accept(this);
 	// cout << "\nDeclarations -> \n";
@@ -1221,24 +1238,33 @@ void TypeVisitor::Visit(Add_expression *n)
 	// cout << "\nRight Expr -> \n";
 	n->expression2->accept(this);
 
-	//types: int , real  
+	// types: int , real
 
 	string left = n->expression1->type;
 	string right = n->expression2->type;
-	
+
 	// cout<<"--------------------------------------------------------------------Left :"<<n->expression1<<" at: "<<n->column<<" , "<<n->line<<"\n";
 	// cout<<"--------------------------------------------------------------------Right :"<<n->expression2<<" at: "<<n->column<<" , "<<n->line<<"\n";
 
 	// cout<<"--------------------------------------------------------------------Left Type:"<<n->expression1->type<<" at: "<<n->column<<" , "<<n->line<<"\n";
 	// cout<<"--------------------------------------------------------------------Right Type:"<<n->expression2->type<<" at: "<<n->column<<" , "<<n->line<<"\n";
-	if(left == "INT" && right == "INT"){
+	if (left == "INT" && right == "INT")
+	{
 		n->type = "INT";
-	}else if(left == "RL" && right == "RL"){
-		n->type="RL";
-	}else if((left == "INT" && right == "RL") || (left == "RL" && right == "INT")){
+	}
+	else if (left == "RL" && right == "RL")
+	{
+		n->type = "RL";
+	}
+	else if ((left == "INT" && right == "RL") || (left == "RL" && right == "INT"))
+	{
 		n->type = "RL";
 		n->expression1->type = "RL";
 		n->expression2->type = "RL";
+	}
+	else
+	{
+		cout << "Type Error: line " << n->line << ", column " << n->column << endl;
 	}
 	// cout<<"--------------------------------------------------------------------Left Type:"<<n->expression1->type<<" at: "<<n->column<<" , "<<n->line<<"\n";
 	// cout<<"--------------------------------------------------------------------Right Type:"<<n->expression2->type<<" at: "<<n->column<<" , "<<n->line<<"\n";
@@ -1250,23 +1276,28 @@ void TypeVisitor::Visit(Minus_expression *n)
 	n->expression1->accept(this);
 	// cout << "\nRight Expr -> \n";
 	n->expression2->accept(this);
-	
-	//types: int , real  
+
+	// types: int , real
 
 	string left = n->expression1->type;
 	string right = n->expression2->type;
-	
-	if(left == "INT" && right == "INT"){
+
+	if (left == "INT" && right == "INT")
+	{
 		n->type = "INT";
-	}else if(left == "RL" && right == "RL"){
-		n->type="RL";
-	}else if((left == "INT" && right == "RL") || (left == "RL" && right == "INT")){
+	}
+	else if (left == "RL" && right == "RL")
+	{
+		n->type = "RL";
+	}
+	else if ((left == "INT" && right == "RL") || (left == "RL" && right == "INT"))
+	{
 		n->type = "RL";
 		n->expression1->type = "RL";
 		n->expression2->type = "RL";
 	}
-	cout<<"The Type of left is: "<<n->expression1->type<<"\n";
-	cout<<"The Type of Right is: "<<n->expression2->type<<"\n";
+	cout << "The Type of left is: " << n->expression1->type << "\n";
+	cout << "The Type of Right is: " << n->expression2->type << "\n";
 }
 
 void TypeVisitor::Visit(Mul_expression *n)
@@ -1275,23 +1306,28 @@ void TypeVisitor::Visit(Mul_expression *n)
 	n->expression1->accept(this);
 	// cout << "\nRight Expr -> \n";
 	n->expression2->accept(this);
-	
-	//types: int , real  
+
+	// types: int , real
 
 	string left = n->expression1->type;
 	string right = n->expression2->type;
-	
-	if(left == "INT" && right == "INT"){
+
+	if (left == "INT" && right == "INT")
+	{
 		n->type = "INT";
-	}else if(left == "RL" && right == "RL"){
-		n->type="RL";
-	}else if((left == "INT" && right == "RL") || (left == "RL" && right == "INT")){
+	}
+	else if (left == "RL" && right == "RL")
+	{
+		n->type = "RL";
+	}
+	else if ((left == "INT" && right == "RL") || (left == "RL" && right == "INT"))
+	{
 		n->type = "RL";
 		n->expression1->type = "RL";
 		n->expression2->type = "RL";
 	}
-	cout<<"The Type of left is: "<<n->expression1->type<<"\n";
-	cout<<"The Type of Right is: "<<n->expression2->type<<"\n";
+	cout << "The Type of left is: " << n->expression1->type << "\n";
+	cout << "The Type of Right is: " << n->expression2->type << "\n";
 }
 
 void TypeVisitor::Visit(Divide_expression *n)
@@ -1300,16 +1336,15 @@ void TypeVisitor::Visit(Divide_expression *n)
 	n->expression1->accept(this);
 	// cout << "\nRight Expr -> \n";
 	n->expression2->accept(this);
-	//types : int, real 
+	// types : int, real
 
 	string left = n->expression1->type;
 	string right = n->expression2->type;
-	
-	n->type = "RL";
-	cout<<"The Type of left is: "<<n->expression1->type<<"\n";
-	cout<<"The Type of Right is: "<<n->expression2->type<<"\n";
-}
 
+	n->type = "RL";
+	cout << "The Type of left is: " << n->expression1->type << "\n";
+	cout << "The Type of Right is: " << n->expression2->type << "\n";
+}
 
 /************************ Code Visitors ************************/
 
@@ -1323,7 +1358,6 @@ void CodeVisitor::Visit(Ident *n)
 
 void CodeVisitor::Visit(Ident_List *n)
 {
-	
 }
 
 void CodeVisitor::Visit(Int_Num *n)
@@ -1340,22 +1374,22 @@ void CodeVisitor::Visit(Standard_Type *n)
 
 void CodeVisitor::Visit(Type *n)
 {
-	
 }
 
 void CodeVisitor::Visit(Parameter *n)
 {
-	if(n->type->std_type->type == 'I'){
+	if (n->type->std_type->type == 'I')
+	{
 		for (int i = 0; i < n->ident_list->idents->size(); i++)
 		{
 			fp++;
 			n->ident_list->idents->at(i)->symbol->location = fp;
 			// cout << n->ident_list->idents->at(i)->name << endl;
-			vout << "pushi 0" << "\n";
-			vout << "storel " << fp <<"\n";
+			vout << "pushi 0"
+				 << "\n";
+			vout << "storel " << fp << "\n";
 			vout << "pushl " << fp << "\n";
 		}
-		
 	}
 }
 
@@ -1365,7 +1399,6 @@ void CodeVisitor::Visit(Declaration *n)
 
 void CodeVisitor::Visit(Declarations *n)
 {
-	
 }
 
 void CodeVisitor::Visit(Expression *n)
@@ -1374,12 +1407,10 @@ void CodeVisitor::Visit(Expression *n)
 
 void CodeVisitor::Visit(Int_Expression *n)
 {
-
 }
 
 void CodeVisitor::Visit(Real_Expression *n)
 {
-	
 }
 
 void CodeVisitor::Visit(Boolean_Expression *n)
@@ -1388,12 +1419,10 @@ void CodeVisitor::Visit(Boolean_Expression *n)
 
 void CodeVisitor::Visit(Ident_Expression *n)
 {
-	
 }
 
 void CodeVisitor::Visit(Expression_Expression *n)
 {
-
 }
 
 void CodeVisitor::Visit(Expression_List *n)
@@ -1402,7 +1431,6 @@ void CodeVisitor::Visit(Expression_List *n)
 
 void CodeVisitor::Visit(Binary_expression *n)
 {
-	
 }
 
 void CodeVisitor::Visit(Binary_opreator *n)
@@ -1411,7 +1439,6 @@ void CodeVisitor::Visit(Binary_opreator *n)
 
 void CodeVisitor::Visit(Not_Expression *n)
 {
-	
 }
 
 void CodeVisitor::Visit(Statement *n)
@@ -1420,37 +1447,30 @@ void CodeVisitor::Visit(Statement *n)
 
 void CodeVisitor::Visit(Statement_List *n)
 {
-	
 }
 
 void CodeVisitor::Visit(If_Statement *n)
 {
-	
 }
 
 void CodeVisitor::Visit(While_Statement *n)
 {
-	
 }
 
 void CodeVisitor::Visit(If_Else_Statement *n)
 {
-	
 }
 
 void CodeVisitor::Visit(Compound_Statement *n)
 {
-	
 }
 
 void CodeVisitor::Visit(Optional_Statements *n)
 {
-
 }
 
 void CodeVisitor::Visit(Variable_Statement *n)
 {
-	
 }
 
 void CodeVisitor::Visit(Parameter_List *n)
@@ -1461,38 +1481,30 @@ void CodeVisitor::Visit(Parameter_List *n)
 	{
 		n->params->at(i)->accept(this);
 	}
-	
-
 }
 
 void CodeVisitor::Visit(Arguments *n)
 {
-	
 }
 
 void CodeVisitor::Visit(Procedure_Statement *n)
 {
-	
 }
 
 void CodeVisitor::Visit(Variable *n)
 {
-
 }
 
 void CodeVisitor::Visit(Subprogram_Head *n)
 {
-
 }
 
 void CodeVisitor::Visit(Subprogram_Declaration *n)
 {
-
 }
 
 void CodeVisitor::Visit(Subprogram_Declarations *n)
 {
-
 }
 
 void CodeVisitor::Visit(Program *n)
@@ -1503,29 +1515,24 @@ void CodeVisitor::Visit(Program *n)
 	{
 		n->sub_decs->decs->at(i)->sub_head->args->param_lst->accept(this);
 	}
-	
 
 	vout << "stop\n";
 }
 
 void CodeVisitor::Visit(Add_expression *n)
 {
-
 }
 
 void CodeVisitor::Visit(Minus_expression *n)
 {
-
 }
 
 void CodeVisitor::Visit(Mul_expression *n)
 {
-
 }
 
 void CodeVisitor::Visit(Divide_expression *n)
 {
-
 }
 
 Symbol::Symbol(string n, int k, char t)
@@ -1547,7 +1554,8 @@ SymbolTable::SymbolTable()
 bool SymbolTable::AddSymbol(Ident *ident, int kind, char type)
 {
 	Symbol *s = new Symbol(ident->name, kind, type);
-	string key = "l" + ident->name;
+	string key_type = (kind == 1 ? "g" : "l");
+	string key = key_type + ident->name;
 	Symbol *temp = this->current->hashTab->GetMember(key);
 	if (temp == NULL)
 	{
@@ -1600,7 +1608,7 @@ Symbol *SymbolTable::lookUpSymbol(Ident *ident)
 	else
 	{
 		key = "g" + ident->name;
-		Symbol *sym = this->scopes->at(this->scopes->size() - 2)->hashTab->GetMember(key);
+		Symbol *sym = this->scopes->at(0)->hashTab->GetMember(key);
 		if (sym != NULL)
 		{
 			ident->symbol = sym;

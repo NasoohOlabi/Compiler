@@ -10,7 +10,7 @@ function MYFUNC (var1,y : integer) : boolean;
 
 Begin
     if 4 > 5 then
-        var2 := 4 + 5
+        var2 := 42.1
 End;
 
 function MYFUNC (x : integer) : boolean;

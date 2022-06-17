@@ -9,7 +9,7 @@ Var var3 : Boolean;
 function MYFUNC (var1,y : integer) : boolean;
 
 Begin
-    if 4 > 5 then
+    if (var3 AND var3) then
         var2 := 42.1
 End;
 

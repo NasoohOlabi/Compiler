@@ -49,7 +49,9 @@
 	Mul_expression *tMul_expression;
 	Divide_expression *tDivide_expression;
 	Binary_expression *tBinary_expression;
+	Logical_expression *tLogical_expression;
 	Binary_opreator *tBinary_Opreator;
+	Logical_opreator *tLogical_Opreator;
  }
 
 /* Tokens Section (Terminals) */
@@ -69,6 +71,7 @@
 %left '*' '/'
 
 %nonassoc <tBinary_Opreator> BINARY_OPERATOR
+%nonassoc <tLogical_Opreator> LOGICAL_OPERATOR
 
 %nonassoc EXPRLST_PREC
 
@@ -120,6 +123,7 @@
 %type <tMul_expression> mul_expression
 %type <tDivide_expression> divide_expression
 %type <tBinary_expression> binary_expression
+%type <tLogical_expression> logical_expression
 
 
 %%
@@ -260,6 +264,10 @@ expression: INT_NUM
 								{
 									$$ = $1;
 								}
+			| logical_expression %prec UNARY_PREC
+								{
+									$$ = $1;
+								}
 			| IDENT expression_list %prec EXPR_PREC
 								{
 									$$ = new Ident_Expression($1, $2 ,lin, col);
@@ -392,6 +400,13 @@ binary_expression: expression BINARY_OPERATOR expression
 				{
 						cout<< "Binary Expression found";
 						$$ = new Binary_expression($1, $2, $3, lin, col);
+				}
+;
+
+logical_expression: expression LOGICAL_OPERATOR expression 
+				{
+						cout<< "Logical Expression found";
+						$$ = new Logical_expression($1, $2, $3, lin, col);
 				}
 ;
 

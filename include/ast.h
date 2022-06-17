@@ -13,8 +13,8 @@ using std::string;
 #include "hash_fun.h"
 
 #include <fstream>
-using std::ofstream;
 using std::ios;
+using std::ofstream;
 
 static ofstream vout("..\\code.txt", ios::out);
 
@@ -57,15 +57,17 @@ class Minus_expression;
 class Mul_expression;
 class Divide_expression;
 class Binary_expression;
+class Logical_expression;
 class Binary_opreator;
+class Logical_opreator;
 
 class NodeVisitor;
 class PrintVisitor;
+class TypeVisitor;
+class CodeVisitor;
 class Symbol;
 class Scope;
 class SymbolTable;
-// class TypeVisitor;
-// class CodeVisitor;
 
 typedef CHashTable<Symbol> HashTab;
 
@@ -420,11 +422,29 @@ public:
 	Binary_expression(Expression *, Binary_opreator *, Expression *, int, int);
 	void accept(NodeVisitor *) override;
 };
+
+class Logical_expression : public Expression
+{
+public:
+	Expression *expression1;
+	Expression *expression2;
+	Logical_opreator *op;
+	Logical_expression(Expression *, Logical_opreator *, Expression *, int, int);
+	void accept(NodeVisitor *) override;
+};
 class Binary_opreator : public Node
 {
 public:
 	string op;
 	Binary_opreator(string, int, int);
+	void accept(NodeVisitor *) override;
+};
+
+class Logical_opreator : public Node
+{
+public:
+	string op;
+	Logical_opreator(string, int, int);
 	void accept(NodeVisitor *) override;
 };
 
@@ -449,6 +469,7 @@ public:
 	virtual void Visit(Expression_Expression *) = 0;
 	virtual void Visit(Expression_List *) = 0;
 	virtual void Visit(Binary_expression *) = 0;
+	virtual void Visit(Logical_expression *) = 0;
 	virtual void Visit(Not_Expression *) = 0;
 	virtual void Visit(Statement *) = 0;
 	virtual void Visit(Statement_List *) = 0;
@@ -471,6 +492,7 @@ public:
 	virtual void Visit(Mul_expression *) = 0;
 	virtual void Visit(Divide_expression *) = 0;
 	virtual void Visit(Binary_opreator *) = 0;
+	virtual void Visit(Logical_opreator *) = 0;
 };
 
 class PrintVisitor : public NodeVisitor
@@ -494,6 +516,7 @@ public:
 	void Visit(Expression_Expression *) override;
 	void Visit(Expression_List *) override;
 	void Visit(Binary_expression *) override;
+	void Visit(Logical_expression *) override;
 	void Visit(Not_Expression *) override;
 	void Visit(Statement *) override;
 	void Visit(Statement_List *) override;
@@ -516,6 +539,7 @@ public:
 	void Visit(Mul_expression *) override;
 	void Visit(Divide_expression *) override;
 	void Visit(Binary_opreator *) override;
+	void Visit(Logical_opreator *) override;
 };
 
 class TypeVisitor : public NodeVisitor
@@ -539,6 +563,7 @@ public:
 	virtual void Visit(Expression_Expression *);
 	virtual void Visit(Expression_List *);
 	virtual void Visit(Binary_expression *);
+	virtual void Visit(Logical_expression *);
 	virtual void Visit(Not_Expression *);
 	virtual void Visit(Statement *);
 	virtual void Visit(Statement_List *);
@@ -561,6 +586,7 @@ public:
 	virtual void Visit(Mul_expression *);
 	virtual void Visit(Divide_expression *);
 	virtual void Visit(Binary_opreator *);
+	virtual void Visit(Logical_opreator *);
 };
 
 class CodeVisitor : public NodeVisitor
@@ -585,6 +611,7 @@ public:
 	virtual void Visit(Expression_Expression *);
 	virtual void Visit(Expression_List *);
 	virtual void Visit(Binary_expression *);
+	virtual void Visit(Logical_expression *);
 	virtual void Visit(Not_Expression *);
 	virtual void Visit(Statement *);
 	virtual void Visit(Statement_List *);
@@ -607,6 +634,7 @@ public:
 	virtual void Visit(Mul_expression *);
 	virtual void Visit(Divide_expression *);
 	virtual void Visit(Binary_opreator *);
+	virtual void Visit(Logical_opreator *);
 };
 
 class Symbol

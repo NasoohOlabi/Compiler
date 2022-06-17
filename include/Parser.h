@@ -49,19 +49,20 @@
      INT_NUM = 275,
      REAL_NUM = 276,
      BINARY_OPERATOR = 277,
-     EXPRLST_PREC = 278,
-     ELSE = 279,
-     IF_PREC = 280,
-     NOSUBDECS_PREC = 281,
-     FUNCTION = 282,
-     PROCEDURE = 283,
-     SUBPROGRAMDEC_PREC = 284,
-     SUBDECS_PREC = 285,
-     NODECS_PREC = 286,
-     VAR = 287,
-     UNARY_PREC = 288,
-     NOT = 289,
-     EXPR_PREC = 290
+     LOGICAL_OPERATOR = 278,
+     EXPRLST_PREC = 279,
+     ELSE = 280,
+     IF_PREC = 281,
+     NOSUBDECS_PREC = 282,
+     FUNCTION = 283,
+     PROCEDURE = 284,
+     SUBPROGRAMDEC_PREC = 285,
+     SUBDECS_PREC = 286,
+     NODECS_PREC = 287,
+     VAR = 288,
+     UNARY_PREC = 289,
+     NOT = 290,
+     EXPR_PREC = 291
    };
 #endif
 /* Tokens.  */
@@ -85,19 +86,20 @@
 #define INT_NUM 275
 #define REAL_NUM 276
 #define BINARY_OPERATOR 277
-#define EXPRLST_PREC 278
-#define ELSE 279
-#define IF_PREC 280
-#define NOSUBDECS_PREC 281
-#define FUNCTION 282
-#define PROCEDURE 283
-#define SUBPROGRAMDEC_PREC 284
-#define SUBDECS_PREC 285
-#define NODECS_PREC 286
-#define VAR 287
-#define UNARY_PREC 288
-#define NOT 289
-#define EXPR_PREC 290
+#define LOGICAL_OPERATOR 278
+#define EXPRLST_PREC 279
+#define ELSE 280
+#define IF_PREC 281
+#define NOSUBDECS_PREC 282
+#define FUNCTION 283
+#define PROCEDURE 284
+#define SUBPROGRAMDEC_PREC 285
+#define SUBDECS_PREC 286
+#define NODECS_PREC 287
+#define VAR 288
+#define UNARY_PREC 289
+#define NOT 290
+#define EXPR_PREC 291
 
 
 
@@ -139,10 +141,12 @@ typedef union YYSTYPE {
 	Mul_expression *tMul_expression;
 	Divide_expression *tDivide_expression;
 	Binary_expression *tBinary_expression;
+	Logical_expression *tLogical_expression;
 	Binary_opreator *tBinary_Opreator;
+	Logical_opreator *tLogical_Opreator;
  } YYSTYPE;
 /* Line 1447 of yacc.c.  */
-#line 146 "../include/Parser.h"
+#line 150 "../include/Parser.h"
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
 # define YYSTYPE_IS_TRIVIAL 1

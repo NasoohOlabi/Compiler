@@ -578,12 +578,38 @@ void Binary_expression::accept(NodeVisitor *nv)
 	nv->Visit(this);
 }
 
+Logical_expression::Logical_expression(Expression *e1, Logical_opreator *o, Expression *e2, int lin, int col) : Expression(lin, col)
+{
+	this->expression1 = e1;
+	this->op = o;
+	this->expression2 = e2;
+	if (e1 != nullptr)
+		e1->father = this;
+	if (e2 != nullptr)
+		e2->father = this;
+}
+
+void Logical_expression::accept(NodeVisitor *nv)
+{
+	nv->Visit(this);
+}
+
 Binary_opreator::Binary_opreator(string o, int lin, int col) : Node(lin, col)
 {
 	this->op = o;
 }
 
 void Binary_opreator::accept(NodeVisitor *nv)
+{
+	nv->Visit(this);
+}
+
+Logical_opreator::Logical_opreator(string o, int lin, int col) : Node(lin, col)
+{
+	this->op = o;
+}
+
+void Logical_opreator::accept(NodeVisitor *nv)
 {
 	nv->Visit(this);
 }
@@ -727,9 +753,24 @@ void PrintVisitor::Visit(Binary_expression *n)
 	n->expression2->accept(this);
 }
 
+void PrintVisitor::Visit(Logical_expression *n)
+{
+	cout << "Logical Expression:: \nLeft Expr -> \n";
+	n->expression1->accept(this);
+	cout << "\nOperator -> ";
+	n->op->accept(this);
+	cout << "\nRight Expr -> \n";
+	n->expression2->accept(this);
+}
+
 void PrintVisitor::Visit(Binary_opreator *n)
 {
 	cout << "Binary Opreator:: \nopreator -> " << n->op << "\n";
+}
+
+void PrintVisitor::Visit(Logical_opreator *n)
+{
+	cout << "Logical Opreator:: \nopreator -> " << n->op << "\n";
 }
 
 void PrintVisitor::Visit(Not_Expression *n)
@@ -1021,6 +1062,14 @@ void TypeVisitor::Visit(Ident_Expression *n)
 	// n->type = n->ident->symbol->type;
 	// cout << "Ident Expression:: \nIdent -> \n";
 	n->ident->accept(this);
+	char t = n->ident->symbol->type;
+	if (t == 'I')
+		n->type = "INT";
+	if (t == 'R')
+		n->type = "RL";
+	if (t == 'B')
+		n->type = "BOOL";
+
 	if (n->expr_lst != NULL)
 	{
 		// cout << "Expr List -> \n";
@@ -1057,12 +1106,41 @@ void TypeVisitor::Visit(Binary_expression *n)
 	n->op->accept(this);
 	// cout << "\nRight Expr -> \n";
 	n->expression2->accept(this);
+
+	n->type = "BOOL";
+}
+
+void TypeVisitor::Visit(Logical_expression *n)
+{
+	// TODO
+	//  cout << "Logical Expression:: \nLeft Expr -> \n";
+	n->expression1->accept(this);
+	// cout << "\nOperator -> ";
+	n->op->accept(this);
+	// cout << "\nRight Expr -> \n";
+	n->expression2->accept(this);
+
+	cout << "VISITOR HEEEEEREEEEE \n"
+		 << n->expression1->type << n->expression2->type;
+
+	if (n->expression1->type == "BOOL" && n->expression2->type == "BOOL")
+		cout << "Logical Expression type checked correctly\n";
+	else
+	{
+		cout << "Type Error: line " << n->line << ", column " << n->column << endl;
+	}
+
 	n->type = "BOOL";
 }
 
 void TypeVisitor::Visit(Binary_opreator *n)
 {
 	// cout << "Binary Opreator:: \nopreator -> " << n->op << "\n";
+}
+
+void TypeVisitor::Visit(Logical_opreator *n)
+{
+	// cout << "Logical Opreator:: \nopreator -> " << n->op << "\n";
 }
 
 void TypeVisitor::Visit(Not_Expression *n)
@@ -1433,7 +1511,15 @@ void CodeVisitor::Visit(Binary_expression *n)
 {
 }
 
+void CodeVisitor::Visit(Logical_expression *n)
+{
+}
+
 void CodeVisitor::Visit(Binary_opreator *n)
+{
+}
+
+void CodeVisitor::Visit(Logical_opreator *n)
 {
 }
 

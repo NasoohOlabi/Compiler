@@ -1107,7 +1107,7 @@ void TypeVisitor::Visit(Binary_expression *n)
 	n->expression2->accept(this);
 
 	if (n->expression1->type == n->expression2->type && n->expression1->type != "BOOL")
-		cout << "Binary Expression type checked correctly\n";
+		cout << "Binary Expression type checked correctly, line " << n->line << endl;
 	else
 	{
 		cout << "Type Error: line " << n->line << ", column " << n->column << endl;
@@ -1126,10 +1126,8 @@ void TypeVisitor::Visit(Logical_expression *n)
 	// cout << "\nRight Expr -> \n";
 	n->expression2->accept(this);
 
-	cout << "VISITOR HEEEEEREEEEE \n";
-
 	if (n->expression1->type == "BOOL" && n->expression2->type == "BOOL")
-		cout << "Logical Expression type checked correctly\n";
+		cout << "Logical Expression type checked correctly, line " << n->line << "\n";
 	else
 	{
 		cout << "Type Error: line " << n->line << ", column " << n->column << endl;
@@ -1214,13 +1212,16 @@ void TypeVisitor::Visit(Variable_Statement *n)
 	n->variable->accept(this);
 	n->expression->accept(this);
 
+	if (n->variable->id->symbol == NULL)
+		return;
+
 	char ident_type = n->variable->id->symbol->type;
 
 	string expr_type = n->expression->type;
 
 	if (ident_type == 'I' && expr_type == "INT" || ident_type == 'R' && expr_type == "RL" || ident_type == 'B' && expr_type == "BOOL")
 	{
-		cout << "TYPE ACCEPTED\n";
+		cout << "Assignemt Type checked correctly, line " << n->line << endl;
 	}
 	else
 	{
@@ -1294,15 +1295,16 @@ void TypeVisitor::Visit(Subprogram_Declarations *n)
 	for (int i = 0; i < n->decs->size(); i++)
 	{
 		// cout << "Subprogram Declaration number " << i << " ::\n";
-		cout << "Visiting Subprogram " << i << endl;
+		cout << "\n\nVisiting Subprogram " << i << "\n\n";
 
 		n->decs->at(i)->accept(this);
 	}
+
+	cout << "\n\nVisiting the main program\n\n";
 }
 
 void TypeVisitor::Visit(Program *n)
 {
-	cout << "PROGRAM VISITOR\n";
 	// cout << "Program (root):: \nIdent -> \n";
 	n->id->accept(this);
 	// cout << "\nDeclarations -> \n";
@@ -1661,21 +1663,29 @@ bool SymbolTable::AddSymbol(Ident *ident, int kind, char type)
 	}
 }
 
-bool SymbolTable::AddFunction(Ident *ident, Arguments *args, int kind, char type) // k = 0 -> function else procedure
+bool SymbolTable::AddFunction(Ident *ident, Arguments *args, int kind, char type) // k = 1 -> function else procedure
 {
 	Symbol *s = new Symbol(ident->name, kind, type);
-	string key = "f" + ident->name;
+	string key;
+	if (kind == 1)
+		key = "f" + ident->name;
+	else
+		key = "p" + ident->name;
+
 	int n = args->param_lst->params->size();
 
 	for (int i = 0; i < n; i++)
 	{
-		key += ("@" + args->param_lst->params->at(i)->type->std_type->type);
+		cout << "line " << ident->line << " arg " << i << " type " << args->param_lst->params->at(i)->type->std_type->type << endl;
+		key += "@";
+		key.push_back(args->param_lst->params->at(i)->type->std_type->type);
+		key += (std::to_string(args->param_lst->params->at(i)->ident_list->idents->size()));
 	}
 
-	Symbol *temp = this->current->hashTab->GetMember(key);
+	Symbol *temp = this->scopes->at(0)->hashTab->GetMember(key);
 	if (temp == NULL)
 	{
-		this->current->hashTab->AddKey(key, s);
+		this->scopes->at(0)->hashTab->AddKey(key, s);
 		ident->symbol = s;
 		return true;
 	}

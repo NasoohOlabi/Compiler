@@ -69,9 +69,9 @@
 
 %left '+' '-'
 %left '*' '/'
+%left <tLogical_Opreator> LOGICAL_OPERATOR
 
 %nonassoc <tBinary_Opreator> BINARY_OPERATOR
-%nonassoc <tLogical_Opreator> LOGICAL_OPERATOR
 
 %nonassoc EXPRLST_PREC
 
@@ -465,6 +465,6 @@ compound_statement: BEG optional_statements END
 
 int yyerror(const char* s)
 {
-	cout << "OOPs, synatx error" << endl;
+	cout << "OOPs, synatx error, line " << lin << ", col " << col << endl;
 	return 1;
 }

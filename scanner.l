@@ -9,6 +9,11 @@
 
 %option noyywrap
 %option caseless
+%option nodefault
+
+%x error
+%x com1
+%x com2
 
 
 /* Definitions */
@@ -18,7 +23,7 @@ alpha 		[a-z]
 id      	({alpha}|_)({alpha}|{digit}|_)*
 int_num 	0|([1-9]{digit}*)
 real_num	(0|[1-9][0-9]*)"."[0-9]*([eE][-+]?(0|[1-9][0-9]*))?|"."[0-9]+([eE][-+]?(0|[1-9][0-9]*))?|(0|[1-9][0-9]*)([eE][-+]?(0|[1-9][0-9]*))
-white_space [ /t/n]
+white_space [ /t]
 opreators	[\[\]:;,)(]
 binary_opreators "<="|">="|"<>"|"div"|[=<>]
 logical_opreators "and"|"or"
@@ -28,7 +33,7 @@ basic_opreators [+*/\-]
 %%
 
 \n {
-	col = 1;
+	col = 0;
 	lin += 1;
 }
 
@@ -198,7 +203,57 @@ basic_opreators [+*/\-]
 }
 
 {white_space} {
-	/* IGNORE */
+	col += yyleng;
+}
+
+"//" {
+	BEGIN(com1);
+}
+
+<com1>"\n" {
+	BEGIN(0);
+	lin += 1;
+	col = 0;
+}
+
+<com1>. {} /* Ignore */
+
+"{" {
+	BEGIN(com2);
+}
+
+<com2>"}" {
+	col += 1;
+	BEGIN(0);
+}
+
+<com2>"\n" {
+	col = 0;
+	lin += 1;
+}
+
+<com2>{white_space} {
+	col += yyleng;
+}
+
+<com2>. {
+	col += yyleng;
+}
+
+. {
+	BEGIN(error);
+	cout << yytext;
+}
+
+<error>"\n" {
+	BEGIN(0);
+	cout << " :: Syntax Error on line " << lin << ", col " << col << endl;
+	lin += 1;
+	col = 0;
+}
+
+<error>. {
+	cout << yytext;
 }
 
 

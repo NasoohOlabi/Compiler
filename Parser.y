@@ -5,7 +5,7 @@
 	using std::endl;	
 	extern int yylex();
 	extern int yyerror(const char *);
-	int lin = 1, col =1;
+	int lin = 1, col =0;
 
 	Program *root;
 	SymbolTable *symbolTable = new SymbolTable();

@@ -1,6 +1,10 @@
-Program ArrayExample;
+@@@@@@@@@@
+// nfoenbiovbeiobvoieb
+Program ArrayExample; {bbrebere}
 
-Var var1 : Integer;
+Var var1 : Integer; {Comment
+....
+..}
 Var var2 : Real;
 Var var3 : Boolean;
 Var var3 : Boolean;

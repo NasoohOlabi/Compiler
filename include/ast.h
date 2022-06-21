@@ -28,10 +28,13 @@ class Type;
 class Parameter;
 class Declaration;
 class Declarations;
+class Local_Declaration;
+class Local_Declarations;
 class Expression;
 class Int_Expression;
 class Real_Expression;
 class Boolean_Expression;
+class Function_Expression;
 class Ident_Expression;
 class Expression_Expression;
 class Not_Expression;
@@ -70,6 +73,8 @@ class Scope;
 class SymbolTable;
 
 typedef CHashTable<Symbol> HashTab;
+
+extern SymbolTable *symbolTable;
 
 class Node
 {
@@ -173,6 +178,24 @@ public:
 	void accept(NodeVisitor *) override;
 };
 
+class Local_Declaration : public Node
+{
+public:
+	Parameter *param;
+	Local_Declaration(Parameter *, int, int);
+	void accept(NodeVisitor *) override;
+};
+
+class Local_Declarations : public Node
+{
+public:
+	vector<Local_Declaration *> *decs;
+	Local_Declarations(int, int);
+	Local_Declarations(Local_Declaration *, int, int);
+	void AddDec(Local_Declaration *);
+	void accept(NodeVisitor *) override;
+};
+
 class Arguments : public Node
 {
 public:
@@ -209,12 +232,19 @@ public:
 	Boolean_Expression(bool, int, int);
 	void accept(NodeVisitor *) override;
 };
-class Ident_Expression : public Expression
+class Function_Expression : public Expression
 {
 public:
 	Ident *ident;
 	Expression_List *expr_lst = NULL;
-	Ident_Expression(Ident *, Expression_List *, int, int);
+	Function_Expression(Ident *, Expression_List *, int, int);
+	void accept(NodeVisitor *) override;
+};
+
+class Ident_Expression : public Expression
+{
+public:
+	Ident *ident;
 	Ident_Expression(Ident *, int, int);
 	void accept(NodeVisitor *) override;
 };
@@ -254,7 +284,7 @@ class Procedure_Statement : public Statement
 {
 public:
 	Ident *id;
-	Expression_List *expr_lst{};
+	Expression_List *expr_lst;
 	Procedure_Statement(Ident *, int, int);
 	Procedure_Statement(Ident *, Expression_List *, int, int);
 	void accept(NodeVisitor *) override;
@@ -350,9 +380,10 @@ public:
 class Subprogram_Declaration : public Node
 {
 public:
+	Local_Declarations *decs;
 	Subprogram_Head *sub_head;
 	Compound_Statement *comp_stmt;
-	Subprogram_Declaration(Subprogram_Head *, Compound_Statement *, int, int);
+	Subprogram_Declaration(Local_Declarations *, Subprogram_Head *, Compound_Statement *, int, int);
 	void accept(NodeVisitor *) override;
 };
 
@@ -461,10 +492,13 @@ public:
 	virtual void Visit(Parameter *) = 0;
 	virtual void Visit(Declaration *) = 0;
 	virtual void Visit(Declarations *) = 0;
+	virtual void Visit(Local_Declaration *) = 0;
+	virtual void Visit(Local_Declarations *) = 0;
 	virtual void Visit(Expression *) = 0;
 	virtual void Visit(Int_Expression *) = 0;
 	virtual void Visit(Real_Expression *) = 0;
 	virtual void Visit(Boolean_Expression *) = 0;
+	virtual void Visit(Function_Expression *) = 0;
 	virtual void Visit(Ident_Expression *) = 0;
 	virtual void Visit(Expression_Expression *) = 0;
 	virtual void Visit(Expression_List *) = 0;
@@ -508,10 +542,13 @@ public:
 	void Visit(Parameter *) override;
 	void Visit(Declaration *) override;
 	void Visit(Declarations *) override;
+	void Visit(Local_Declaration *) override;
+	void Visit(Local_Declarations *) override;
 	void Visit(Expression *) override;
 	void Visit(Int_Expression *) override;
 	void Visit(Real_Expression *) override;
 	void Visit(Boolean_Expression *) override;
+	void Visit(Function_Expression *) override;
 	void Visit(Ident_Expression *) override;
 	void Visit(Expression_Expression *) override;
 	void Visit(Expression_List *) override;
@@ -555,10 +592,13 @@ public:
 	virtual void Visit(Parameter *);
 	virtual void Visit(Declaration *);
 	virtual void Visit(Declarations *);
+	virtual void Visit(Local_Declaration *);
+	virtual void Visit(Local_Declarations *);
 	virtual void Visit(Expression *);
 	virtual void Visit(Int_Expression *);
 	virtual void Visit(Real_Expression *);
 	virtual void Visit(Boolean_Expression *);
+	virtual void Visit(Function_Expression *);
 	virtual void Visit(Ident_Expression *);
 	virtual void Visit(Expression_Expression *);
 	virtual void Visit(Expression_List *);
@@ -603,10 +643,13 @@ public:
 	virtual void Visit(Parameter *);
 	virtual void Visit(Declaration *);
 	virtual void Visit(Declarations *);
+	virtual void Visit(Local_Declaration *);
+	virtual void Visit(Local_Declarations *);
 	virtual void Visit(Expression *);
 	virtual void Visit(Int_Expression *);
 	virtual void Visit(Real_Expression *);
 	virtual void Visit(Boolean_Expression *);
+	virtual void Visit(Function_Expression *);
 	virtual void Visit(Ident_Expression *);
 	virtual void Visit(Expression_Expression *);
 	virtual void Visit(Expression_List *);
@@ -663,6 +706,7 @@ public:
 	bool AddProcedure(Ident *, Arguments *, int, char);
 	SymbolTable();
 	Symbol *lookUpSymbol(Ident *);
+	Symbol *lookUpFunction(Ident *, Expression_List *, int);
 	void startScope();
 	void endScope();
 };

@@ -25,11 +25,14 @@
 	Parameter_List *tParameter_List;
 	Declaration *tDeclaration;
 	Declarations *tDeclarations;
+	Local_Declaration *tLocal_Declaration;
+	Local_Declarations *tLocal_Declarations;
 	Arguments *tArguments;
 	Expression *tExpression;
 	Int_Expression *tInt_Expression;
 	Real_Expression *tReal_Expression;
 	Boolean_Expression *tBoolean_Expression;
+	Function_Expression *tFunction_Expression;
 	Ident_Expression *tIdent_Expression;
 	Expression_Expression *tExpression_Expression;
 	Not_Expression *tNot_Expression;
@@ -105,6 +108,8 @@
 %type <tParameter_List> parameter_list
 %type <tDeclaration> declaration
 %type <tDeclarations> declarations
+%type <tLocal_Declaration> local_declaration
+%type <tLocal_Declarations> local_declarations
 %type <tArguments> arguments
 %type <tExpression> expression
 %type <tExpression_List> expression_list
@@ -148,10 +153,10 @@ subprogram_declarations: subprogram_declarations subprogram_declaration ';' %pre
 
 
 subprogram_declaration: { symbolTable->startScope(); }
-						subprogram_head compound_statement 
+						subprogram_head local_declarations compound_statement 
 						{ symbolTable->endScope(); } %prec SUBPROGRAMDEC_PREC
 							{
-								$$ = new Subprogram_Declaration($2, $3, lin, col);
+								$$ = new Subprogram_Declaration($3, $2, $4, lin, col);
 							}
 ;
 
@@ -248,17 +253,14 @@ expression: INT_NUM
 								{
 									$$ = $1;
 								}
-			| IDENT expression_list %prec EXPR_PREC
+			| IDENT '(' expression_list ')' %prec EXPR_PREC
 								{
-									$$ = new Ident_Expression($1, $2 ,lin, col);
-
-									symbolTable->lookUpSymbol($1);
+									$$ = new Function_Expression($1, $3 ,lin, col);
 								}
 			| IDENT 
 								{
-									$$ = new Ident_Expression($1, lin, col);
-
 									symbolTable->lookUpSymbol($1);
+									$$ = new Ident_Expression($1, lin, col);
 								}
 			| '(' expression ')'
 								{
@@ -311,6 +313,33 @@ declaration: VAR parameter ';'
 											int n = $2->ident_list->idents->size();
 											for(int i=0;i<n;i++){
 												symbolTable->AddSymbol($2->ident_list->idents->at(i),1,t);
+											}
+										}
+;
+
+local_declarations: local_declaration
+						{
+							$$ = new Local_Declarations($1 ,lin, col);
+						}
+			| local_declarations local_declaration
+				{
+					$1->AddDec($2);
+					$$ = $1;
+				}
+			| /* Empty */  %prec NODECS_PREC
+				{
+					$$ = new Local_Declarations(lin, col);
+				}
+;
+
+local_declaration: VAR parameter ';'	
+										{
+											$$ = new Local_Declaration($2, lin, col);
+
+											char t = $2->type->std_type->type;
+											int n = $2->ident_list->idents->size();
+											for(int i=0;i<n;i++){
+												symbolTable->AddSymbol($2->ident_list->idents->at(i),2,t);
 											}
 										}
 ;
@@ -413,7 +442,7 @@ statement : variable ASSIGN expression
 									}
 			| procedure_statement
 									{
-										/* $$ = $1; */
+										$$ = $1;
 									}
 			| compound_statement
 									{

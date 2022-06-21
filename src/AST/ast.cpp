@@ -150,6 +150,7 @@ Declarations::Declarations(Declaration *dec, int l, int c) : Node(l, c)
 {
 	this->decs = new vector<Declaration *>;
 	this->AddDec(dec);
+	dec->father = this;
 }
 
 void Declarations::AddDec(Declaration *dec)
@@ -159,6 +160,40 @@ void Declarations::AddDec(Declaration *dec)
 }
 
 void Declarations::accept(NodeVisitor *nv)
+{
+	nv->Visit(this);
+}
+
+Local_Declaration::Local_Declaration(Parameter *p, int l, int c) : Node(l, c)
+{
+	this->param = p;
+	p->father = this;
+}
+
+void Local_Declaration::accept(NodeVisitor *nv)
+{
+	nv->Visit(this);
+}
+
+Local_Declarations::Local_Declarations(int l, int c) : Node(l, c)
+{
+	this->decs = new vector<Local_Declaration *>;
+}
+
+Local_Declarations::Local_Declarations(Local_Declaration *dec, int l, int c) : Node(l, c)
+{
+	this->decs = new vector<Local_Declaration *>;
+	this->AddDec(dec);
+	dec->father = this;
+}
+
+void Local_Declarations::AddDec(Local_Declaration *dec)
+{
+	this->decs->push_back(dec);
+	dec->father = this;
+}
+
+void Local_Declarations::accept(NodeVisitor *nv)
 {
 	nv->Visit(this);
 }
@@ -213,18 +248,23 @@ void Boolean_Expression::accept(NodeVisitor *nv)
 	nv->Visit(this);
 }
 
-Ident_Expression::Ident_Expression(Ident *id, int l, int c) : Expression(l, c)
-{
-	this->ident = id;
-	id->father = this;
-}
-
-Ident_Expression::Ident_Expression(Ident *id, Expression_List *e_lst, int l, int c) : Expression(l, c)
+Function_Expression::Function_Expression(Ident *id, Expression_List *e_lst, int l, int c) : Expression(l, c)
 {
 	this->ident = id;
 	this->expr_lst = e_lst;
 	id->father = this;
 	e_lst->father = this;
+}
+
+void Function_Expression::accept(NodeVisitor *nv)
+{
+	nv->Visit(this);
+}
+
+Ident_Expression::Ident_Expression(Ident *id, int l, int c) : Expression(l, c)
+{
+	this->ident = id;
+	id->father = this;
 }
 
 void Ident_Expression::accept(NodeVisitor *nv)
@@ -448,10 +488,12 @@ void Subprogram_Head::accept(NodeVisitor *nv)
 	nv->Visit(this);
 }
 
-Subprogram_Declaration::Subprogram_Declaration(Subprogram_Head *s, Compound_Statement *cs, int l, int c) : Node(l, c)
+Subprogram_Declaration::Subprogram_Declaration(Local_Declarations *d, Subprogram_Head *s, Compound_Statement *cs, int l, int c) : Node(l, c)
 {
 	this->sub_head = s;
 	this->comp_stmt = cs;
+	this->decs = d;
+	d->father = this;
 	s->father = this;
 	cs->father = this;
 }
@@ -494,6 +536,7 @@ Program::Program(Ident *i, Declarations *d, Subprogram_Declarations *sd, Compoun
 		sd->father = this;
 	cs->father = this;
 	i->father = this;
+	decs->father = this;
 }
 
 void Program::accept(NodeVisitor *nv)
@@ -689,6 +732,22 @@ void PrintVisitor::Visit(Declarations *n)
 	}
 }
 
+void PrintVisitor::Visit(Local_Declaration *n)
+{
+	cout << "Local Declaration:: \nParameter -> \n";
+	n->param->accept(this);
+}
+
+void PrintVisitor::Visit(Local_Declarations *n)
+{
+	cout << "Local Declarations List:: \n";
+	for (int i = 0; i < (n->decs)->size(); i++)
+	{
+		cout << "Local Declaration number " << i << " ::\n";
+		n->decs->at(i)->accept(this);
+	}
+}
+
 void PrintVisitor::Visit(Expression *n)
 {
 	cout << "Expression:: \n";
@@ -711,9 +770,9 @@ void PrintVisitor::Visit(Boolean_Expression *n)
 	cout << "Boolean Expression:: \nValue ->" << n->value << "\n";
 }
 
-void PrintVisitor::Visit(Ident_Expression *n)
+void PrintVisitor::Visit(Function_Expression *n)
 {
-	cout << "Ident Expression:: \nIdent -> \n";
+	cout << "Function Expression:: \nIdent -> \n";
 	n->ident->accept(this);
 	if (n->expr_lst != NULL)
 	{
@@ -724,6 +783,12 @@ void PrintVisitor::Visit(Ident_Expression *n)
 	{
 		cout << "\n";
 	}
+}
+
+void PrintVisitor::Visit(Ident_Expression *n)
+{
+	cout << "Ident Expression:: \nIdent -> \n";
+	n->ident->accept(this);
 }
 
 void PrintVisitor::Visit(Expression_Expression *n)
@@ -891,7 +956,9 @@ void PrintVisitor::Visit(Subprogram_Head *n)
 
 void PrintVisitor::Visit(Subprogram_Declaration *n)
 {
-	cout << "Subprogram Declaration:: \nSubHead -> \n";
+	cout << "Subprogram Declaration:: Local Decs ->\n";
+	n->decs->accept(this);
+	cout << "\nSubHead-> \n ";
 	n->sub_head->accept(this);
 	cout << "\nCompound Stmt -> \n";
 	n->comp_stmt->accept(this);
@@ -1027,6 +1094,22 @@ void TypeVisitor::Visit(Declarations *n)
 	}
 }
 
+void TypeVisitor::Visit(Local_Declaration *n)
+{
+	// cout << "Local Declaration:: \nParameter -> \n";
+	n->param->accept(this);
+}
+
+void TypeVisitor::Visit(Local_Declarations *n)
+{
+	// cout << "Local Declarations List:: \n";
+	for (int i = 0; i < (n->decs)->size(); i++)
+	{
+		// cout << "Local Declaration number " << i << " ::\n";
+		n->decs->at(i)->accept(this);
+	}
+}
+
 void TypeVisitor::Visit(Expression *n)
 {
 	// cout << "Expression:: \n";
@@ -1057,27 +1140,44 @@ void TypeVisitor::Visit(Boolean_Expression *n)
 
 void TypeVisitor::Visit(Ident_Expression *n)
 {
-	// cout<<"////////////////////////////////////////////////////   Type Visitor in Ident Expression \n";
-	// n->type = n->ident->symbol->type;
-	// cout << "Ident Expression:: \nIdent -> \n";
-	n->ident->accept(this);
-	char t = n->ident->symbol->type;
+	if (n->ident->symbol != NULL)
+	{
+		char t = n->ident->symbol->type;
+		if (t == 'I')
+			n->type = "INT";
+		if (t == 'R')
+			n->type = "RL";
+		if (t == 'B')
+			n->type = "BOOL";
+	}
+	else
+	{
+		cout << "NULL Ident " << n->ident->name << "\n\n";
+	}
+}
+
+void TypeVisitor::Visit(Function_Expression *n)
+{
+
+	if (n->expr_lst != NULL)
+	{
+		n->expr_lst->accept(this);
+	}
+
+	Symbol *s = symbolTable->lookUpFunction(n->ident, n->expr_lst, 1);
+
+	if (s == NULL)
+		cout << "NULL Function Symbol\n";
+
+	n->symbol = s;
+
+	char t = n->symbol->type;
 	if (t == 'I')
 		n->type = "INT";
 	if (t == 'R')
 		n->type = "RL";
 	if (t == 'B')
 		n->type = "BOOL";
-
-	if (n->expr_lst != NULL)
-	{
-		// cout << "Expr List -> \n";
-		n->expr_lst->accept(this);
-	}
-	else
-	{
-		// cout << "\n";
-	}
 }
 
 void TypeVisitor::Visit(Expression_Expression *n)
@@ -1111,6 +1211,7 @@ void TypeVisitor::Visit(Binary_expression *n)
 	else
 	{
 		cout << "Type Error: line " << n->line << ", column " << n->column << endl;
+		cout << "left:: " << n->expression1->type << " right:: " << n->expression2->type;
 	}
 
 	n->type = "BOOL";
@@ -1248,13 +1349,16 @@ void TypeVisitor::Visit(Arguments *n)
 
 void TypeVisitor::Visit(Procedure_Statement *n)
 {
-	// cout << "Procedure Statement:: \nIdent -> \n";
+	// TODO
+	//  cout << "Procedure Statement:: \nIdent -> \n";
 	n->id->accept(this);
 	if (n->expr_lst != NULL)
 	{
 		// cout << "Expr List -> \n";
 		n->expr_lst->accept(this);
 	}
+
+	Symbol *s = symbolTable->lookUpFunction(n->id, n->expr_lst, 2);
 }
 
 void TypeVisitor::Visit(Variable *n)
@@ -1282,6 +1386,8 @@ void TypeVisitor::Visit(Subprogram_Head *n)
 
 void TypeVisitor::Visit(Subprogram_Declaration *n)
 {
+	if (n->decs != NULL)
+		n->decs->accept(this);
 	// cout << "Subprogram Declaration:: \nSubHead -> \n";
 	n->sub_head->accept(this);
 	// cout << "\nCompound Stmt -> \n";
@@ -1486,6 +1592,14 @@ void CodeVisitor::Visit(Declarations *n)
 {
 }
 
+void CodeVisitor::Visit(Local_Declaration *n)
+{
+}
+
+void CodeVisitor::Visit(Local_Declarations *n)
+{
+}
+
 void CodeVisitor::Visit(Expression *n)
 {
 }
@@ -1503,6 +1617,10 @@ void CodeVisitor::Visit(Boolean_Expression *n)
 }
 
 void CodeVisitor::Visit(Ident_Expression *n)
+{
+}
+
+void CodeVisitor::Visit(Function_Expression *n)
 {
 }
 
@@ -1672,11 +1790,20 @@ bool SymbolTable::AddFunction(Ident *ident, Arguments *args, int kind, char type
 	else
 		key = "p" + ident->name;
 
-	int n = args->param_lst->params->size();
+	// int n = args->param_lst->params->size();
+
+	if (kind == 1)
+		cout << "localll\n\n";
+
+	int n;
+
+	if (args->param_lst->params != NULL)
+		n = args->param_lst->params->size();
+	else
+		n = 0;
 
 	for (int i = 0; i < n; i++)
 	{
-		cout << "line " << ident->line << " arg " << i << " type " << args->param_lst->params->at(i)->type->std_type->type << endl;
 		key += "@";
 		key.push_back(args->param_lst->params->at(i)->type->std_type->type);
 		key += (std::to_string(args->param_lst->params->at(i)->ident_list->idents->size()));
@@ -1718,8 +1845,72 @@ Symbol *SymbolTable::lookUpSymbol(Ident *ident)
 		else
 		{
 			cout << "\n\nError:: Undeclared variable " << ident->name << ", line " << ident->line << ", col " << ident->column << "\n\n";
-			return NULL;
+			return nullptr;
 		}
+	}
+}
+
+Symbol *SymbolTable::lookUpFunction(Ident *ident, Expression_List *exp_lst, int kind)
+{
+	string key;
+	if (kind == 1)
+		key = "f" + ident->name;
+	else
+		key = "p" + ident->name;
+
+	int n;
+
+	if (exp_lst->exprs != NULL)
+		n = exp_lst->exprs->size();
+	else
+		n = 0;
+
+	char lst = '?';
+	int lst_num = 0;
+
+	for (int i = 0; i < n; i++)
+	{
+		if (lst == '?')
+		{
+			lst = exp_lst->exprs->at(i)->type.at(0);
+			lst_num += 1;
+		}
+		else
+		{
+			if (lst == exp_lst->exprs->at(i)->type.at(0))
+			{
+				lst_num += 1;
+			}
+			else
+			{
+				key += "@";
+				key.push_back(lst);
+				key += std::to_string(lst_num);
+				lst_num = 1;
+				lst = exp_lst->exprs->at(i)->type.at(0);
+			}
+		}
+	}
+	if (lst_num >= 1)
+	{
+		key += "@";
+		key.push_back(exp_lst->exprs->back()->type.at(0));
+		key += std::to_string(lst_num);
+	}
+
+	Symbol *sym = this->scopes->at(0)->hashTab->GetMember(key);
+
+	if (sym != NULL)
+	{
+		ident->symbol = sym;
+		string str = (kind == 1 ? "function" : "procedure");
+		cout << "\n\nMatched " << str << " correctly, line " << ident->line << "\n\n";
+		return sym;
+	}
+	else
+	{
+		cout << "\n\nError:: No matching function " << ident->name << "with the same params, line " << ident->line << ", col " << ident->column << "\n\n";
+		return nullptr;
 	}
 }
 

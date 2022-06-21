@@ -117,11 +117,14 @@ typedef union YYSTYPE {
 	Parameter_List *tParameter_List;
 	Declaration *tDeclaration;
 	Declarations *tDeclarations;
+	Local_Declaration *tLocal_Declaration;
+	Local_Declarations *tLocal_Declarations;
 	Arguments *tArguments;
 	Expression *tExpression;
 	Int_Expression *tInt_Expression;
 	Real_Expression *tReal_Expression;
 	Boolean_Expression *tBoolean_Expression;
+	Function_Expression *tFunction_Expression;
 	Ident_Expression *tIdent_Expression;
 	Expression_Expression *tExpression_Expression;
 	Not_Expression *tNot_Expression;
@@ -146,7 +149,7 @@ typedef union YYSTYPE {
 	Logical_opreator *tLogical_Opreator;
  } YYSTYPE;
 /* Line 1447 of yacc.c.  */
-#line 150 "../include/Parser.h"
+#line 153 "../include/Parser.h"
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
 # define YYSTYPE_IS_TRIVIAL 1

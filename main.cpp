@@ -1,5 +1,6 @@
 #include "ast.h"
 #include "Parser.h"
+#include <cstdlib>
 
 extern int yyparse();
 
@@ -8,7 +9,7 @@ extern Program *root;
 
 int main()
 {
-	freopen(SRC_PATH "/Input.mp", "r", stdin);
+	freopen(SRC_PATH "/Input-Clean.mp", "r", stdin);
 	cout << "\n\nParsing started...\n\n";
 	yyparse();
 	cout << "\n\nParsing is done...\n\n";
@@ -17,7 +18,13 @@ int main()
 	// root->accept(pv);
 	NodeVisitor *pv = new TypeVisitor();
 	root->accept(pv);
-	// NodeVisitor *cv = new CodeVisitor();
-	// root->accept(cv);
+
+	NodeVisitor *cv = new CodeVisitor();
+	root->accept(cv);
+
+	string cmd = ".\\\\..\\\\VM\\\\vm.exe -dump ../code.txt";
+	const char *command = cmd.c_str();
+	system(command);
+
 	return 0;
 }

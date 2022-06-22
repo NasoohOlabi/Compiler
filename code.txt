@@ -1,0 +1,37 @@
+start
+
+pushi 0
+storeg 0
+pushg 0
+
+pushi 0
+storeg 1
+pushg 1
+
+pushf 0.0
+storeg 2
+pushg 2
+
+
+//var1 := 100;
+
+pushi 100
+storeg 0
+
+
+//if(var1 > 10)
+
+pushg 0
+pushi 10
+sup
+jz END_IF
+
+pushf 1.1
+storeg 2
+
+END_IF:
+
+pushg 2
+writef
+
+stop

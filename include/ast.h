@@ -633,7 +633,7 @@ public:
 class CodeVisitor : public NodeVisitor
 {
 public:
-	int fp = -1;
+	int fp = -1, ifCount = 0;
 	virtual void Visit(Node *);
 	virtual void Visit(Ident *);
 	virtual void Visit(Ident_List *);

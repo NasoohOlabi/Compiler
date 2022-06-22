@@ -1312,7 +1312,8 @@ void TypeVisitor::Visit(Compound_Statement *n)
 void TypeVisitor::Visit(Optional_Statements *n)
 {
 	// cout << "Optional Statement:: \nStmt List -> \n";
-	n->statement_list->accept(this);
+	if (n->statement_list != NULL)
+		n->statement_list->accept(this);
 }
 
 void TypeVisitor::Visit(Variable_Statement *n)
@@ -1584,27 +1585,49 @@ void CodeVisitor::Visit(Type *n)
 
 void CodeVisitor::Visit(Parameter *n)
 {
+	// TODO BOOLEAN
+	string ptype;
 	if (n->type->std_type->type == 'I')
+		ptype = "i";
+
+	if (n->type->std_type->type == 'R')
+		ptype = "f";
+
+	string pkind;
+
+	if (n->ident_list == NULL || n->ident_list->idents->size() == 0)
+		return;
+
+	if (n->ident_list->idents->front()->symbol->kind == 1)
+		pkind = "g";
+
+	if (n->ident_list->idents->front()->symbol->kind == 2)
+		pkind = "l";
+
+	string def_value = (ptype == "i" ? "0" : "0.0");
+
+	for (int i = 0; i < n->ident_list->idents->size(); i++)
 	{
-		for (int i = 0; i < n->ident_list->idents->size(); i++)
-		{
-			fp++;
-			n->ident_list->idents->at(i)->symbol->location = fp;
-			// cout << n->ident_list->idents->at(i)->name << endl;
-			vout << "pushi 0"
-				 << "\n";
-			vout << "storel " << fp << "\n";
-			vout << "pushl " << fp << "\n";
-		}
+		fp++;
+		n->ident_list->idents->at(i)->symbol->location = fp;
+		vout << "push" << ptype << " " << def_value << "\n";
+		vout << "store" << pkind << " " << fp << "\n";
+		vout << "push" << pkind << " " << fp << "\n";
 	}
 }
 
 void CodeVisitor::Visit(Declaration *n)
 {
+	n->param->accept(this);
 }
 
 void CodeVisitor::Visit(Declarations *n)
 {
+	int s = n->decs->size();
+	for (int i = 0; i < s; i++)
+	{
+		n->decs->at(i)->accept(this);
+	}
 }
 
 void CodeVisitor::Visit(Local_Declaration *n)
@@ -1621,10 +1644,12 @@ void CodeVisitor::Visit(Expression *n)
 
 void CodeVisitor::Visit(Int_Expression *n)
 {
+	vout << "pushi " << n->value->value << endl;
 }
 
 void CodeVisitor::Visit(Real_Expression *n)
 {
+	vout << "pushf " << n->value->value << endl;
 }
 
 void CodeVisitor::Visit(Boolean_Expression *n)
@@ -1633,6 +1658,14 @@ void CodeVisitor::Visit(Boolean_Expression *n)
 
 void CodeVisitor::Visit(Ident_Expression *n)
 {
+	if (n->ident->symbol->kind == 1)
+	{
+		vout << "pushg " << n->ident->symbol->location << "\n";
+	}
+	else if (n->ident->symbol->kind == 2)
+	{
+		vout << "pushl " << n->ident->symbol->location << "\n";
+	}
 }
 
 void CodeVisitor::Visit(Function_Expression *n)
@@ -1673,6 +1706,11 @@ void CodeVisitor::Visit(Statement *n)
 
 void CodeVisitor::Visit(Statement_List *n)
 {
+	int s = n->stmts->size();
+	for (int i = 0; i < s; i++)
+	{
+		n->stmts->at(i)->accept(this);
+	}
 }
 
 void CodeVisitor::Visit(If_Statement *n)
@@ -1689,24 +1727,39 @@ void CodeVisitor::Visit(If_Else_Statement *n)
 
 void CodeVisitor::Visit(Compound_Statement *n)
 {
+	n->optional_statements->accept(this);
 }
 
 void CodeVisitor::Visit(Optional_Statements *n)
 {
+	if (n->statement_list != NULL)
+		n->statement_list->accept(this);
 }
 
 void CodeVisitor::Visit(Variable_Statement *n)
 {
+
+	n->expression->accept(this);
+	int loc = n->variable->id->symbol->location;
+
+	if (n->variable->id->symbol->kind == 1)
+	{ // 1 is global
+		vout << "storeg " << loc << "\n";
+	}
+	else
+	{ // 2 is local
+		vout << "storel " << loc << "\n";
+	}
 }
 
 void CodeVisitor::Visit(Parameter_List *n)
 {
 
-	int pls = n->params->size();
-	for (int i = 0; i < pls; i++)
-	{
-		n->params->at(i)->accept(this);
-	}
+	// int pls = n->params->size();
+	// for (int i = 0; i < pls; i++)
+	// {
+	// 	n->params->at(i)->accept(this);
+	// }
 }
 
 void CodeVisitor::Visit(Arguments *n)
@@ -1736,17 +1789,33 @@ void CodeVisitor::Visit(Subprogram_Declarations *n)
 void CodeVisitor::Visit(Program *n)
 {
 	vout << "start\n";
-	int n_of_functions = n->sub_decs->decs->size();
-	for (int i = 0; i < n_of_functions; i++)
-	{
-		n->sub_decs->decs->at(i)->sub_head->args->param_lst->accept(this);
-	}
+	// int n_of_functions = n->sub_decs->decs->size();
+	// for (int i = 0; i < n_of_functions; i++)
+	// {
+	// 	n->sub_decs->decs->at(i)->sub_head->args->param_lst->accept(this);
+	// }
+
+	n->decs->accept(this);
+	n->comp_stmt->accept(this);
 
 	vout << "stop\n";
+
+	vout.close();
 }
 
 void CodeVisitor::Visit(Add_expression *n)
 {
+
+	n->expression1->accept(this);
+	n->expression2->accept(this);
+	if (n->type == "INT")
+	{
+		vout << "add\n";
+	}
+	if (n->type == "RL")
+	{
+		vout << "addf\n";
+	}
 }
 
 void CodeVisitor::Visit(Minus_expression *n)
@@ -1916,7 +1985,7 @@ Symbol *SymbolTable::lookUpFunction(Ident *ident, Expression_List *exp_lst, int 
 	{
 		ident->symbol = sym;
 		string str = (kind == 1 ? "function" : "procedure");
-		cout << "\n\nMatched " << str << " correctly, line " << ident->line << "\n\n";
+		cout << "\n\nMatched " << str << " correctly, line " << ident->line << "\n";
 		return sym;
 	}
 	else

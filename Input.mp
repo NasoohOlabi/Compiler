@@ -19,6 +19,18 @@ Begin
         var2 := 42.1
 End;
 
+procedure NOARGS;
+
+Begin
+    var1 := 70
+End;
+
+function NOARGS : Integer;
+
+Begin
+    var1 := 70
+End;
+
 
 function MYFUNC (x,y : integer) : boolean;
 
@@ -32,18 +44,20 @@ End;
 
 Begin
 
+    NOARGS;
+
     MYPROD(1, 1);
 
     myVar := 999;
 
-    var3 := MYFUNC(1,2);
+    var3 := MYFUNC(1, 1, true);
+
+    var1 := NOARGS;
 
     if var1 >5 then
         var2 := 42;
 
     if var1 >5 then
-        var2 := 42.23            
-
-    
+        var2 := 42.23   
     
 End

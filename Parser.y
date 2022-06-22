@@ -178,6 +178,11 @@ variable: IDENT
 				{
 					Symbol* s = symbolTable->lookUpSymbol($1);
 
+					if(s == NULL)
+					{
+						cout << "\n\nError:: Undeclared variable " << $1->name << ", line " << $1->line << ", col " << $1->column << "\n\n";
+					}
+
 					$$ = new Variable($1, lin, col);
 				}
 			| IDENT '[' expression ']'
@@ -259,7 +264,13 @@ expression: INT_NUM
 								}
 			| IDENT 
 								{
-									symbolTable->lookUpSymbol($1);
+									Symbol *s = symbolTable->lookUpSymbol($1);
+									if(s == NULL){
+										s = symbolTable->lookUpFunction($1, NULL, 1);
+									}
+									if(s == NULL){
+										cout << "\n\nError:: Undeclared variable " << $1->name << ", line " << $1->line << ", col " << $1->column << "\n\n";
+									}
 									$$ = new Ident_Expression($1, lin, col);
 								}
 			| '(' expression ')'
@@ -287,6 +298,8 @@ arguments: '(' parameter_list ')'
 						}
 			| /* Empty */
 				{
+					Parameter_List *pl = new Parameter_List(lin, col);
+					$$ = new Arguments(pl, lin, col);
 				}
 ;
 

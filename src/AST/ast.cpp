@@ -198,6 +198,11 @@ void Local_Declarations::accept(NodeVisitor *nv)
 	nv->Visit(this);
 }
 
+Arguments::Arguments(int l, int c) : Node(l, c)
+{
+	this->param_lst = NULL;
+}
+
 Arguments::Arguments(Parameter_List *p_lst, int l, int c) : Node(l, c)
 {
 	this->param_lst = p_lst;
@@ -1152,7 +1157,7 @@ void TypeVisitor::Visit(Ident_Expression *n)
 	}
 	else
 	{
-		cout << "NULL Ident " << n->ident->name << "\n\n";
+		cout << "\nNULL Ident " << n->ident->name << "\n\n";
 	}
 }
 
@@ -1167,7 +1172,10 @@ void TypeVisitor::Visit(Function_Expression *n)
 	Symbol *s = symbolTable->lookUpFunction(n->ident, n->expr_lst, 1);
 
 	if (s == NULL)
-		cout << "NULL Function Symbol\n";
+	{
+		n->symbol = NULL;
+		return;
+	}
 
 	n->symbol = s;
 
@@ -1207,11 +1215,11 @@ void TypeVisitor::Visit(Binary_expression *n)
 	n->expression2->accept(this);
 
 	if (n->expression1->type == n->expression2->type && n->expression1->type != "BOOL")
-		cout << "Binary Expression type checked correctly, line " << n->line << endl;
+		cout << "Binary Expression type checked correctly, line " << n->line << "\n\n";
 	else
 	{
 		cout << "Type Error: line " << n->line << ", column " << n->column << endl;
-		cout << "left:: " << n->expression1->type << " right:: " << n->expression2->type;
+		cout << "left:: " << n->expression1->type << " right:: " << n->expression2->type << "\n\n";
 	}
 
 	n->type = "BOOL";
@@ -1228,10 +1236,10 @@ void TypeVisitor::Visit(Logical_expression *n)
 	n->expression2->accept(this);
 
 	if (n->expression1->type == "BOOL" && n->expression2->type == "BOOL")
-		cout << "Logical Expression type checked correctly, line " << n->line << "\n";
+		cout << "Logical Expression type checked correctly, line " << n->line << "\n\n";
 	else
 	{
-		cout << "Type Error: line " << n->line << ", column " << n->column << endl;
+		cout << "Type Error: line " << n->line << ", column " << n->column << "\n\n";
 	}
 
 	n->type = "BOOL";
@@ -1322,12 +1330,12 @@ void TypeVisitor::Visit(Variable_Statement *n)
 
 	if (ident_type == 'I' && expr_type == "INT" || ident_type == 'R' && expr_type == "RL" || ident_type == 'B' && expr_type == "BOOL")
 	{
-		cout << "Assignemt Type checked correctly, line " << n->line << endl;
+		cout << "Assignemt Type checked correctly, line " << n->line << "\n\n";
 	}
 	else
 	{
-		cout << "Type Error: line " << n->line << ", column " << n->column << endl;
-		cout << "left:: " << ident_type << "  right:: " << expr_type << endl;
+		cout << "Type Error: line " << n->line << ", column " << n->column << "\n";
+		cout << "left:: " << ident_type << "  right:: " << expr_type << "\n\n";
 	}
 }
 
@@ -1344,17 +1352,18 @@ void TypeVisitor::Visit(Parameter_List *n)
 void TypeVisitor::Visit(Arguments *n)
 {
 	// cout << "Arguments List:: \nParam List -> \n";
-	n->param_lst->accept(this);
+	if (n->param_lst != NULL)
+	{
+		n->param_lst->accept(this);
+	}
 }
 
 void TypeVisitor::Visit(Procedure_Statement *n)
 {
-	// TODO
-	//  cout << "Procedure Statement:: \nIdent -> \n";
 	n->id->accept(this);
+
 	if (n->expr_lst != NULL)
 	{
-		// cout << "Expr List -> \n";
 		n->expr_lst->accept(this);
 	}
 
@@ -1376,7 +1385,12 @@ void TypeVisitor::Visit(Subprogram_Head *n)
 {
 	// cout << "Subprogram Head:: \nType -> " << (n->is_function ? "Function" : "Procedure");
 	// cout << "\nArguments -> \n";
-	n->args->accept(this);
+
+	if (n->args != NULL && n->args->param_lst != NULL && n->args->param_lst->params != NULL)
+	{
+		n->args->accept(this);
+	}
+
 	if (n->std_type)
 	{
 		// cout << "\nStd type -> \n";
@@ -1386,10 +1400,11 @@ void TypeVisitor::Visit(Subprogram_Head *n)
 
 void TypeVisitor::Visit(Subprogram_Declaration *n)
 {
-	if (n->decs != NULL)
-		n->decs->accept(this);
 	// cout << "Subprogram Declaration:: \nSubHead -> \n";
 	n->sub_head->accept(this);
+
+	if (n->decs != NULL)
+		n->decs->accept(this);
 	// cout << "\nCompound Stmt -> \n";
 	n->comp_stmt->accept(this);
 }
@@ -1455,7 +1470,7 @@ void TypeVisitor::Visit(Add_expression *n)
 	}
 	else
 	{
-		cout << "Type Error: line " << n->line << ", column " << n->column << endl;
+		cout << "Type Error: line " << n->line << ", column " << n->column << "\n\n";
 	}
 	// cout<<"--------------------------------------------------------------------Left Type:"<<n->expression1->type<<" at: "<<n->column<<" , "<<n->line<<"\n";
 	// cout<<"--------------------------------------------------------------------Right Type:"<<n->expression2->type<<" at: "<<n->column<<" , "<<n->line<<"\n";
@@ -1792,9 +1807,6 @@ bool SymbolTable::AddFunction(Ident *ident, Arguments *args, int kind, char type
 
 	// int n = args->param_lst->params->size();
 
-	if (kind == 1)
-		cout << "localll\n\n";
-
 	int n;
 
 	if (args->param_lst->params != NULL)
@@ -1844,7 +1856,7 @@ Symbol *SymbolTable::lookUpSymbol(Ident *ident)
 		}
 		else
 		{
-			cout << "\n\nError:: Undeclared variable " << ident->name << ", line " << ident->line << ", col " << ident->column << "\n\n";
+			// cout << "\n\nError:: Undeclared variable " << ident->name << ", line " << ident->line << ", col " << ident->column << "\n\n";
 			return nullptr;
 		}
 	}
@@ -1860,7 +1872,7 @@ Symbol *SymbolTable::lookUpFunction(Ident *ident, Expression_List *exp_lst, int 
 
 	int n;
 
-	if (exp_lst->exprs != NULL)
+	if (exp_lst != NULL && exp_lst->exprs != NULL)
 		n = exp_lst->exprs->size();
 	else
 		n = 0;
@@ -1909,7 +1921,7 @@ Symbol *SymbolTable::lookUpFunction(Ident *ident, Expression_List *exp_lst, int 
 	}
 	else
 	{
-		cout << "\n\nError:: No matching function " << ident->name << "with the same params, line " << ident->line << ", col " << ident->column << "\n\n";
+		cout << "\n\nError:: No matching function " << ident->name << " with the same params, line " << ident->line << "\n\n";
 		return nullptr;
 	}
 }

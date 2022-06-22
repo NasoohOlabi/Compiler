@@ -200,6 +200,7 @@ class Arguments : public Node
 {
 public:
 	Parameter_List *param_lst;
+	Arguments(int, int);
 	Arguments(Parameter_List *, int, int);
 	void accept(NodeVisitor *) override;
 };

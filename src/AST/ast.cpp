@@ -475,6 +475,7 @@ Subprogram_Head::Subprogram_Head(Arguments *a, int l, int c) : Node(l, c)
 {
 	this->args = a;
 	this->is_function = false;
+	this->std_type = NULL;
 	if (a != nullptr)
 		a->father = this;
 }
@@ -1392,7 +1393,7 @@ void TypeVisitor::Visit(Subprogram_Head *n)
 		n->args->accept(this);
 	}
 
-	if (n->std_type)
+	if (n->std_type != NULL)
 	{
 		// cout << "\nStd type -> \n";
 		n->std_type->accept(this);
@@ -1654,10 +1655,12 @@ void CodeVisitor::Visit(Real_Expression *n)
 
 void CodeVisitor::Visit(Boolean_Expression *n)
 {
+	cout << "\n\nBOOLEAN\n\n";
 }
 
 void CodeVisitor::Visit(Ident_Expression *n)
 {
+	cout << "IDENT\n\n";
 	if (n->ident->symbol->kind == 1)
 	{
 		vout << "pushg " << n->ident->symbol->location << "\n";
@@ -1670,10 +1673,12 @@ void CodeVisitor::Visit(Ident_Expression *n)
 
 void CodeVisitor::Visit(Function_Expression *n)
 {
+	cout << "FUNC\n\n";
 }
 
 void CodeVisitor::Visit(Expression_Expression *n)
 {
+	n->expression->accept(this);
 }
 
 void CodeVisitor::Visit(Expression_List *n)
@@ -1682,10 +1687,38 @@ void CodeVisitor::Visit(Expression_List *n)
 
 void CodeVisitor::Visit(Binary_expression *n)
 {
+
+	cout << "BINARY EXPR\n\n";
+
+	n->expression1->accept(this);
+	n->expression2->accept(this);
+
+	string ptype;
+	if (n->expression1->type == "INT")
+		ptype = "";
+
+	else if (n->expression1->type == "RL")
+		ptype = "f";
+
+	string opreation;
+
+	if (n->op->op == ">")
+		opreation = "sup";
+	else if (n->op->op == ">=")
+		opreation = "supeq";
+	else if (n->op->op == "<")
+		opreation = "inf";
+	else if (n->op->op == "<=")
+		opreation = "infeq";
+
+	opreation = ptype + opreation;
+
+	vout << opreation << "\n";
 }
 
 void CodeVisitor::Visit(Logical_expression *n)
 {
+	cout << "\n\nLOGICAL\n\n";
 }
 
 void CodeVisitor::Visit(Binary_opreator *n)
@@ -1698,6 +1731,7 @@ void CodeVisitor::Visit(Logical_opreator *n)
 
 void CodeVisitor::Visit(Not_Expression *n)
 {
+	cout << "\n\nNOT\n\n";
 }
 
 void CodeVisitor::Visit(Statement *n)
@@ -1715,6 +1749,27 @@ void CodeVisitor::Visit(Statement_List *n)
 
 void CodeVisitor::Visit(If_Statement *n)
 {
+
+	cout << "IF visitor\n\n";
+
+	if (dynamic_cast<Binary_expression *>(n->expression) != nullptr)
+	{
+		std::cout << "\n\nBE\n\n"
+				  << std::endl;
+	}
+
+	n->expression->accept(this);
+
+	// cout << "HERE\n";
+
+	string end = "END_IF";
+
+	end += std::to_string(ifCount++);
+
+	vout << "jz " << end << "\n";
+
+	n->statement->accept(this);
+	vout << end << ":\n";
 }
 
 void CodeVisitor::Visit(While_Statement *n)
@@ -1814,20 +1869,50 @@ void CodeVisitor::Visit(Add_expression *n)
 	}
 	if (n->type == "RL")
 	{
-		vout << "addf\n";
+		vout << "fadd\n";
 	}
 }
 
 void CodeVisitor::Visit(Minus_expression *n)
 {
+	n->expression1->accept(this);
+	n->expression2->accept(this);
+	if (n->type == "INT")
+	{
+		vout << "sub\n";
+	}
+	if (n->type == "RL")
+	{
+		vout << "fsub\n";
+	}
 }
 
 void CodeVisitor::Visit(Mul_expression *n)
 {
+	n->expression1->accept(this);
+	n->expression2->accept(this);
+	if (n->type == "INT")
+	{
+		vout << "mul\n";
+	}
+	if (n->type == "RL")
+	{
+		vout << "fmul\n";
+	}
 }
 
 void CodeVisitor::Visit(Divide_expression *n)
 {
+	n->expression1->accept(this);
+	n->expression2->accept(this);
+	if (n->expression1->type == "INT")
+	{
+		vout << "div\n";
+	}
+	if (n->expression1->type == "RL")
+	{
+		vout << "fdiv\n";
+	}
 }
 
 Symbol::Symbol(string n, int k, char t)

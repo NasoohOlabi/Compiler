@@ -1,6 +1,7 @@
 %{
 	#include "ast.h"
 	#include <iostream>
+
 	using std::cout;
 	using std::endl;	
 	extern int yylex();
@@ -8,7 +9,9 @@
 	int lin = 1, col =0;
 
 	Program *root;
+	std::map<string, Subprogram_Declaration> funcs;
 	SymbolTable *symbolTable = new SymbolTable();
+
 %}
 
 
@@ -53,6 +56,7 @@
 	Divide_expression *tDivide_expression;
 	Binary_expression *tBinary_expression;
 	Logical_expression *tLogical_expression;
+	Array_expression *tArray_expression;
 	Binary_opreator *tBinary_Opreator;
 	Logical_opreator *tLogical_Opreator;
  }
@@ -129,6 +133,7 @@
 %type <tDivide_expression> divide_expression
 %type <tBinary_expression> binary_expression
 %type <tLogical_expression> logical_expression
+%type <tArray_expression> array_expression
 
 
 %%
@@ -156,21 +161,26 @@ subprogram_declaration: { symbolTable->startScope(); }
 						subprogram_head local_declarations compound_statement 
 						{ symbolTable->endScope(); } %prec SUBPROGRAMDEC_PREC
 							{
+								string name = $2->ident->name;
+
 								$$ = new Subprogram_Declaration($3, $2, $4, lin, col);
+								Subprogram_Declaration sd = *$$;
+
+								funcs.insert({name, sd});
 							}
 ;
 
 subprogram_head: FUNCTION IDENT arguments ':' standard_type ';'
 					{
-						$$ = new Subprogram_Head($3, $5, lin, col);
+						$$ = new Subprogram_Head($2, $3, $5, lin, col);
 
-						symbolTable->AddFunction($2, $3, 1, $5->type); // 1 is Function
+						symbolTable->AddFunction($2, $3, 1, $5->type, false); // 1 is Function
 					}
 				| PROCEDURE IDENT arguments ';'
 					{
-						$$ = new Subprogram_Head($3, lin, col);
+						$$ = new Subprogram_Head($2, $3, lin, col);
 
-						symbolTable->AddFunction($2, $3, 2, 'x'); // 2 is Procedure
+						symbolTable->AddFunction($2, $3, 2, 'x', false); // 2 is Procedure
 					}
 ;
 
@@ -187,6 +197,22 @@ variable: IDENT
 				}
 			| IDENT '[' expression ']'
 				{
+					Symbol* s = symbolTable->lookUpSymbol($1);
+
+					int value = ((Int_Expression*)$3)->value->value;
+					int first = s->first;
+					int last = s->last;
+
+					if(!(value >= first && value <= last)){
+						cout << "Error: index out of range, line " << $1->line;
+					}
+
+					if(s == NULL)
+					{
+						cout << "\n\nError:: Undeclared variable " << $1->name << ", line " << $1->line << ", col " << $1->column << "\n\n";
+					}
+
+
 					$$ = new Variable($1, $3, lin, col);
 				}
 ;
@@ -258,6 +284,10 @@ expression: INT_NUM
 								{
 									$$ = $1;
 								}
+			| array_expression
+								{
+									$$ = $1;
+								}
 			| IDENT '(' expression_list ')' %prec EXPR_PREC
 								{
 									$$ = new Function_Expression($1, $3 ,lin, col);
@@ -287,12 +317,25 @@ arguments: '(' parameter_list ')'
 							for(int i=0;i<n;i++){
 
 								Parameter *p = $2->params->at(i);
+								bool is_arr = p->type->is_array;
+
 								int s = p->ident_list->idents->size();
 								char t = p->type->std_type->type;
 
-								for(int j=0;j<s;j++){
-									symbolTable->AddSymbol(p->ident_list->idents->at(j),2,t);
+								if(is_arr){
+									int first = p->type->first;
+									int last = p->type->last;
+									for(int j=0;j<s;j++){
+										symbolTable->AddSymbol(p->ident_list->idents->at(j),2,t, is_arr, first, last);
+									}
 								}
+								else{
+									for(int j=0;j<s;j++){
+										symbolTable->AddSymbol(p->ident_list->idents->at(j),2,t, is_arr);
+									}
+								}
+
+								
 
 							}
 						}
@@ -321,12 +364,22 @@ declarations: declaration
 declaration: VAR parameter ';'	
 										{
 											$$ = new Declaration($2, lin, col);
-
+											bool is_arr = $2->type->is_array;
 											char t = $2->type->std_type->type;
 											int n = $2->ident_list->idents->size();
-											for(int i=0;i<n;i++){
-												symbolTable->AddSymbol($2->ident_list->idents->at(i),1,t);
+											if(is_arr){
+												int f = $2->type->first;
+												int l = $2->type->last;
+												for(int i=0;i<n;i++){
+													symbolTable->AddSymbol($2->ident_list->idents->at(i),1,t, is_arr, f, l);
+												}
 											}
+											else{
+												for(int i=0;i<n;i++){
+													symbolTable->AddSymbol($2->ident_list->idents->at(i),1,t, is_arr);
+												}
+											}
+											
 										}
 ;
 
@@ -350,9 +403,19 @@ local_declaration: VAR parameter ';'
 											$$ = new Local_Declaration($2, lin, col);
 
 											char t = $2->type->std_type->type;
+											bool is_arr = $2->type->is_array;
 											int n = $2->ident_list->idents->size();
-											for(int i=0;i<n;i++){
-												symbolTable->AddSymbol($2->ident_list->idents->at(i),2,t);
+											if(is_arr){
+												int f = $2->type->first;
+												int l = $2->type->last;
+												for(int i=0;i<n;i++){
+													symbolTable->AddSymbol($2->ident_list->idents->at(i),1,t, is_arr, f, l);
+												}
+											}
+											else{
+												for(int i=0;i<n;i++){
+													symbolTable->AddSymbol($2->ident_list->idents->at(i),1,t, is_arr);
+												}
 											}
 										}
 ;
@@ -421,6 +484,12 @@ binary_expression: expression BINARY_OPERATOR expression
 logical_expression: expression LOGICAL_OPERATOR expression 
 				{
 						$$ = new Logical_expression($1, $2, $3, lin, col);
+				}
+;
+
+array_expression: IDENT '[' expression ']'
+				{
+						$$ = new Array_expression($1, $3, lin, col);
 				}
 ;
 

@@ -4,6 +4,7 @@ using std::cout;
 using std::endl;
 
 #include <vector>
+#include <map>
 using std::vector;
 
 #include <string>
@@ -61,6 +62,7 @@ class Mul_expression;
 class Divide_expression;
 class Binary_expression;
 class Logical_expression;
+class Array_expression;
 class Binary_opreator;
 class Logical_opreator;
 
@@ -75,6 +77,7 @@ class SymbolTable;
 typedef CHashTable<Symbol> HashTab;
 
 extern SymbolTable *symbolTable;
+extern std::map<string, Subprogram_Declaration> funcs;
 
 class Node
 {
@@ -364,6 +367,7 @@ public:
 	Expression *expr{};
 	Variable(Ident *, int, int);
 	Variable(Ident *, Expression *, int, int);
+	bool is_array = false;
 	void accept(NodeVisitor *) override;
 };
 
@@ -373,8 +377,9 @@ public:
 	Arguments *args;
 	Standard_Type *std_type;
 	bool is_function;
-	Subprogram_Head(Arguments *, int, int);
-	Subprogram_Head(Arguments *, Standard_Type *, int, int);
+	Ident *ident;
+	Subprogram_Head(Ident *, Arguments *, int, int);
+	Subprogram_Head(Ident *, Arguments *, Standard_Type *, int, int);
 	void accept(NodeVisitor *) override;
 };
 
@@ -464,6 +469,15 @@ public:
 	Logical_expression(Expression *, Logical_opreator *, Expression *, int, int);
 	void accept(NodeVisitor *) override;
 };
+
+class Array_expression : public Expression
+{
+public:
+	Expression *index;
+	Ident *name;
+	Array_expression(Ident *, Expression *, int, int);
+	void accept(NodeVisitor *) override;
+};
 class Binary_opreator : public Node
 {
 public:
@@ -505,6 +519,7 @@ public:
 	virtual void Visit(Expression_List *) = 0;
 	virtual void Visit(Binary_expression *) = 0;
 	virtual void Visit(Logical_expression *) = 0;
+	virtual void Visit(Array_expression *) = 0;
 	virtual void Visit(Not_Expression *) = 0;
 	virtual void Visit(Statement *) = 0;
 	virtual void Visit(Statement_List *) = 0;
@@ -555,6 +570,7 @@ public:
 	void Visit(Expression_List *) override;
 	void Visit(Binary_expression *) override;
 	void Visit(Logical_expression *) override;
+	void Visit(Array_expression *) override;
 	void Visit(Not_Expression *) override;
 	void Visit(Statement *) override;
 	void Visit(Statement_List *) override;
@@ -605,6 +621,7 @@ public:
 	virtual void Visit(Expression_List *);
 	virtual void Visit(Binary_expression *);
 	virtual void Visit(Logical_expression *);
+	virtual void Visit(Array_expression *);
 	virtual void Visit(Not_Expression *);
 	virtual void Visit(Statement *);
 	virtual void Visit(Statement_List *);
@@ -657,6 +674,7 @@ public:
 	virtual void Visit(Binary_expression *);
 	virtual void Visit(Logical_expression *);
 	virtual void Visit(Not_Expression *);
+	virtual void Visit(Array_expression *);
 	virtual void Visit(Statement *);
 	virtual void Visit(Statement_List *);
 	virtual void Visit(If_Statement *);
@@ -687,8 +705,12 @@ public:
 	string name;
 	int kind;
 	char type;
+	bool is_array;
 	int location;
-	Symbol(string, int, char);
+	int first;
+	int last;
+	Symbol(string, int, char, bool);
+	Symbol(string, int, char, bool, int, int);
 };
 class Scope
 {
@@ -702,9 +724,10 @@ class SymbolTable
 public:
 	vector<Scope *> *scopes;
 	Scope *current;
-	bool AddSymbol(Ident *, int, char);
-	bool AddFunction(Ident *, Arguments *, int, char);
-	bool AddProcedure(Ident *, Arguments *, int, char);
+	bool AddSymbol(Ident *, int, char, bool);
+	bool AddSymbol(Ident *, int, char, bool, int, int);
+	bool AddFunction(Ident *, Arguments *, int, char, bool);
+	// bool AddProcedure(Ident *, Arguments *, int, char);
 	SymbolTable();
 	Symbol *lookUpSymbol(Ident *);
 	Symbol *lookUpFunction(Ident *, Expression_List *, int);

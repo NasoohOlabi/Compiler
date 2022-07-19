@@ -1,7 +1,5 @@
 //Clean Input file without errors
 
-// .\\..\\VM\\vm.exe -dump ../code.txt
-
 Program ArrayExample; {bbrebere}
 
 Var var1, newVar : Integer;

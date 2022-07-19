@@ -9,13 +9,16 @@ extern Program *root;
 
 int main()
 {
-	freopen(SRC_PATH "/Input-Clean.mp", "r", stdin);
+	freopen(SRC_PATH "/test.mp", "r", stdin);
+	// freopen(SRC_PATH "/Input-Clean.mp", "r", stdin);
 	cout << "\n\nParsing started...\n\n";
 	yyparse();
 	cout << "\n\nParsing is done...\n\n";
 	root;
+
 	// NodeVisitor *pv = new PrintVisitor();
 	// root->accept(pv);
+
 	NodeVisitor *pv = new TypeVisitor();
 	root->accept(pv);
 

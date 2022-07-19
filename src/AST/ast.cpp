@@ -456,6 +456,7 @@ Variable::Variable(Ident *i, int l, int c) : Node(l, c)
 {
 	this->id = i;
 	i->father = this;
+	// this->is_array = false;
 }
 
 Variable::Variable(Ident *i, Expression *e, int l, int c) : Node(l, c)
@@ -464,6 +465,7 @@ Variable::Variable(Ident *i, Expression *e, int l, int c) : Node(l, c)
 	i->father = this;
 	this->expr = e;
 	e->father = this;
+	// this->is_array = true;
 }
 
 void Variable::accept(NodeVisitor *nv)
@@ -471,20 +473,22 @@ void Variable::accept(NodeVisitor *nv)
 	nv->Visit(this);
 }
 
-Subprogram_Head::Subprogram_Head(Arguments *a, int l, int c) : Node(l, c)
+Subprogram_Head::Subprogram_Head(Ident *id, Arguments *a, int l, int c) : Node(l, c)
 {
 	this->args = a;
 	this->is_function = false;
+	this->ident = id;
 	this->std_type = NULL;
 	if (a != nullptr)
 		a->father = this;
 }
 
-Subprogram_Head::Subprogram_Head(Arguments *a, Standard_Type *s, int l, int c) : Node(l, c)
+Subprogram_Head::Subprogram_Head(Ident *id, Arguments *a, Standard_Type *s, int l, int c) : Node(l, c)
 {
 	this->args = a;
 	this->std_type = s;
 	this->is_function = true;
+	this->ident = id;
 	s->father = this;
 	if (a != nullptr)
 		a->father = this;
@@ -638,6 +642,17 @@ Logical_expression::Logical_expression(Expression *e1, Logical_opreator *o, Expr
 }
 
 void Logical_expression::accept(NodeVisitor *nv)
+{
+	nv->Visit(this);
+}
+
+Array_expression::Array_expression(Ident *id, Expression *e, int lin, int col) : Expression(lin, col)
+{
+	this->index = e;
+	this->name = id;
+}
+
+void Array_expression::accept(NodeVisitor *nv)
 {
 	nv->Visit(this);
 }
@@ -831,6 +846,10 @@ void PrintVisitor::Visit(Logical_expression *n)
 	n->op->accept(this);
 	cout << "\nRight Expr -> \n";
 	n->expression2->accept(this);
+}
+
+void PrintVisitor::Visit(Array_expression *n)
+{
 }
 
 void PrintVisitor::Visit(Binary_opreator *n)
@@ -1149,12 +1168,22 @@ void TypeVisitor::Visit(Ident_Expression *n)
 	if (n->ident->symbol != NULL)
 	{
 		char t = n->ident->symbol->type;
+
+		if (n->ident->symbol->is_array)
+		{
+			n->type = "*";
+		}
+		else
+		{
+			n->type = "";
+		}
+
 		if (t == 'I')
-			n->type = "INT";
+			n->type += "INT";
 		if (t == 'R')
-			n->type = "RL";
+			n->type += "RL";
 		if (t == 'B')
-			n->type = "BOOL";
+			n->type += "BOOL";
 	}
 	else
 	{
@@ -1181,12 +1210,22 @@ void TypeVisitor::Visit(Function_Expression *n)
 	n->symbol = s;
 
 	char t = n->symbol->type;
+
+	if (n->ident->symbol->is_array)
+	{
+		n->type = "*";
+	}
+	else
+	{
+		n->type = "";
+	}
+
 	if (t == 'I')
-		n->type = "INT";
+		n->type += "INT";
 	if (t == 'R')
-		n->type = "RL";
+		n->type += "RL";
 	if (t == 'B')
-		n->type = "BOOL";
+		n->type += "BOOL";
 }
 
 void TypeVisitor::Visit(Expression_Expression *n)
@@ -1244,6 +1283,29 @@ void TypeVisitor::Visit(Logical_expression *n)
 	}
 
 	n->type = "BOOL";
+}
+
+void TypeVisitor::Visit(Array_expression *n)
+{
+	// TODO
+	//  cout << "Logical Expression:: \nLeft Expr -> \n";
+	n->index->accept(this);
+	// cout << "\nOperator -> ";
+	n->name->accept(this);
+	// cout << "\nRight Expr -> \n";
+
+	// cout << "Expr -> \n";
+
+	if (n->index->type == "INT")
+	{
+		cout << "Array int index";
+	}
+	else
+	{
+		cout << "Error: Array not int index, line " << n->line;
+	}
+
+	// n->name->
 }
 
 void TypeVisitor::Visit(Binary_opreator *n)
@@ -1323,12 +1385,55 @@ void TypeVisitor::Visit(Variable_Statement *n)
 	n->variable->accept(this);
 	n->expression->accept(this);
 
+	// bool is_arr = n->variable->is_array;
+
+	// cout << "HERE!" << endl;
+	// if (n->variable->id->symbol->type == NULL)
+	// 	cout << "null";
+
 	if (n->variable->id->symbol == NULL)
+	{
+		cout << "here";
 		return;
+	}
 
 	char ident_type = n->variable->id->symbol->type;
 
+	if (n->variable->expr != NULL)
+	{
+		ident_type -= 1;
+	}
+
+	cout << ident_type << "\n";
+
 	string expr_type = n->expression->type;
+
+	// if (!is_arr)
+	// {
+	// 	if (ident_type == 'I' && expr_type == "INT" || ident_type == 'R' && expr_type == "RL" || ident_type == 'B' && expr_type == "BOOL")
+	// 	{
+	// 		cout << "Assignemt Type checked correctly, line " << n->line << "\n\n";
+	// 	}
+	// 	else
+	// 	{
+	// 		cout << "Type Error: line " << n->line << ", column " << n->column << "\n";
+	// 		cout << "left:: " << ident_type << "  right:: " << expr_type << "\n\n";
+	// 	}
+	// }
+
+	// else
+	// {
+
+	// 	if (ident_type == 'I' && expr_type == "*INT" || ident_type == 'R' && expr_type == "*RL" || ident_type == 'B' && expr_type == "*BOOL")
+	// 	{
+	// 		cout << "Assignemt Type checked correctly, line " << n->line << "\n\n";
+	// 	}
+	// 	else
+	// 	{
+	// 		cout << "Type Error: line " << n->line << ", column " << n->column << "\n";
+	// 		cout << "left:: " << ident_type << "  right:: " << expr_type << "\n\n";
+	// 	}
+	// }
 
 	if (ident_type == 'I' && expr_type == "INT" || ident_type == 'R' && expr_type == "RL" || ident_type == 'B' && expr_type == "BOOL")
 	{
@@ -1380,6 +1485,14 @@ void TypeVisitor::Visit(Variable *n)
 	{
 		// cout << "Expr -> \n";
 		n->expr->accept(this);
+		if (n->expr->type == "INT")
+		{
+			cout << "Array int index";
+		}
+		else
+		{
+			cout << "Error: Array not int index, line " << n->line;
+		}
 	}
 }
 
@@ -1588,6 +1701,7 @@ void CodeVisitor::Visit(Parameter *n)
 {
 	// TODO BOOLEAN
 	string ptype;
+
 	if (n->type->std_type->type == 'I')
 		ptype = "i";
 
@@ -1611,7 +1725,15 @@ void CodeVisitor::Visit(Parameter *n)
 	{
 		fp++;
 		n->ident_list->idents->at(i)->symbol->location = fp;
-		vout << "push" << ptype << " " << def_value << "\n";
+		if (n->type->is_array)
+		{
+			int size = n->type->last - n->type->first + 1;
+			vout << "alloc " << size << "\n";
+		}
+		else
+		{
+			vout << "push" << ptype << " " << def_value << "\n";
+		}
 		vout << "store" << pkind << " " << fp << "\n";
 		vout << "push" << pkind << " " << fp << "\n";
 	}
@@ -1633,10 +1755,16 @@ void CodeVisitor::Visit(Declarations *n)
 
 void CodeVisitor::Visit(Local_Declaration *n)
 {
+	n->param->accept(this);
 }
 
 void CodeVisitor::Visit(Local_Declarations *n)
 {
+	int s = n->decs->size();
+	for (int i = 0; i < s; i++)
+	{
+		n->decs->at(i)->accept(this);
+	}
 }
 
 void CodeVisitor::Visit(Expression *n)
@@ -1660,7 +1788,6 @@ void CodeVisitor::Visit(Boolean_Expression *n)
 
 void CodeVisitor::Visit(Ident_Expression *n)
 {
-	cout << "IDENT\n\n";
 	if (n->ident->symbol->kind == 1)
 	{
 		vout << "pushg " << n->ident->symbol->location << "\n";
@@ -1673,7 +1800,6 @@ void CodeVisitor::Visit(Ident_Expression *n)
 
 void CodeVisitor::Visit(Function_Expression *n)
 {
-	cout << "FUNC\n\n";
 }
 
 void CodeVisitor::Visit(Expression_Expression *n)
@@ -1687,8 +1813,6 @@ void CodeVisitor::Visit(Expression_List *n)
 
 void CodeVisitor::Visit(Binary_expression *n)
 {
-
-	cout << "BINARY EXPR\n\n";
 
 	n->expression1->accept(this);
 	n->expression2->accept(this);
@@ -1733,6 +1857,9 @@ void CodeVisitor::Visit(Not_Expression *n)
 {
 	cout << "\n\nNOT\n\n";
 }
+void CodeVisitor::Visit(Array_expression *n)
+{
+}
 
 void CodeVisitor::Visit(Statement *n)
 {
@@ -1749,8 +1876,6 @@ void CodeVisitor::Visit(Statement_List *n)
 
 void CodeVisitor::Visit(If_Statement *n)
 {
-
-	cout << "IF visitor\n\n";
 
 	if (dynamic_cast<Binary_expression *>(n->expression) != nullptr)
 	{
@@ -1823,6 +1948,9 @@ void CodeVisitor::Visit(Arguments *n)
 
 void CodeVisitor::Visit(Procedure_Statement *n)
 {
+	string name = n->id->name;
+	Subprogram_Declaration sd = funcs.at(name);
+	cout << sd.line;
 }
 
 void CodeVisitor::Visit(Variable *n)
@@ -1915,12 +2043,28 @@ void CodeVisitor::Visit(Divide_expression *n)
 	}
 }
 
-Symbol::Symbol(string n, int k, char t)
+Symbol::Symbol(string n, int k, char t, bool is_array)
 {
 	this->name = n;
 	this->type = t;
 	this->kind = k;
+	this->is_array = is_array;
+	if (is_array)
+		this->type += 1;
 }
+
+Symbol::Symbol(string n, int k, char t, bool is_array, int f, int l)
+{
+	this->name = n;
+	this->type = t;
+	this->kind = k;
+	this->is_array = is_array;
+	if (is_array)
+		this->type += 1;
+	this->first = f;
+	this->last = l;
+}
+
 Scope::Scope()
 {
 	this->hashTab = new HashTab;
@@ -1931,9 +2075,10 @@ SymbolTable::SymbolTable()
 	this->scopes->push_back(new Scope());
 	this->current = this->scopes->at(0);
 }
-bool SymbolTable::AddSymbol(Ident *ident, int kind, char type)
+bool SymbolTable::AddSymbol(Ident *ident, int kind, char type, bool is_array)
 {
-	Symbol *s = new Symbol(ident->name, kind, type);
+
+	Symbol *s = new Symbol(ident->name, kind, type, is_array);
 	string key_type = (kind == 1 ? "g" : "l");
 	string key = key_type + ident->name;
 	Symbol *temp = this->current->hashTab->GetMember(key);
@@ -1950,9 +2095,29 @@ bool SymbolTable::AddSymbol(Ident *ident, int kind, char type)
 	}
 }
 
-bool SymbolTable::AddFunction(Ident *ident, Arguments *args, int kind, char type) // k = 1 -> function else procedure
+bool SymbolTable::AddSymbol(Ident *ident, int kind, char type, bool is_array, int first, int last)
 {
-	Symbol *s = new Symbol(ident->name, kind, type);
+
+	Symbol *s = new Symbol(ident->name, kind, type, is_array, first, last);
+	string key_type = (kind == 1 ? "g" : "l");
+	string key = key_type + ident->name;
+	Symbol *temp = this->current->hashTab->GetMember(key);
+	if (temp == NULL)
+	{
+		this->current->hashTab->AddKey(key, s);
+		ident->symbol = s;
+		return true;
+	}
+	else
+	{
+		cout << "\n\nError:: variable redefinition " << ident->name << ", line " << ident->line << ", col " << ident->column << "\n\n";
+		return false;
+	}
+}
+
+bool SymbolTable::AddFunction(Ident *ident, Arguments *args, int kind, char type, bool is_array) // k = 1 -> function else procedure
+{
+	Symbol *s = new Symbol(ident->name, kind, type, is_array);
 	string key;
 	if (kind == 1)
 		key = "f" + ident->name;

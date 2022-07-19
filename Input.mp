@@ -5,6 +5,7 @@ Program ArrayExample; {bbrebere}
 Var var1 : Integer;
 Var var2 : Real;
 Var var3 : Boolean;
+//Var arr: array[1..9] of Integer;
 //Var var3 : Boolean;
 
 
@@ -44,9 +45,13 @@ End;
 
 Begin
 
+
+
     NOARGS;
 
-    MYPROD(1, 1);
+    //arr[0] := 1;
+
+    var1 := MYPROD(1, 1.1);
 
     myVar := 999;
 
@@ -57,7 +62,7 @@ Begin
     if var1 >5 then
         var2 := 42;
 
-    if var1 >5 then
-        var2 := 42.23   
+    if (var1 > 5 AND var2 < 100) then
+        var1 := 42.23   
     
 End

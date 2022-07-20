@@ -35,34 +35,38 @@
      BOOLEAN = 261,
      DD = 262,
      ASSIGN = 263,
-     WHILE = 264,
-     DO = 265,
-     BEG = 266,
-     END = 267,
-     IF = 268,
-     THEN = 269,
-     ARRAY = 270,
-     OF = 271,
-     TRUE = 272,
-     FALSE = 273,
-     IDENT = 274,
-     INT_NUM = 275,
-     REAL_NUM = 276,
-     LOGICAL_OPERATOR = 277,
-     BINARY_OPERATOR = 278,
-     EXPRLST_PREC = 279,
-     ELSE = 280,
-     IF_PREC = 281,
-     NOSUBDECS_PREC = 282,
-     FUNCTION = 283,
-     PROCEDURE = 284,
-     SUBPROGRAMDEC_PREC = 285,
-     SUBDECS_PREC = 286,
-     NODECS_PREC = 287,
-     VAR = 288,
-     UNARY_PREC = 289,
-     NOT = 290,
-     EXPR_PREC = 291
+     RET = 264,
+     ENDWHILE = 265,
+     WHILE = 266,
+     DO = 267,
+     BEG = 268,
+     END = 269,
+     IF = 270,
+     THEN = 271,
+     ARRAY = 272,
+     OF = 273,
+     TRUE = 274,
+     FALSE = 275,
+     ENDIF = 276,
+     IDENT = 277,
+     INT_NUM = 278,
+     REAL_NUM = 279,
+     LOGICAL_OPERATOR = 280,
+     BINARY_OPERATOR = 281,
+     EXPRLST_PREC = 282,
+     IF_PREC = 283,
+     ELSE = 284,
+     WHILE_PREC = 285,
+     NOSUBDECS_PREC = 286,
+     FUNCTION = 287,
+     PROCEDURE = 288,
+     SUBPROGRAMDEC_PREC = 289,
+     SUBDECS_PREC = 290,
+     NODECS_PREC = 291,
+     VAR = 292,
+     UNARY_PREC = 293,
+     NOT = 294,
+     EXPR_PREC = 295
    };
 #endif
 /* Tokens.  */
@@ -72,40 +76,44 @@
 #define BOOLEAN 261
 #define DD 262
 #define ASSIGN 263
-#define WHILE 264
-#define DO 265
-#define BEG 266
-#define END 267
-#define IF 268
-#define THEN 269
-#define ARRAY 270
-#define OF 271
-#define TRUE 272
-#define FALSE 273
-#define IDENT 274
-#define INT_NUM 275
-#define REAL_NUM 276
-#define LOGICAL_OPERATOR 277
-#define BINARY_OPERATOR 278
-#define EXPRLST_PREC 279
-#define ELSE 280
-#define IF_PREC 281
-#define NOSUBDECS_PREC 282
-#define FUNCTION 283
-#define PROCEDURE 284
-#define SUBPROGRAMDEC_PREC 285
-#define SUBDECS_PREC 286
-#define NODECS_PREC 287
-#define VAR 288
-#define UNARY_PREC 289
-#define NOT 290
-#define EXPR_PREC 291
+#define RET 264
+#define ENDWHILE 265
+#define WHILE 266
+#define DO 267
+#define BEG 268
+#define END 269
+#define IF 270
+#define THEN 271
+#define ARRAY 272
+#define OF 273
+#define TRUE 274
+#define FALSE 275
+#define ENDIF 276
+#define IDENT 277
+#define INT_NUM 278
+#define REAL_NUM 279
+#define LOGICAL_OPERATOR 280
+#define BINARY_OPERATOR 281
+#define EXPRLST_PREC 282
+#define IF_PREC 283
+#define ELSE 284
+#define WHILE_PREC 285
+#define NOSUBDECS_PREC 286
+#define FUNCTION 287
+#define PROCEDURE 288
+#define SUBPROGRAMDEC_PREC 289
+#define SUBDECS_PREC 290
+#define NODECS_PREC 291
+#define VAR 292
+#define UNARY_PREC 293
+#define NOT 294
+#define EXPR_PREC 295
 
 
 
 
 #if ! defined (YYSTYPE) && ! defined (YYSTYPE_IS_DECLARED)
-#line 20 "../Parser.y"
+#line 21 "../Parser.y"
 typedef union YYSTYPE {
 	Ident *tIdent;
 	Ident_List *tIdent_List;
@@ -134,6 +142,7 @@ typedef union YYSTYPE {
 	Statement_List *tStatement_List;
 	Optional_Statements *tOptional_Statements;
 	Compound_Statement *tCompound_Statement;
+	Return_Statement *tReturn_Statement;
 	Variable *tVariable;
 	Subprogram_Head *tSubprogram_Head;
 	Subprogram_Declaration *tSubprogram_Declaration;
@@ -150,7 +159,7 @@ typedef union YYSTYPE {
 	Logical_opreator *tLogical_Opreator;
  } YYSTYPE;
 /* Line 1447 of yacc.c.  */
-#line 154 "../include/Parser.h"
+#line 163 "../include/Parser.h"
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
 # define YYSTYPE_IS_TRIVIAL 1

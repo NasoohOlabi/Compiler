@@ -10,6 +10,7 @@
 
 	Program *root;
 	std::map<string, Subprogram_Declaration> funcs;
+	std::map<string, bool> visited;
 	SymbolTable *symbolTable = new SymbolTable();
 
 %}
@@ -45,6 +46,7 @@
 	Statement_List *tStatement_List;
 	Optional_Statements *tOptional_Statements;
 	Compound_Statement *tCompound_Statement;
+	Return_Statement *tReturn_Statement;
 	Variable *tVariable;
 	Subprogram_Head *tSubprogram_Head;
 	Subprogram_Declaration *tSubprogram_Declaration;
@@ -63,8 +65,8 @@
 
 /* Tokens Section (Terminals) */
 
-%token PROGRAM INTEGER REAL BOOLEAN DD ASSIGN
-%token WHILE DO BEG END IF THEN ARRAY OF TRUE FALSE
+%token PROGRAM INTEGER REAL BOOLEAN DD ASSIGN RET ENDWHILE
+%token WHILE DO BEG END IF THEN ARRAY OF TRUE FALSE ENDIF
 %token <tIdent> IDENT
 %token <tInt_Num> INT_NUM
 %token <tReal_Num> REAL_NUM
@@ -82,8 +84,13 @@
 
 %nonassoc EXPRLST_PREC
 
-%nonassoc ELSE
+
+
 %nonassoc IF_PREC
+%nonassoc ELSE
+
+%nonassoc WHILE_PREC
+%nonassoc DO
 
 %nonassoc NOSUBDECS_PREC
 %nonassoc FUNCTION
@@ -289,19 +296,34 @@ expression: INT_NUM
 									$$ = $1;
 								}
 			| IDENT '(' expression_list ')' %prec EXPR_PREC
-								{
+								{			
+									string ss = "";					
+									Symbol *s = symbolTable->lookUpFunction($1, $3, 1, ss);
+
+								
+									if(s == NULL){
+										cout << "\n\nError:: Undeclared function " << $1->name << ", line " << $1->line << ", col " << $1->column << "\n\n";
+									}
 									$$ = new Function_Expression($1, $3 ,lin, col);
 								}
 			| IDENT 
 								{
 									Symbol *s = symbolTable->lookUpSymbol($1);
+									string ss = "";
 									if(s == NULL){
-										s = symbolTable->lookUpFunction($1, NULL, 1);
+										s = symbolTable->lookUpFunction($1, NULL, 1, ss);
+										if(s == NULL){
+											cout << "\n\nError:: Undeclared variable " << $1->name << ", line " << $1->line << ", col " << $1->column << "\n\n";
+											$$ = new Ident_Expression($1, lin, col);
+										}
+										else{
+											$$ = new Function_Expression($1, lin, col);
+										}
 									}
-									if(s == NULL){
-										cout << "\n\nError:: Undeclared variable " << $1->name << ", line " << $1->line << ", col " << $1->column << "\n\n";
+									else{
+										$$ = new Ident_Expression($1, lin, col);
 									}
-									$$ = new Ident_Expression($1, lin, col);
+									
 								}
 			| '(' expression ')'
 								{
@@ -490,6 +512,25 @@ logical_expression: expression LOGICAL_OPERATOR expression
 array_expression: IDENT '[' expression ']'
 				{
 						$$ = new Array_expression($1, $3, lin, col);
+
+						Symbol* s = symbolTable->lookUpSymbol($1);
+
+						int value = ((Int_Expression*)$3)->value->value;
+						int first = s->first;
+						int last = s->last;
+				
+
+						if(!(value >= first && value <= last)){
+							cout << "Error: index out of range, line " << $1->line;
+						}
+
+						if(s == NULL)
+						{
+							cout << "\n\nError:: Undeclared variable " << $1->name << ", line " << $1->line << ", col " << $1->column << "\n\n";
+						}
+						else{
+							$$->symbol = s;
+						}
 				}
 ;
 
@@ -526,25 +567,31 @@ statement : variable ASSIGN expression
 									{
 										$$ = $1;
 									}
+			| RET expression
+									{
+										$$ = new Return_Statement($2, lin, col);
+									}
 			| compound_statement
 									{
 										$$= new Compound_Statement($1->optional_statements, lin, col);
 									}
-			| IF expression THEN statement %prec IF_PREC 
+
+			| IF expression THEN statement_list ENDIF %prec IF_PREC
 									{
 										$$= new If_Statement($2, $4, lin, col);
 									}
-			| IF expression THEN statement ELSE statement
+
+			| IF expression THEN statement_list ELSE statement_list ENDIF
 									{
 										$$= new If_Else_Statement($2, $4, $6, lin, col);
 									}
-			| WHILE expression DO statement
+			| WHILE expression DO statement_list ENDWHILE %prec WHILE_PREC
 									{
 										$$= new While_Statement($2, $4, lin, col);
 									}
 ;
 
-statement_list : statement 
+statement_list : statement
 					{
 						$$= new Statement_List($1, lin, col);
 					}

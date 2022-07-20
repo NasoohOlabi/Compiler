@@ -148,6 +148,16 @@ basic_opreators [+*/\-]
 	return NOT;
 }
 
+"endif" {
+	col += yyleng;
+	return ENDIF;
+}
+
+"endwhile" {
+	col += yyleng;
+	return ENDWHILE;
+}
+
 "true" {
 	col += yyleng;
 	return TRUE;
@@ -155,6 +165,11 @@ basic_opreators [+*/\-]
 "false" {
 	col += yyleng;
 	return FALSE;
+}
+
+"return" {
+	col += yyleng;
+	return RET;
 }
 
 

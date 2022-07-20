@@ -1,39 +1,68 @@
 
 Program ArrayExample; {bbrebere}
 var arr1 : array [ 1 .. 9 ] of Integer;
-Var var1 : Integer;
+Var var1, var2 : Integer;
 
-{
-function MYFUNC (arr2 : array [ 1 .. 9 ] of Integer) : boolean;
 
-Begin
-    //var1 := 100;
 
-    arr2[0] := 2
-    //arr2 := 3
-End;
-}
-
-procedure MYPROD (var1,y : integer);
-
-Var localVar : Integer;
+procedure MYPROD (x,y : integer);
 
 Begin
-    var2 := 1.1;
-    localVar := 100;
-    if (true AND true) then
-        var2 := 42.1
+    var1 := x + y
 End;
 
 
+
+function addFunc (a, b : integer) : integer;
+
+Begin
+    return a + b
+End;
+
+
+procedure ArrProcedure ( localArr : array [ 1 .. 9 ] of Integer );
+
+Begin
+    var1 := localArr[4]
+End;
+
+
+
 Begin
 
- MYPROD(1,1)
 
- //arr1 := 5;
 
- //arr1[0] := 5;
+ arr1[4] := 5;
 
- //var1 := 5
+ var1 := arr1[4];
+
+
+ if (var1 < 1) then 
+    var1 := 100 
+ else 
+    var1 := 99999; 
+    var1 := 99998
+ endif;
+
+
+
+ var1 := 1;
+
+ var2 := 10;
+
+ while (var1 < 3) DO
+
+    var2 := var2 * 10;
+    var1 := var1 + 1
+
+ endwhile;
+
+ ArrProcedure(arr1);
+
+ var1 := addFunc(3,6);
+ 
+
+ MYPROD(addFunc(3,6) , 6)
+
     
 End

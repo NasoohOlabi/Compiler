@@ -1,8 +1,101 @@
 start
 alloc 9
-storeg 0
-pushg 0
+storeg 999
+pushg 999
 pushi 0
-storeg 1
-pushg 1
+storeg 998
+pushg 998
+pushi 0
+storeg 997
+pushg 997
+pushg 999
+pushi 5
+store 4
+pushg 999
+load 4
+storeg 998
+pushg 998
+pushi 1
+inf
+jz ELSE_IF0
+pushi 100
+storeg 998
+ELSE_IF0:
+pushi 99999
+storeg 998
+pushi 99998
+storeg 998
+END_IF0:
+pushi 1
+storeg 998
+pushi 10
+storeg 997
+START_WHILE0:
+pushg 998
+pushi 3
+inf
+jz END_WHILE0
+pushg 997
+pushi 10
+mul
+storeg 997
+pushg 998
+pushi 1
+add
+storeg 998
+jump START_WHILE0
+END_WHILE0:
+pushg 999
+pusha pArrProcedure_J1
+call
+jump END_pArrProcedure_J1
+pArrProcedure_J1:
+pushl -1
+load 4
+storeg 998
+return
+END_pArrProcedure_J1:
+pop 1
+pushi 0
+storeg 996
+pushi 0
+storel 0
+pushi 3
+pushi 6
+pusha faddFunc_I2
+call
+jump END_faddFunc_I2
+faddFunc_I2:
+pushl -2
+pushl -1
+add
+storeg 996
+return
+return
+END_faddFunc_I2:
+pop 1
+pushg 996
+storeg 998
+pushi 0
+storeg 995
+pushi 0
+storel 1
+pushi 3
+pushi 6
+pusha faddFunc_I2
+call
+pop 1
+pushg 995
+pushi 6
+pusha pMYPROD_I2
+call
+jump END_pMYPROD_I2
+pMYPROD_I2:
+pushl -2
+pushl -1
+add
+storeg 998
+return
+END_pMYPROD_I2:
+pop 2
 stop

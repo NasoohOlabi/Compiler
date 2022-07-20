@@ -22,6 +22,8 @@ int main()
 	NodeVisitor *pv = new TypeVisitor();
 	root->accept(pv);
 
+	cout << "\n\nType Checking Finished... Starting Code Generation:\n\n";
+
 	NodeVisitor *cv = new CodeVisitor();
 	root->accept(cv);
 

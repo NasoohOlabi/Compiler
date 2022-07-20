@@ -226,6 +226,7 @@ void Expression::accept(NodeVisitor *nv)
 Int_Expression::Int_Expression(Int_Num *v, int l, int c) : Expression(l, c)
 {
 	this->value = v;
+	this->type = "INT";
 }
 
 void Int_Expression::accept(NodeVisitor *nv)
@@ -236,6 +237,7 @@ void Int_Expression::accept(NodeVisitor *nv)
 Real_Expression::Real_Expression(Real_Num *v, int l, int c) : Expression(l, c)
 {
 	this->value = v;
+	this->type = "RL";
 }
 
 void Real_Expression::accept(NodeVisitor *nv)
@@ -246,6 +248,7 @@ void Real_Expression::accept(NodeVisitor *nv)
 Boolean_Expression::Boolean_Expression(bool v, int l, int c) : Expression(l, c)
 {
 	this->value = v;
+	this->type = "BOOL";
 }
 
 void Boolean_Expression::accept(NodeVisitor *nv)
@@ -259,6 +262,12 @@ Function_Expression::Function_Expression(Ident *id, Expression_List *e_lst, int 
 	this->expr_lst = e_lst;
 	id->father = this;
 	e_lst->father = this;
+}
+
+Function_Expression::Function_Expression(Ident *id, int l, int c) : Expression(l, c)
+{
+	this->ident = id;
+	id->father = this;
 }
 
 void Function_Expression::accept(NodeVisitor *nv)
@@ -374,7 +383,7 @@ void Compound_Statement::accept(NodeVisitor *nv)
 	nv->Visit(this);
 }
 
-If_Statement::If_Statement(Expression *e, Statement *s, int l, int c) : Statement(l, c)
+If_Statement::If_Statement(Expression *e, Statement_List *s, int l, int c) : Statement(l, c)
 {
 	this->expression = e;
 	this->statement = s;
@@ -387,7 +396,7 @@ void If_Statement::accept(NodeVisitor *nv)
 	nv->Visit(this);
 }
 
-If_Else_Statement::If_Else_Statement(Expression *e, Statement *s1, Statement *s2, int l, int c) : Statement(l, c)
+If_Else_Statement::If_Else_Statement(Expression *e, Statement_List *s1, Statement_List *s2, int l, int c) : Statement(l, c)
 {
 	this->statement1 = s1;
 	this->statement2 = s2;
@@ -402,7 +411,7 @@ void If_Else_Statement::accept(NodeVisitor *nv)
 	nv->Visit(this);
 }
 
-While_Statement::While_Statement(Expression *e, Statement *s, int l, int c) : Statement(l, c)
+While_Statement::While_Statement(Expression *e, Statement_List *s, int l, int c) : Statement(l, c)
 {
 	this->expression = e;
 	this->statement = s;
@@ -411,6 +420,17 @@ While_Statement::While_Statement(Expression *e, Statement *s, int l, int c) : St
 }
 
 void While_Statement::accept(NodeVisitor *nv)
+{
+	nv->Visit(this);
+}
+
+Return_Statement::Return_Statement(Expression *exp, int l, int c) : Statement(l, c)
+{
+	this->e = exp;
+	exp->father = this;
+}
+
+void Return_Statement::accept(NodeVisitor *nv)
 {
 	nv->Visit(this);
 }
@@ -921,6 +941,12 @@ void PrintVisitor::Visit(Optional_Statements *n)
 	n->statement_list->accept(this);
 }
 
+void PrintVisitor::Visit(Return_Statement *n)
+{
+	cout << "Return Statement:: \nExp -> \n";
+	n->e->accept(this);
+}
+
 void PrintVisitor::Visit(Variable_Statement *n)
 {
 	cout << "Variable Statement:: \nVariable -> \n";
@@ -1178,11 +1204,11 @@ void TypeVisitor::Visit(Ident_Expression *n)
 			n->type = "";
 		}
 
-		if (t == 'I')
+		if (t == 'I' || t == 'J')
 			n->type += "INT";
-		if (t == 'R')
+		if (t == 'R' || t == 'S')
 			n->type += "RL";
-		if (t == 'B')
+		if (t == 'B' || t == 'C')
 			n->type += "BOOL";
 	}
 	else
@@ -1198,8 +1224,8 @@ void TypeVisitor::Visit(Function_Expression *n)
 	{
 		n->expr_lst->accept(this);
 	}
-
-	Symbol *s = symbolTable->lookUpFunction(n->ident, n->expr_lst, 1);
+	string ss = "";
+	Symbol *s = symbolTable->lookUpFunction(n->ident, n->expr_lst, 1, ss);
 
 	if (s == NULL)
 	{
@@ -1220,11 +1246,11 @@ void TypeVisitor::Visit(Function_Expression *n)
 		n->type = "";
 	}
 
-	if (t == 'I')
+	if (t == 'I' || t == 'J')
 		n->type += "INT";
-	if (t == 'R')
+	if (t == 'R' || t == 'S')
 		n->type += "RL";
-	if (t == 'B')
+	if (t == 'B' || t == 'C')
 		n->type += "BOOL";
 }
 
@@ -1296,9 +1322,20 @@ void TypeVisitor::Visit(Array_expression *n)
 
 	// cout << "Expr -> \n";
 
+	Symbol *s = symbolTable->lookUpSymbol(n->name);
+	if (s != NULL)
+	{
+		if (s->type == 'I')
+			n->type = "INT";
+		if (s->type == 'R')
+			n->type = "RL";
+		if (s->type == 'B')
+			n->type = "BOOL";
+	}
+
 	if (n->index->type == "INT")
 	{
-		cout << "Array int index";
+		cout << "Array with int index\n";
 	}
 	else
 	{
@@ -1379,6 +1416,11 @@ void TypeVisitor::Visit(Optional_Statements *n)
 		n->statement_list->accept(this);
 }
 
+void TypeVisitor::Visit(Return_Statement *n)
+{
+	n->e->accept(this);
+}
+
 void TypeVisitor::Visit(Variable_Statement *n)
 {
 
@@ -1393,49 +1435,41 @@ void TypeVisitor::Visit(Variable_Statement *n)
 
 	if (n->variable->id->symbol == NULL)
 	{
-		cout << "here";
+		cout << "this is null";
 		return;
 	}
 
 	char ident_type = n->variable->id->symbol->type;
+
+	string expr_type = "";
+
+	if (n->expression->type.size() == 0)
+	{
+		expr_type = n->expression->symbol->type;
+	}
+	else
+	{
+		expr_type = n->expression->type;
+	}
+
+	if (dynamic_cast<Array_expression *>(n->expression) != NULL)
+	{
+		// cout << "dynamic cast";
+		string ss = "";
+		ss.push_back(expr_type[0] - 1);
+		expr_type = ss;
+	}
 
 	if (n->variable->expr != NULL)
 	{
 		ident_type -= 1;
 	}
 
-	cout << ident_type << "\n";
-
-	string expr_type = n->expression->type;
-
-	// if (!is_arr)
-	// {
-	// 	if (ident_type == 'I' && expr_type == "INT" || ident_type == 'R' && expr_type == "RL" || ident_type == 'B' && expr_type == "BOOL")
-	// 	{
-	// 		cout << "Assignemt Type checked correctly, line " << n->line << "\n\n";
-	// 	}
-	// 	else
-	// 	{
-	// 		cout << "Type Error: line " << n->line << ", column " << n->column << "\n";
-	// 		cout << "left:: " << ident_type << "  right:: " << expr_type << "\n\n";
-	// 	}
-	// }
-
-	// else
-	// {
-
-	// 	if (ident_type == 'I' && expr_type == "*INT" || ident_type == 'R' && expr_type == "*RL" || ident_type == 'B' && expr_type == "*BOOL")
-	// 	{
-	// 		cout << "Assignemt Type checked correctly, line " << n->line << "\n\n";
-	// 	}
-	// 	else
-	// 	{
-	// 		cout << "Type Error: line " << n->line << ", column " << n->column << "\n";
-	// 		cout << "left:: " << ident_type << "  right:: " << expr_type << "\n\n";
-	// 	}
-	// }
-
 	if (ident_type == 'I' && expr_type == "INT" || ident_type == 'R' && expr_type == "RL" || ident_type == 'B' && expr_type == "BOOL")
+	{
+		cout << "Assignemt Type checked correctly, line " << n->line << "\n\n";
+	}
+	else if (ident_type == 'I' && expr_type == "I" || ident_type == 'R' && expr_type == "R" || ident_type == 'B' && expr_type == "B")
 	{
 		cout << "Assignemt Type checked correctly, line " << n->line << "\n\n";
 	}
@@ -1473,8 +1507,8 @@ void TypeVisitor::Visit(Procedure_Statement *n)
 	{
 		n->expr_lst->accept(this);
 	}
-
-	Symbol *s = symbolTable->lookUpFunction(n->id, n->expr_lst, 2);
+	string ss = "";
+	Symbol *s = symbolTable->lookUpFunction(n->id, n->expr_lst, 2, ss);
 }
 
 void TypeVisitor::Visit(Variable *n)
@@ -1617,8 +1651,6 @@ void TypeVisitor::Visit(Minus_expression *n)
 		n->expression1->type = "RL";
 		n->expression2->type = "RL";
 	}
-	cout << "The Type of left is: " << n->expression1->type << "\n";
-	cout << "The Type of Right is: " << n->expression2->type << "\n";
 }
 
 void TypeVisitor::Visit(Mul_expression *n)
@@ -1647,8 +1679,6 @@ void TypeVisitor::Visit(Mul_expression *n)
 		n->expression1->type = "RL";
 		n->expression2->type = "RL";
 	}
-	cout << "The Type of left is: " << n->expression1->type << "\n";
-	cout << "The Type of Right is: " << n->expression2->type << "\n";
 }
 
 void TypeVisitor::Visit(Divide_expression *n)
@@ -1663,8 +1693,6 @@ void TypeVisitor::Visit(Divide_expression *n)
 	string right = n->expression2->type;
 
 	n->type = "RL";
-	cout << "The Type of left is: " << n->expression1->type << "\n";
-	cout << "The Type of Right is: " << n->expression2->type << "\n";
 }
 
 /************************ Code Visitors ************************/
@@ -1723,8 +1751,19 @@ void CodeVisitor::Visit(Parameter *n)
 
 	for (int i = 0; i < n->ident_list->idents->size(); i++)
 	{
-		fp++;
-		n->ident_list->idents->at(i)->symbol->location = fp;
+		int pointer;
+		if (pkind == "g")
+		{
+			gp--;
+			pointer = gp;
+		}
+		else
+		{
+			fp++;
+			pointer = fp;
+		}
+
+		n->ident_list->idents->at(i)->symbol->location = pointer;
 		if (n->type->is_array)
 		{
 			int size = n->type->last - n->type->first + 1;
@@ -1734,8 +1773,8 @@ void CodeVisitor::Visit(Parameter *n)
 		{
 			vout << "push" << ptype << " " << def_value << "\n";
 		}
-		vout << "store" << pkind << " " << fp << "\n";
-		vout << "push" << pkind << " " << fp << "\n";
+		vout << "store" << pkind << " " << pointer << "\n";
+		vout << "push" << pkind << " " << pointer << "\n";
 	}
 }
 
@@ -1800,6 +1839,91 @@ void CodeVisitor::Visit(Ident_Expression *n)
 
 void CodeVisitor::Visit(Function_Expression *n)
 {
+
+	string name = n->ident->name;
+	Subprogram_Declaration sd = funcs.at(name);
+
+	if (n->type == "INT")
+	{
+		vout << "pushi 0\n";
+		vout << "storeg " << --gp << "\n";
+		vout << "pushi 0\n";
+		vout << "storel " << ++fp << "\n";
+	}
+	else if (n->type == "RL")
+	{
+		vout << "pushf 0.0\n";
+		vout << "storeg " << --gp << "\n";
+		vout << "pushi 0\n";
+		vout << "storel " << ++fp << "\n";
+	}
+	else if (n->type == "BOOL")
+	{
+		vout << "pushi 0\n";
+		vout << "storeg " << --gp << "\n";
+		vout << "pushi 0\n";
+		vout << "storel " << ++fp << "\n";
+	}
+
+	n->expr_lst->accept(this);
+
+	string func_key = "";
+
+	symbolTable->lookUpFunction(n->ident, n->expr_lst, 1, func_key);
+
+	string func_label = "";
+
+	for (int i = 0; i < func_key.size(); i++)
+	{
+		if (func_key[i] == '@')
+			func_label.push_back('_');
+		else
+		{
+			func_label.push_back(func_key[i]);
+		}
+	}
+
+	if (visited.count(func_label) == 0)
+	{
+
+		visited.insert({func_label, true});
+
+		sd.sub_head->args->accept(this);
+
+		vout << "pusha " << func_label << "\n"
+			 << "call\n"
+			 << "jump "
+			 << "END_" + func_label << "\n"
+			 << func_label + ":\n";
+
+		for (int i = 0; i < sd.comp_stmt->optional_statements->statement_list->stmts->size(); i++)
+		{
+			sd.comp_stmt->optional_statements->statement_list->stmts->at(i)->accept(this);
+		}
+
+		vout << "return\n";
+
+		vout
+			<< "END_" + func_label + ":"
+			<< "\n";
+	}
+
+	else
+	{
+		vout << "pusha " << func_label << "\n"
+			 << "call\n";
+	}
+
+	// vout << "pushg " << gp << "\n";
+	// vout << "storel " << fp << "\n";
+
+	// vout << "pop " << n->expr_lst->exprs->size() - 1 << "\n";
+
+	// vout << "pushl " << fp << "\n";
+
+	vout << "pop " << n->expr_lst->exprs->size() - 1 << "\n";
+
+	vout << "pushg " << gp << "\n";
 }
 
 void CodeVisitor::Visit(Expression_Expression *n)
@@ -1809,6 +1933,10 @@ void CodeVisitor::Visit(Expression_Expression *n)
 
 void CodeVisitor::Visit(Expression_List *n)
 {
+	for (int i = 0; i < n->exprs->size(); i++)
+	{
+		n->exprs->at(i)->accept(this);
+	}
 }
 
 void CodeVisitor::Visit(Binary_expression *n)
@@ -1859,6 +1987,18 @@ void CodeVisitor::Visit(Not_Expression *n)
 }
 void CodeVisitor::Visit(Array_expression *n)
 {
+
+	int loc = n->name->symbol->location;
+	if (n->name->symbol->kind == 1)
+	{ // 1 is global
+		vout << "pushg " << loc << "\n";
+	}
+	else
+	{ // 2 is local
+		vout << "pushl " << loc << "\n";
+	}
+
+	vout << "load " << ((Int_Expression *)n->index)->value->value << "\n";
 }
 
 void CodeVisitor::Visit(Statement *n)
@@ -1898,11 +2038,43 @@ void CodeVisitor::Visit(If_Statement *n)
 }
 
 void CodeVisitor::Visit(While_Statement *n)
+
 {
+	string start = "START_WHILE" + std::to_string(whileCount);
+	string end = "END_WHILE" + std::to_string(whileCount++);
+
+	vout << start << ":\n";
+
+	n->expression->accept(this);
+
+	vout << "jz " << end << "\n";
+
+	n->statement->accept(this);
+
+	vout << "jump " << start << "\n";
+	vout << end << ":\n";
 }
 
 void CodeVisitor::Visit(If_Else_Statement *n)
 {
+
+	n->expression->accept(this);
+
+	string end = "END_IF";
+	string elseif = "ELSE_IF";
+
+	end += std::to_string(ifCount);
+	elseif += std::to_string(ifCount++);
+
+	vout << "jz " << elseif << "\n";
+
+	n->statement1->accept(this);
+
+	vout << elseif << ":\n";
+
+	n->statement2->accept(this);
+
+	vout << end << ":\n";
 }
 
 void CodeVisitor::Visit(Compound_Statement *n)
@@ -1916,8 +2088,39 @@ void CodeVisitor::Visit(Optional_Statements *n)
 		n->statement_list->accept(this);
 }
 
+void CodeVisitor::Visit(Return_Statement *n)
+{
+	// TODO return certain value
+
+	n->e->accept(this);
+
+	vout << "storeg " << gp << "\n";
+
+	vout
+		<< "return\n";
+}
+
 void CodeVisitor::Visit(Variable_Statement *n)
 {
+
+	if (n->variable->expr != NULL)
+	{
+		int loc = n->variable->id->symbol->location;
+		if (n->variable->id->symbol->kind == 1)
+		{ // 1 is global
+			vout << "pushg " << loc << "\n";
+		}
+		else
+		{ // 2 is local
+			vout << "pushl " << loc << "\n";
+		}
+
+		n->expression->accept(this);
+
+		vout << "store " << ((Int_Expression *)n->variable->expr)->value->value << "\n";
+
+		return;
+	}
 
 	n->expression->accept(this);
 	int loc = n->variable->id->symbol->location;
@@ -1944,13 +2147,71 @@ void CodeVisitor::Visit(Parameter_List *n)
 
 void CodeVisitor::Visit(Arguments *n)
 {
+	int counter = -1;
+	for (int i = n->param_lst->params->size() - 1; i >= 0; i--)
+	{
+		for (int j = n->param_lst->params->at(i)->ident_list->idents->size() - 1; j >= 0; j--)
+		{
+			n->param_lst->params->at(i)->ident_list->idents->at(j)->symbol->location = counter--;
+		}
+	}
 }
 
 void CodeVisitor::Visit(Procedure_Statement *n)
 {
 	string name = n->id->name;
 	Subprogram_Declaration sd = funcs.at(name);
-	cout << sd.line;
+
+	n->expr_lst->accept(this);
+
+	string proc_key = "";
+
+	symbolTable->lookUpFunction(n->id, n->expr_lst, 2, proc_key);
+
+	string proc_label = "";
+
+	for (int i = 0; i < proc_key.size(); i++)
+	{
+		if (proc_key[i] == '@')
+			proc_label.push_back('_');
+		else
+		{
+			proc_label.push_back(proc_key[i]);
+		}
+	}
+
+	if (visited.count(proc_label) == 0)
+	{
+
+		visited.insert({proc_label, true});
+
+		sd.sub_head->args->accept(this);
+
+		vout << "pusha " << proc_label << "\n"
+			 << "call\n"
+			 << "jump "
+			 << "END_" + proc_label << "\n"
+			 << proc_label + ":\n";
+
+		for (int i = 0; i < sd.comp_stmt->optional_statements->statement_list->stmts->size(); i++)
+		{
+			sd.comp_stmt->optional_statements->statement_list->stmts->at(i)->accept(this);
+		}
+
+		vout << "return\n";
+
+		vout
+			<< "END_" + proc_label + ":"
+			<< "\n";
+	}
+
+	else
+	{
+		vout << "pusha " << proc_label << "\n"
+			 << "call\n";
+	}
+
+	vout << "pop " << n->expr_lst->exprs->size() << "\n";
 }
 
 void CodeVisitor::Visit(Variable *n)
@@ -2082,6 +2343,7 @@ bool SymbolTable::AddSymbol(Ident *ident, int kind, char type, bool is_array)
 	string key_type = (kind == 1 ? "g" : "l");
 	string key = key_type + ident->name;
 	Symbol *temp = this->current->hashTab->GetMember(key);
+
 	if (temp == NULL)
 	{
 		this->current->hashTab->AddKey(key, s);
@@ -2102,6 +2364,7 @@ bool SymbolTable::AddSymbol(Ident *ident, int kind, char type, bool is_array, in
 	string key_type = (kind == 1 ? "g" : "l");
 	string key = key_type + ident->name;
 	Symbol *temp = this->current->hashTab->GetMember(key);
+
 	if (temp == NULL)
 	{
 		this->current->hashTab->AddKey(key, s);
@@ -2136,7 +2399,8 @@ bool SymbolTable::AddFunction(Ident *ident, Arguments *args, int kind, char type
 	for (int i = 0; i < n; i++)
 	{
 		key += "@";
-		key.push_back(args->param_lst->params->at(i)->type->std_type->type);
+		key.push_back(args->param_lst->params->at(i)->ident_list->idents->front()->symbol->type);
+		// key.push_back(args->param_lst->params->at(i)->type->std_type->type);
 		key += (std::to_string(args->param_lst->params->at(i)->ident_list->idents->size()));
 	}
 
@@ -2181,7 +2445,7 @@ Symbol *SymbolTable::lookUpSymbol(Ident *ident)
 	}
 }
 
-Symbol *SymbolTable::lookUpFunction(Ident *ident, Expression_List *exp_lst, int kind)
+Symbol *SymbolTable::lookUpFunction(Ident *ident, Expression_List *exp_lst, int kind, string &k)
 {
 	string key;
 	if (kind == 1)
@@ -2204,11 +2468,22 @@ Symbol *SymbolTable::lookUpFunction(Ident *ident, Expression_List *exp_lst, int 
 		if (lst == '?')
 		{
 			lst = exp_lst->exprs->at(i)->type.at(0);
+			if (lst == '*')
+			{
+				lst = exp_lst->exprs->at(i)->type.at(1) + 1;
+			}
 			lst_num += 1;
 		}
 		else
 		{
-			if (lst == exp_lst->exprs->at(i)->type.at(0))
+
+			char nw = exp_lst->exprs->at(i)->type.at(0);
+			if (nw == '*')
+			{
+				nw = exp_lst->exprs->at(i)->type.at(1) + 1;
+			}
+
+			if (lst == nw)
 			{
 				lst_num += 1;
 			}
@@ -2218,14 +2493,14 @@ Symbol *SymbolTable::lookUpFunction(Ident *ident, Expression_List *exp_lst, int 
 				key.push_back(lst);
 				key += std::to_string(lst_num);
 				lst_num = 1;
-				lst = exp_lst->exprs->at(i)->type.at(0);
+				lst = nw;
 			}
 		}
 	}
 	if (lst_num >= 1)
 	{
 		key += "@";
-		key.push_back(exp_lst->exprs->back()->type.at(0));
+		key.push_back(lst);
 		key += std::to_string(lst_num);
 	}
 
@@ -2236,11 +2511,13 @@ Symbol *SymbolTable::lookUpFunction(Ident *ident, Expression_List *exp_lst, int 
 		ident->symbol = sym;
 		string str = (kind == 1 ? "function" : "procedure");
 		cout << "\n\nMatched " << str << " correctly, line " << ident->line << "\n";
+		k = key;
 		return sym;
 	}
 	else
 	{
 		cout << "\n\nError:: No matching function " << ident->name << " with the same params, line " << ident->line << "\n\n";
+		k = "";
 		return nullptr;
 	}
 }

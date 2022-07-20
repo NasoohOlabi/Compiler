@@ -14,6 +14,7 @@ using std::string;
 #include "hash_fun.h"
 
 #include <fstream>
+#include <regex>
 using std::ios;
 using std::ofstream;
 
@@ -49,6 +50,7 @@ class If_Statement;
 class While_Statement;
 class If_Else_Statement;
 class Compound_Statement;
+class Return_Statement;
 class Variable;
 class Parameter_List;
 class Arguments;
@@ -78,6 +80,7 @@ typedef CHashTable<Symbol> HashTab;
 
 extern SymbolTable *symbolTable;
 extern std::map<string, Subprogram_Declaration> funcs;
+extern std::map<string, bool> visited;
 
 class Node
 {
@@ -242,6 +245,7 @@ public:
 	Ident *ident;
 	Expression_List *expr_lst = NULL;
 	Function_Expression(Ident *, Expression_List *, int, int);
+	Function_Expression(Ident *, int, int);
 	void accept(NodeVisitor *) override;
 };
 
@@ -333,21 +337,29 @@ public:
 	void accept(NodeVisitor *) override;
 };
 
+class Return_Statement : public Statement
+{
+public:
+	Expression *e;
+	Return_Statement(Expression *, int, int);
+	void accept(NodeVisitor *) override;
+};
+
 class If_Statement : public Statement
 {
 public:
 	Expression *expression;
-	Statement *statement;
-	If_Statement(Expression *, Statement *, int, int);
+	Statement_List *statement;
+	If_Statement(Expression *, Statement_List *, int, int);
 	void accept(NodeVisitor *) override;
 };
 class If_Else_Statement : public Statement
 {
 public:
 	Expression *expression;
-	Statement *statement1;
-	Statement *statement2;
-	If_Else_Statement(Expression *, Statement *, Statement *, int, int);
+	Statement_List *statement1;
+	Statement_List *statement2;
+	If_Else_Statement(Expression *, Statement_List *, Statement_List *, int, int);
 	void accept(NodeVisitor *) override;
 };
 
@@ -355,8 +367,8 @@ class While_Statement : public Statement
 {
 public:
 	Expression *expression;
-	Statement *statement;
-	While_Statement(Expression *, Statement *, int, int);
+	Statement_List *statement;
+	While_Statement(Expression *, Statement_List *, int, int);
 	void accept(NodeVisitor *) override;
 };
 
@@ -527,6 +539,7 @@ public:
 	virtual void Visit(While_Statement *) = 0;
 	virtual void Visit(If_Else_Statement *) = 0;
 	virtual void Visit(Compound_Statement *) = 0;
+	virtual void Visit(Return_Statement *) = 0;
 	virtual void Visit(Optional_Statements *) = 0;
 	virtual void Visit(Variable_Statement *) = 0;
 	virtual void Visit(Parameter_List *) = 0;
@@ -578,6 +591,7 @@ public:
 	void Visit(While_Statement *) override;
 	void Visit(If_Else_Statement *) override;
 	void Visit(Compound_Statement *) override;
+	void Visit(Return_Statement *) override;
 	void Visit(Optional_Statements *) override;
 	void Visit(Variable_Statement *) override;
 	void Visit(Parameter_List *) override;
@@ -629,6 +643,7 @@ public:
 	virtual void Visit(While_Statement *);
 	virtual void Visit(If_Else_Statement *);
 	virtual void Visit(Compound_Statement *);
+	virtual void Visit(Return_Statement *);
 	virtual void Visit(Optional_Statements *);
 	virtual void Visit(Variable_Statement *);
 	virtual void Visit(Parameter_List *);
@@ -650,7 +665,7 @@ public:
 class CodeVisitor : public NodeVisitor
 {
 public:
-	int fp = -1, ifCount = 0;
+	int fp = -1, ifCount = 0, gp = 1000, whileCount = 0;
 	virtual void Visit(Node *);
 	virtual void Visit(Ident *);
 	virtual void Visit(Ident_List *);
@@ -681,6 +696,7 @@ public:
 	virtual void Visit(While_Statement *);
 	virtual void Visit(If_Else_Statement *);
 	virtual void Visit(Compound_Statement *);
+	virtual void Visit(Return_Statement *);
 	virtual void Visit(Optional_Statements *);
 	virtual void Visit(Variable_Statement *);
 	virtual void Visit(Parameter_List *);
@@ -730,7 +746,7 @@ public:
 	// bool AddProcedure(Ident *, Arguments *, int, char);
 	SymbolTable();
 	Symbol *lookUpSymbol(Ident *);
-	Symbol *lookUpFunction(Ident *, Expression_List *, int);
+	Symbol *lookUpFunction(Ident *, Expression_List *, int, string &);
 	void startScope();
 	void endScope();
 };

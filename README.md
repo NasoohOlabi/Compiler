@@ -19,3 +19,5 @@ To get started with the project, you will need to install the following:
 6.  Or build using the bottom bar CMake extension shortcuts
 
 7.  After build there should be a Compiler.exe in build folder
+
+(Take a look at CMakeLists.txt to view the used commands)

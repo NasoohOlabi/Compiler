@@ -9,7 +9,7 @@ extern Program *root;
 
 int main()
 {
-	freopen(SRC_PATH "/test.mp", "r", stdin);
+	freopen(SRC_PATH "/Clean-Input.mp", "r", stdin);
 	// freopen(SRC_PATH "/Input-Clean.mp", "r", stdin);
 	cout << "\n\nParsing started...\n\n";
 	yyparse();
